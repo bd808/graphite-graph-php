@@ -1,42 +1,18 @@
 <?php
 /**
- * Copyright (c) 2011, Bryan Davis and contributors
- * All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions are met:
- *
- *   a. Redistributions of source code must retain the above copyright notice,
- *      this list of conditions and the following disclaimer.
- *
- *   b. Redistributions in binary form must reproduce the above copyright
- *      notice, this list of conditions and the following disclaimer in the
- *      documentation and/or other materials provided with the distribution.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
- * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
- * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE 
- * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE 
- * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR 
- * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF 
- * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS 
- * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN 
- * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) 
- * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE 
- * POSSIBILITY OF SUCH DAMAGE.
- *
  * @package Graphite
+ * @author Bryan Davis <bd808@bd808.com>
+ * @copyright 2011 Bryan Davis and contributors. All Rights Reserved.
+ * @license http://www.opensource.org/licenses/BSD-2-Clause Simplified BSD License
  */
 
-
 /**
- * DSL for creating graph desciptions for <a 
- * href="http://graphite.wikidot.com/">Graphite</a>.
+ * Graphite graph query string generator.
  *
  * @package Graphite
  * @author Bryan Davis <bd808@bd808.com>
- * @version SVN: $Id: skeleton.php 81 2007-07-11 15:04:33Z bpd $
  * @copyright 2011 Bryan Davis and contributors. All Rights Reserved.
+ * @license http://www.opensource.org/licenses/BSD-2-Clause Simplified BSD License
  */
 class Graphite_GraphBuilder {
 
@@ -137,70 +113,89 @@ class Graphite_GraphBuilder {
   /**
    * Generate a graphite graph description url.
    * @param string $format Format to export data in (null for graph)
-   * @return string Query string to append to grpahite url to render this 
-   * graph
+   * @return string Query string to append to graphite url to render this
+   *  graph
+   *  @throws Exception If required data is missing
    */
   public function url ($format=null) {
     if ($this->props['suppress']) {
       return null;
     }
 
-    $parts = array();
+    $parms = array();
     $colors = array();
 
     foreach (array('title', 'vtitle', 'from', 'width', 'height') as $item) {
-      $parts[] = $item . '=' . htmlentities($this->props[$item]);
+      $parms[] = $item . '=' . urlencode($this->props[$item]);
     }
-    $parts[] = 'areaMode=' . htmlentities($this->props['area']);
+    $parms[] = 'areaMode=' . urlencode($this->props['area']);
 
     foreach ($this->series as $name => $conf) {
-      if (isset($conf['target']) && $conf['target']) {
-        $parts[] = 'target=' . htmlentities($conf['target']);
-
-      } else {
-        if (!isset($conf['data'])) {
-          throw new Exception(
-              "field {$name} does not have any data associated with it");
-        }
-
-        $gt = htmlentities($conf['data']);
-        if (isset($conf['derivative'])) {
-          $gt = "derivative({$gt})";
-        }
-        if (isset($conf['scale'])) {
-          $scale = htmlentities($conf['scale']);
-          $gt = "scale({$gt},{$scale})";
-        }
-        if (isset($conf['line'])) {
-          $gt = "drawAsInfinite({$gt})";
-        }
-
-        if (isset($conf['alias'])) {
-          $alias = $conf['alias'];
-        } else {
-          $alias = ucfirst($name);
-        }
-        $alias = htmlentities($alias);
-        $gt = "alias({$gt},&quot;{$alias}&quot;)";
-        $parts[] = "target={$gt}";
-      } //end if/else
+      $target = self::generateTarget($name, $conf);
+      $parms[] = "target={$target}";
 
       if (isset($conf['color'])) {
-        $colors[] = $conf['color'];
+        $colors[] = urlencode($conf['color']);
       }
     } //end foreach
 
     if ($colors) {
-      $parts[] = 'colorList=' . htmlentities(implode(',', $colors));
+      $parms[] = 'colorList=' . implode(',', $colors);
     }
 
     if ($format) {
-      $format = htmlentities($format);
-      $parts[] = "format={$format}";
+      $format = urlencode($format);
+      $parms[] = "format={$format}";
     }
 
-    return implode('&', $parts);
+    return implode('&', $parms);
   } //end url
+
+
+  /**
+   * Generate the target parameter for a given field.
+   * @param string $name Field name
+   * @param array $field Field configuration
+   * @return string Target parameter
+   */
+  protected static function generateTarget ($name, $conf) {
+    if (isset($conf['target']) && $conf['target']) {
+      // explict target has been provided by the user
+      $target = urlencode($conf['target']);
+
+    } else if (!isset($conf['data'])) {
+      throw new Exception(
+          "field {$name} does not have any data associated with it.");
+
+    } else {
+      $target = urlencode($conf['data']);
+
+      if (isset($conf['derivative'])) {
+        $target = "derivative({$target})";
+      }
+
+      if (isset($conf['scale'])) {
+        $scale = urlencode($conf['scale']);
+        $target = "scale({$target},{$scale})";
+      }
+
+      if (isset($conf['line'])) {
+        $target = "drawAsInfinite({$target})";
+      }
+
+      if (isset($conf['alias'])) {
+        $alias = $conf['alias'];
+
+      } else {
+        $alias = ucfirst($name);
+      }
+      $alias = urlencode($alias);
+      $target = "alias({$target},%22{$alias}%22)";
+
+    } //end if/else
+
+    return $target;
+  } //end generateTarget
 
 
   public function __get ($name) {
@@ -259,7 +254,7 @@ class Graphite_GraphBuilder {
         // it must be a field
         if (isset($data[':use_service'])) {
           $svcData = $services[$data[':use_service']];
-          $svcName = (isset($svcData['service']))? 
+          $svcName = (isset($svcData['service']))?
               $svcData['service']: $data[':use_service'];
 
           $this->service($svcName, $svcData['data']);
@@ -272,6 +267,5 @@ class Graphite_GraphBuilder {
       } //end foreach
     } //end if
   } //end load
-
 
 } //end Graphite_GraphBuilder

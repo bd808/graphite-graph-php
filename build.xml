@@ -67,16 +67,16 @@
 
  <target name="phpcs" description="Generate checkstyle.xml using PHP_CodeSniffer">
   <exec executable="phpcs" output="/dev/null">
-   <arg line="--report=checkstyle
-              --report-file=${basedir}/build/logs/checkstyle.xml
-              --standard=PEAR
+    <arg line="--report-checkstyle=${basedir}/build/logs/checkstyle.xml
+              --standard=${basedir}/build/phpcs.xml
+              --ignore=autoload.php
               ${source}" />
   </exec>
  </target>
 
  <target name="phpdoc" description="Generate API documentation using PHPDocumentor">
   <exec executable="phpdoc">
-   <arg line="-d ${source} -t ${basedir}/build/api" />
+   <arg line="-o HTML:frames:phpedit -d ${source} -t ${basedir}/build/api" />
   </exec>
  </target>
 
@@ -90,3 +90,4 @@
 
  <target name="build" depends="clean,parallelTasks,phpunit,phpcb"/>
 </project>
+<!-- vim:sw=2 ts=2 sts=2 et: -->

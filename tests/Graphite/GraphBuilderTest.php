@@ -1,41 +1,41 @@
 <?php
 /**
- * Copyright (c) 2011, Bryan Davis and contributors
- * All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions are met:
- *
- *   a. Redistributions of source code must retain the above copyright notice,
- *      this list of conditions and the following disclaimer.
- *
- *   b. Redistributions in binary form must reproduce the above copyright
- *      notice, this list of conditions and the following disclaimer in the
- *      documentation and/or other materials provided with the distribution.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
- * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
- * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE 
- * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE 
- * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR 
- * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF 
- * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS 
- * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN 
- * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) 
- * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE 
- * POSSIBILITY OF SUCH DAMAGE.
+ * @package Graphite
  */
 
-
 /**
- * @author Bryan Davis <bd808@bd808.com>
- * @version SVN: $Id: skeleton.php 81 2007-07-11 15:04:33Z bpd $
- * @copyright 2011 Bryan Davis and contributors. All Rights Reserved.
+ * @package Graphite
  */
 class Graphite_GraphBuilderTest extends PHPUnit_Framework_TestCase {
 
-  public function testNothing () {
-    $this->assertTrue(true);
-  }
+  public function testDsl () {
+    $g = new Graphite_GraphBuilder(null,
+        array('width' => 800, 'height' => 400),
+        array( 'hostname' => 'com.example.foo'));
+
+    $got = $g->title('CPU IRQ Usage')
+        ->vtitle('percent')
+        ->width(100)
+        ->height(100)
+        ->from('-2days')
+        ->area('stacked')
+        ->description('A really cool graph')
+        ->service('munin', 'cpu')
+        ->field('irq', array(
+            'derivative' => true,
+            'scale' => 0.001,
+            'color' => 'red',
+            'alias' => 'IRQ',
+          ))
+        ->field('softirq', array(
+            'derivative' => true,
+            'scale' => 0.001,
+            'color' => 'yellow',
+            'alias' => 'Batched IRQ',
+          ))
+        ->endService()
+        ->url();
+    $this->assertEquals('title=CPU+IRQ+Usage&vtitle=percent&from=-2days&width=100&height=100&areaMode=stacked&target=alias(scale(derivative(com.example.foo.munin.cpu.irq),0.001),%22IRQ%22)&target=alias(scale(derivative(com.example.foo.munin.cpu.softirq),0.001),%22Batched+IRQ%22)&colorList=red,yellow', $got);
+  } //end testDsl
 
 } //end Graphite_GraphBuilderTest
