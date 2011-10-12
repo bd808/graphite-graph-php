@@ -24,6 +24,8 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) 
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE 
  * POSSIBILITY OF SUCH DAMAGE.
+ *
+ * @package Graphite
  */
 
 
@@ -31,11 +33,12 @@
  * DSL for creating graph desciptions for <a 
  * href="http://graphite.wikidot.com/">Graphite</a>.
  *
+ * @package Graphite
  * @author Bryan Davis <bd808@bd808.com>
  * @version SVN: $Id: skeleton.php 81 2007-07-11 15:04:33Z bpd $
  * @copyright 2011 Bryan Davis and contributors. All Rights Reserved.
  */
-class GraphiteGraph {
+class Graphite_GraphBuilder {
 
   /**
    * Properties for graph.
@@ -88,7 +91,7 @@ class GraphiteGraph {
    * Start a service block.
    * @param string $service Name of service
    * @param string $data Data collection of interest
-   * @return GraphiteGraph Self, for message chaining
+   * @return Graphite_GraphBuilder Self, for message chaining
    */
   public function service ($service, $data) {
     if (!isset($this->info['hostname'])) {
@@ -101,7 +104,7 @@ class GraphiteGraph {
 
   /**
    * End service block.
-   * @return GraphiteGraph Self, for message chaining
+   * @return Graphite_GraphBuilder Self, for message chaining
    */
   public function endService () {
     $this->service = null;
@@ -113,7 +116,7 @@ class GraphiteGraph {
    * Add a data series to the graph.
    * @param string $name Name of data field to graph
    * @param array $opts Series options
-   * @return GraphiteGraph Self, for message chaining
+   * @return Graphite_GraphBuilder Self, for message chaining
    */
   public function field ($name, $opts) {
     if (isset($this->series[$name])) {
@@ -248,16 +251,16 @@ class GraphiteGraph {
       $services = array();
       foreach ($ini as $name => $data) {
         // look for services first
-        if (isset($data['is_service'])) {
+        if (isset($data[':is_service'])) {
           $services[$name] = $data;
           continue;
         }
 
         // it must be a field
-        if (isset($data['use_service'])) {
-          $svcData = $services[$data['use_service']];
+        if (isset($data[':use_service'])) {
+          $svcData = $services[$data[':use_service']];
           $svcName = (isset($svcData['service']))? 
-              $svcData['service']: $data['use_service'];
+              $svcData['service']: $data[':use_service'];
 
           $this->service($svcName, $svcData['data']);
         }
@@ -271,4 +274,4 @@ class GraphiteGraph {
   } //end load
 
 
-} //end GraphiteGraph
+} //end Graphite_GraphBuilder
