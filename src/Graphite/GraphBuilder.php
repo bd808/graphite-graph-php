@@ -56,9 +56,11 @@ class Graphite_GraphBuilder {
    * @param array $overrides Default settings for graph
    * @param array $info Settings for service blocks
    */
-  public function __construct ($file=null, $overrides=array(), $info=array()) {
-    $this->props = array_merge($this->props, $overrides);
-    $this->info = $info;
+  public function __construct ($file=null, $overrides=null, $info=null) {
+    if (is_array($overrides)) {
+      $this->props = array_merge($this->props, $overrides);
+    }
+    $this->info = (is_array($info))? $info: array();
     $this->load($file);
   }
 
@@ -68,10 +70,12 @@ class Graphite_GraphBuilder {
    * @param string $service Name of service
    * @param string $data Data collection of interest
    * @return Graphite_GraphBuilder Self, for message chaining
+   * @throws Graphite_ConfigurationException if info[hostname] is not defined
    */
   public function service ($service, $data) {
     if (!isset($this->info['hostname'])) {
-      throw new Exception("Hostname must be defined for services");
+      throw new Graphite_ConfigurationException(
+          "Hostname must be defined for services");
     }
     $this->service = array('service' => $service, 'data' => $data);
     return $this;
@@ -93,10 +97,11 @@ class Graphite_GraphBuilder {
    * @param string $name Name of data field to graph
    * @param array $opts Series options
    * @return Graphite_GraphBuilder Self, for message chaining
+   * @throws Graphite_ConfigurationException If name duplicates existing field
    */
-  public function field ($name, $opts) {
+  public function field ($name, $opts=array()) {
     if (isset($this->series[$name])) {
-      throw new Exception(
+      throw new Graphite_ConfigurationException(
           "A field named {$name} already exists for this graph.");
     }
     $defaults = array();
@@ -115,7 +120,7 @@ class Graphite_GraphBuilder {
    * @param string $format Format to export data in (null for graph)
    * @return string Query string to append to graphite url to render this
    *  graph
-   *  @throws Exception If required data is missing
+   *  @throws Graphite_ConfigurationException If required data is missing
    */
   public function url ($format=null) {
     if ($this->props['suppress']) {
@@ -126,7 +131,9 @@ class Graphite_GraphBuilder {
     $colors = array();
 
     foreach (array('title', 'vtitle', 'from', 'width', 'height') as $item) {
-      $parms[] = $item . '=' . urlencode($this->props[$item]);
+      if ($this->props[$item]) {
+        $parms[] = $item . '=' . urlencode($this->props[$item]);
+      }
     }
     $parms[] = 'areaMode=' . urlencode($this->props['area']);
 
@@ -157,6 +164,8 @@ class Graphite_GraphBuilder {
    * @param string $name Field name
    * @param array $field Field configuration
    * @return string Target parameter
+   * @throws Graphite_ConfigurationException If neither data nor target is set 
+   * in conf
    */
   protected static function generateTarget ($name, $conf) {
     if (isset($conf['target']) && $conf['target']) {
@@ -164,7 +173,7 @@ class Graphite_GraphBuilder {
       $target = urlencode($conf['target']);
 
     } else if (!isset($conf['data'])) {
-      throw new Exception(
+      throw new Graphite_ConfigurationException(
           "field {$name} does not have any data associated with it.");
 
     } else {
@@ -198,6 +207,14 @@ class Graphite_GraphBuilder {
   } //end generateTarget
 
 
+  /**
+   * Handle attempts to read from non-existant members.
+   *
+   * Looks for $name in properties and returns value if found.
+   *
+   * @param string $name Member name
+   * @return mixed Property value
+   */
   public function __get ($name) {
     if ('url' == $name) {
       return $this->url();
@@ -208,6 +225,15 @@ class Graphite_GraphBuilder {
   } //end __get
 
 
+  /**
+   * Handle attempts to write to non-existant members.
+   *
+   * Looks for $name in properties and sets value if found.
+   *
+   * @param string $name Member name
+   * @param mixed $val Value to set
+   * @return void
+   */
   public function __set ($name, $val) {
     if (array_key_exists($name, $this->props)) {
       $this->props[$name] = $val;
@@ -215,12 +241,24 @@ class Graphite_GraphBuilder {
   } //end __set
 
 
+  /**
+   * Handle attempts to call non-existant methods.
+   *
+   * Looks for $name in properties and gets/sets value if found.
+   *
+   * @param string $name Method name
+   * @param array $args Invocation arguments
+   * @return mixed Property value or self
+   */
   public function __call ($name, $args) {
     if (array_key_exists($name, $this->props)) {
-      if ($args) {
+      if (count($args) > 0) {
+        // set property and return self for chaining
         $this->props[$name] = $args[0];
         return $this;
+
       } else {
+        // return property
         return $this->props[$name];
       }
     }
