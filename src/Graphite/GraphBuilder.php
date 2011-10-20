@@ -21,13 +21,17 @@ class Graphite_GraphBuilder {
    * @var array
    */
   protected $props = array(
-      'title' => '',
-      'vtitle' => '',
+      'title' => null,
+      'vtitle' => null,
       'width' => 500,
       'height' => 250,
       'from' => '-1hour',
+      'until' => 'now',
       'suppress' => false,
       'description' => null,
+      'hide_legend' => null,
+      'ymin' => null,
+      'ymax' => null,
       'area' => 'none',
     );
 
@@ -94,6 +98,7 @@ class Graphite_GraphBuilder {
 
   /**
    * Add a data series to the graph.
+   *
    * @param string $name Name of data field to graph
    * @param array $opts Series options
    * @return Graphite_GraphBuilder Self, for message chaining
@@ -116,6 +121,144 @@ class Graphite_GraphBuilder {
 
 
   /**
+   * Draws a straight line on the graph.
+   *
+   * @param array $opts Line options
+   * @return Graphite_GraphBuilder Self, for message chaining
+   * @throws Graphite_ConfigurationException If required options are missing
+   */
+  public function line ($opts) {
+    foreach (array('value', 'alias') as $key) {
+      if (!isset($opts[$key])) {
+        throw new Graphite_ConfigurationException(
+            "lines require a {$key}");
+      }
+    }
+
+    $opts['data'] = 'threshold(' . urlencode($opts['value']) . ')';
+    unset($opts['value']);
+
+    return $this->field('line_' . count($this->series), $opts);
+  } //end line
+
+
+  /**
+   * Add forecast, confidence bands, aberrations and fileds using the 
+   * Holt-Winters Confidence Band prediction model.
+   *
+   * @param array $opts Line options
+   * @return Graphite_GraphBuilder Self, for message chaining
+   * @throws Graphite_ConfigurationException If required options are missing
+   */
+  public function forecast ($name, $opts) {
+    if (!isset($opts['data'])) {
+      throw new Graphite_ConfigurationException(
+          "'data' is required for a Holt-Winters Confidence forecast");
+    }
+    $opts['data'] = urlencode($opts['data']);
+
+    if (!isset($opts['alias'])) {
+      $opts['alias'] = ucfirst($name);
+    }
+
+    if (!isset($opts['forecast_line']) || $opts['forecast_line']) {
+      $args = $opts;
+      $args['data'] = "holtWintersForecast({$args['data']})";
+      $args['alias'] = "{$args['alias']} Forecast";
+      $args['color'] = (isset($args['forecast_color']))?
+          $args['forecast_color']: 'blue';
+      $this->field("{$name}_forecast", $args);
+    }
+
+    if (!isset($opts['bands_line']) || $opts['bands_line']) {
+      $args = $opts;
+      $args['data'] = "holtWintersConfidenceBands({$args['data']})";
+      $args['alias'] = "{$args['alias']} Confidence";
+      $args['color'] = (isset($args['bands_color']))?
+          $args['bands_color']: 'grey';
+      $args['dashed'] = true;
+      $this->field("{$name}_bands", $args);
+    }
+
+    if (!isset($opts['aberration_line']) || $opts['aberration_line']) {
+      $args = $opts;
+      $args['data'] = "holtWintersConfidenceAbberation(keepLastValue(" .
+          $args['data'] . "))";
+      $args['alias'] = "{$args['alias']} Aberration";
+      $args['color'] = (isset($args['aberration_color']))?
+          $args['aberration_color']: 'orange';
+      if (isset($args['aberration_second_y']) && $args['aberration_second_y']) {
+        $args['second_y_axis'] = true;
+      }
+      $this->field("{$name}_aberration", $args);
+    }
+
+    if (isset($opts['critical'])) {
+      $criticals = $opts['critical'];
+      if (!is_array($criticals)) {
+        $criticals = explode(',', $criticals);
+      }
+      foreach ($criticals as $value) {
+        $color = (isset($opts['critical_color']))?
+            $opts['critical_color']: 'red';
+        $caption = "{$opts['alias']} Critical";
+        $this->line(array(
+            'value' => $value,
+            'alias' => $caption,
+            'color' => $color,
+            'dashed' => true,
+          ));
+      }
+    }
+
+    if (isset($opts['warning'])) {
+      $warnings = $opts['warning'];
+      if (!is_array($warnings)) {
+        $warnings = explode(',', $warnings);
+      }
+      foreach ($warnings as $value) {
+        $color = (isset($opts['warning_color']))?
+            $opts['warning_color']: 'orange';
+        $caption = "{$opts['alias']} Warning";
+        $this->line(array(
+            'value' => $value,
+            'alias' => $caption,
+            'color' => $color,
+            'dashed' => true,
+          ));
+      }
+    }
+
+    if (!isset($opts['color'])) {
+      $opts['color'] = 'yellow';
+    }
+
+    if (!isset($opts['actual_line']) || $opts['actual_line']) {
+      $this->field($name, $opts);
+    }
+    return $this;
+  } //end forecast
+
+
+  /**
+   * Mapping from property names to Graphite parameter names.
+   * @var array
+   */
+  protected static $parmMap = array(
+      'title' => 'title',
+      'vtitle' => 'vtitle',
+      'from' => 'from',
+      'until' => 'until',
+      'width' => 'width',
+      'height' => 'height',
+      'area' => 'areaMode',
+      'hide_legend' => 'hideLegend',
+      'ymin' => 'yMin',
+      'ymax' => 'yMax',
+    );
+
+
+  /**
    * Generate a graphite graph description url.
    * @param string $format Format to export data in (null for graph)
    * @return string Query string to append to graphite url to render this
@@ -128,31 +271,19 @@ class Graphite_GraphBuilder {
     }
 
     $parms = array();
-    $colors = array();
 
-    foreach (array('title', 'vtitle', 'from', 'width', 'height') as $item) {
-      if ($this->props[$item]) {
-        $parms[] = $item . '=' . urlencode($this->props[$item]);
+    foreach (self::$parmMap as $item => $parm) {
+      if (isset($this->props[$item])) {
+        $parms[] = $parm . '=' . urlencode($this->props[$item]);
       }
     }
-    $parms[] = 'areaMode=' . urlencode($this->props['area']);
 
     foreach ($this->series as $name => $conf) {
-      $target = self::generateTarget($name, $conf);
-      $parms[] = "target={$target}";
-
-      if (isset($conf['color'])) {
-        $colors[] = urlencode($conf['color']);
-      }
+      $parms[] = 'target=' . self::generateTarget($name, $conf);
     } //end foreach
 
-    if ($colors) {
-      $parms[] = 'colorList=' . implode(',', $colors);
-    }
-
     if ($format) {
-      $format = urlencode($format);
-      $parms[] = "format={$format}";
+      $parms[] = 'format=' . urlencode($format);
     }
 
     return implode('&', $parms);
@@ -179,7 +310,7 @@ class Graphite_GraphBuilder {
     } else {
       $target = urlencode($conf['data']);
 
-      if (isset($conf['derivative'])) {
+      if (isset($conf['derivative']) && $conf['derivative']) {
         $target = "derivative({$target})";
       }
 
@@ -188,8 +319,21 @@ class Graphite_GraphBuilder {
         $target = "scale({$target},{$scale})";
       }
 
-      if (isset($conf['line'])) {
+      if (isset($conf['line']) && $conf['line']) {
         $target = "drawAsInfinite({$target})";
+      }
+
+      if (isset($conf['color'])) {
+        $color = urlencode($conf['color']);
+        $target = "color({$target},\"{$color}\")";
+      }
+
+      if (isset($conf['dashed']) && $conf['dashed']) {
+        $target = "dashed({$target})";
+      }
+
+      if (isset($conf['second_y_axis']) && $conf['second_y_axis']) {
+        $target = "secondyAxis({$target})";
       }
 
       if (isset($conf['alias'])) {
@@ -288,6 +432,9 @@ class Graphite_GraphBuilder {
           $services[$name] = $data;
           continue;
         }
+
+        // TODO: support line
+        // TODO: support forecast
 
         // it must be a field
         if (isset($data[':use_service'])) {
