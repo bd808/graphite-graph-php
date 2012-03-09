@@ -25,6 +25,8 @@ class Graphite_GraphBuilder {
       'vtitle' => null,
       'width' => 500,
       'height' => 250,
+      'bgcolor' => '000000',
+      'fgcolor' => 'FFFFFF',
       'from' => '-1hour',
       'until' => 'now',
       'suppress' => false,
@@ -251,6 +253,8 @@ class Graphite_GraphBuilder {
       'until' => 'until',
       'width' => 'width',
       'height' => 'height',
+      'bgcolor' => 'bgcolor',
+      'fgcolor' => 'fgcolor',
       'area' => 'areaMode',
       'hide_legend' => 'hideLegend',
       'ymin' => 'yMin',
@@ -325,7 +329,7 @@ class Graphite_GraphBuilder {
 
       if (isset($conf['color'])) {
         $color = urlencode($conf['color']);
-        $target = "color({$target},\"{$color}\")";
+        $target = "color({$target},%22{$color}%22)";
       }
 
       if (isset($conf['dashed']) && $conf['dashed']) {
