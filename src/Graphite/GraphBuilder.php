@@ -349,7 +349,9 @@ class Graphite_GraphBuilder {
       }
 
       if (isset($conf['dashed']) && $conf['dashed']) {
-        $target = "dashed({$target})";
+        if ($conf['dashed'] == 'true') $conf['dashed'] = '5.0';
+        $segs = urlencode($conf['dashed']);
+        $target = "dashed({$target},{$segs})";
       }
 
       if (isset($conf['second_y_axis']) && $conf['second_y_axis']) {
