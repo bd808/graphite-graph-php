@@ -317,7 +317,23 @@ class Graphite_GraphBuilder {
       if (isset($conf['derivative']) && $conf['derivative']) {
         $target = "derivative({$target})";
       }
+      
+      if (isset($conf['nonnegativederivative']) && $conf['nonnegativederivative']) {
+        $target = "nonNegativeDerivative({$target})";
+      }
 
+      if ((isset($conf['sumseries']) && $conf['sumseries'])||(isset($conf['sum']) && $conf['sum'])) {
+        $target = "sumSeries({$target})";
+      }
+
+      if ((isset($conf['averageseries']) && $conf['averageseries'])||(isset($conf['avg']) && $conf['avg'])) {
+        $target = "averageSeries({$target})";
+      }
+
+      if (isset($conf['npercentile']) && $conf['npercentile']) {
+        $target = "nPercentile({$target},{$conf['npercentile']})";
+      }
+      
       if (isset($conf['scale'])) {
         $scale = urlencode($conf['scale']);
         $target = "scale({$target},{$scale})";
@@ -348,6 +364,10 @@ class Graphite_GraphBuilder {
       }
       $alias = urlencode($alias);
       $target = "alias({$target},%22{$alias}%22)";
+      
+      if (isset($conf['cactistyle']) && $conf['cactistyle']) {
+        $target = "cactiStyle({$target})";
+      }
 
     } //end if/else
 
