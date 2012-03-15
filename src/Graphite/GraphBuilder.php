@@ -25,12 +25,11 @@ class Graphite_GraphBuilder {
       'vtitle' => null,
       'width' => 500,
       'height' => 250,
-      'bgcolor' => '000000',
-      'fgcolor' => 'FFFFFF',
+      'bgcolor' => 'black',
+      'fgcolor' => 'white',
       'from' => '-1hour',
       'until' => 'now',
       'suppress' => false,
-      'description' => null,
       'hide_legend' => null,
       'ymin' => null,
       'ymax' => null,
@@ -44,16 +43,16 @@ class Graphite_GraphBuilder {
   protected $info;
 
   /**
-   * Service information.
+   * Prefix information.
    * @var array
    */
-  protected $service;
+  protected $prefix = array();
 
   /**
-   * Configuration for each series that will be rendered or retrieved.
+   * Configuration for each metric that will be rendered or retrieved.
    * @var array
    */
-  protected $series;
+  protected $metrics;
 
 
   /**
@@ -67,59 +66,68 @@ class Graphite_GraphBuilder {
       $this->props = array_merge($this->props, $overrides);
     }
     $this->info = (is_array($info))? $info: array();
-    $this->load($file);
+
+    if (null !== $file) {
+      $this->ini($file);
+    }
   }
 
 
   /**
-   * Start a service block.
-   * @param string $service Name of service
-   * @param string $data Data collection of interest
+   * Set a prefix to add to subsequent metrics.
+   * @param string $prefix Prefix to add
    * @return Graphite_GraphBuilder Self, for message chaining
-   * @throws Graphite_ConfigurationException if info[hostname] is not defined
    */
-  public function service ($service, $data) {
-    if (!isset($this->info['hostname'])) {
-      throw new Graphite_ConfigurationException(
-          "Hostname must be defined for services");
+  public function prefix ($prefix) {
+    if ('.' !== mb_substr($prefix, -1)) {
+      // ensure that prefix ends with period
+      // XXX: are we sure this is a good idea?
+      $prefix = "{$prefix}.";
     }
-    $this->service = array('service' => $service, 'data' => $data);
+    $this->prefix[] = "{$this->currentPrefix()}{$prefix}";
     return $this;
-  } //end service
+  } //end prefix
 
 
   /**
-   * End service block.
+   * End prefix block.
    * @return Graphite_GraphBuilder Self, for message chaining
    */
-  public function endService () {
-    $this->service = null;
+  public function endPrefix () {
+    array_pop($this->prefix);
     return $this;
-  } //end endService
+  } //end endPrefix
+
+
+  /**
+   * Get the current target prefix.
+   * @return string Prefix including trailing period (may be empty string)
+   */
+  public function currentPrefix () {
+    return (false !== end($this->prefix))? current($this->prefix): '';
+  }
 
 
   /**
    * Add a data series to the graph.
    *
-   * @param string $name Name of data field to graph
+   * @param string $name Name of data metric to graph
    * @param array $opts Series options
    * @return Graphite_GraphBuilder Self, for message chaining
-   * @throws Graphite_ConfigurationException If name duplicates existing field
+   * @throws Graphite_ConfigurationException If name duplicates existing metric
    */
-  public function field ($name, $opts=array()) {
-    if (isset($this->series[$name])) {
+  public function metric ($name, $opts=array()) {
+    if (isset($this->metrics[$name])) {
       throw new Graphite_ConfigurationException(
-          "A field named {$name} already exists for this graph.");
+          "A metric named {$name} already exists for this graph.");
     }
+
     $defaults = array();
-    if ($this->service) {
-      $defaults['data'] = "{$this->info['hostname']}." .
-          "{$this->service['service']}.{$this->service['data']}.{$name}";
-    }
-    $this->series[$name] = array_merge($defaults, $opts);
+    $defaults['series'] = "{$this->currentPrefix()}{$name}";
+    $this->metrics[$name] = array_merge($defaults, $opts);
 
     return $this;
-  } //end field
+  } //end metric
 
 
   /**
@@ -137,15 +145,15 @@ class Graphite_GraphBuilder {
       }
     }
 
-    $opts['data'] = 'threshold(' . urlencode($opts['value']) . ')';
+    $opts['series'] = 'threshold(' . urlencode($opts['value']) . ')';
     unset($opts['value']);
 
-    return $this->field('line_' . count($this->series), $opts);
+    return $this->metric('line_' . count($this->metrics), $opts);
   } //end line
 
 
   /**
-   * Add forecast, confidence bands, aberrations and fileds using the 
+   * Add forecast, confidence bands, aberrations and fileds using the
    * Holt-Winters Confidence Band prediction model.
    *
    * @param array $opts Line options
@@ -153,11 +161,11 @@ class Graphite_GraphBuilder {
    * @throws Graphite_ConfigurationException If required options are missing
    */
   public function forecast ($name, $opts) {
-    if (!isset($opts['data'])) {
+    if (!isset($opts['series'])) {
       throw new Graphite_ConfigurationException(
-          "'data' is required for a Holt-Winters Confidence forecast");
+          "'series' is required for a Holt-Winters Confidence forecast");
     }
-    $opts['data'] = urlencode($opts['data']);
+    $opts['series'] = urlencode($opts['series']);
 
     if (!isset($opts['alias'])) {
       $opts['alias'] = ucfirst($name);
@@ -165,34 +173,34 @@ class Graphite_GraphBuilder {
 
     if (!isset($opts['forecast_line']) || $opts['forecast_line']) {
       $args = $opts;
-      $args['data'] = "holtWintersForecast({$args['data']})";
+      $args['series'] = "holtWintersForecast({$args['series']})";
       $args['alias'] = "{$args['alias']} Forecast";
       $args['color'] = (isset($args['forecast_color']))?
           $args['forecast_color']: 'blue';
-      $this->field("{$name}_forecast", $args);
+      $this->metric("{$name}_forecast", $args);
     }
 
     if (!isset($opts['bands_line']) || $opts['bands_line']) {
       $args = $opts;
-      $args['data'] = "holtWintersConfidenceBands({$args['data']})";
+      $args['series'] = "holtWintersConfidenceBands({$args['series']})";
       $args['alias'] = "{$args['alias']} Confidence";
       $args['color'] = (isset($args['bands_color']))?
           $args['bands_color']: 'grey';
       $args['dashed'] = true;
-      $this->field("{$name}_bands", $args);
+      $this->metric("{$name}_bands", $args);
     }
 
     if (!isset($opts['aberration_line']) || $opts['aberration_line']) {
       $args = $opts;
-      $args['data'] = "holtWintersConfidenceAbberation(keepLastValue(" .
-          $args['data'] . "))";
+      $args['series'] = "holtWintersConfidenceAbberation(keepLastValue(" .
+          $args['series'] . "))";
       $args['alias'] = "{$args['alias']} Aberration";
       $args['color'] = (isset($args['aberration_color']))?
           $args['aberration_color']: 'orange';
       if (isset($args['aberration_second_y']) && $args['aberration_second_y']) {
         $args['second_y_axis'] = true;
       }
-      $this->field("{$name}_aberration", $args);
+      $this->metric("{$name}_aberration", $args);
     }
 
     if (isset($opts['critical'])) {
@@ -236,7 +244,7 @@ class Graphite_GraphBuilder {
     }
 
     if (!isset($opts['actual_line']) || $opts['actual_line']) {
-      $this->field($name, $opts);
+      $this->metric($name, $opts);
     }
     return $this;
   } //end forecast
@@ -282,7 +290,7 @@ class Graphite_GraphBuilder {
       }
     }
 
-    foreach ($this->series as $name => $conf) {
+    foreach ($this->metrics as $name => $conf) {
       $parms[] = 'target=' . self::generateTarget($name, $conf);
     } //end foreach
 
@@ -295,11 +303,11 @@ class Graphite_GraphBuilder {
 
 
   /**
-   * Generate the target parameter for a given field.
-   * @param string $name Field name
-   * @param array $field Field configuration
+   * Generate the target parameter for a given metric.
+   * @param string $name metric name
+   * @param array $conf Configuration
    * @return string Target parameter
-   * @throws Graphite_ConfigurationException If neither data nor target is set 
+   * @throws Graphite_ConfigurationException If neither data nor target is set
    * in conf
    */
   protected static function generateTarget ($name, $conf) {
@@ -307,17 +315,17 @@ class Graphite_GraphBuilder {
       // explict target has been provided by the user
       $target = urlencode($conf['target']);
 
-    } else if (!isset($conf['data'])) {
+    } else if (!isset($conf['series'])) {
       throw new Graphite_ConfigurationException(
-          "field {$name} does not have any data associated with it.");
+          "metric {$name} does not have any data associated with it.");
 
     } else {
-      $target = urlencode($conf['data']);
+      $target = urlencode($conf['series']);
 
       if (isset($conf['derivative']) && $conf['derivative']) {
         $target = "derivative({$target})";
       }
-      
+
       if (isset($conf['nonnegativederivative']) && $conf['nonnegativederivative']) {
         $target = "nonNegativeDerivative({$target})";
       }
@@ -333,7 +341,7 @@ class Graphite_GraphBuilder {
       if (isset($conf['npercentile']) && $conf['npercentile']) {
         $target = "nPercentile({$target},{$conf['npercentile']})";
       }
-      
+
       if (isset($conf['scale'])) {
         $scale = urlencode($conf['scale']);
         $target = "scale({$target},{$scale})";
@@ -366,7 +374,7 @@ class Graphite_GraphBuilder {
       }
       $alias = urlencode($alias);
       $target = "alias({$target},%22{$alias}%22)";
-      
+
       if (isset($conf['cactistyle']) && $conf['cactistyle']) {
         $target = "cactiStyle({$target})";
       }
@@ -437,46 +445,83 @@ class Graphite_GraphBuilder {
 
   /**
    * Load a graph description file.
+   *
    * @param string $file Path to file
    * @return void
    */
-  protected function load ($file) {
-    $this->series = array();
-    if (null !== $file) {
-      $ini = parse_ini_file($file, true, INI_SCANNER_RAW);
+  public function ini ($file) {
+    $global = array();
+    $prefixes = array();
+    $metrics = array();
 
-      // first section is graph description
-      $graph = array_shift($ini);
-      foreach ($graph as $key => $value) {
-        $this->$key($value);
+    // XXX: add support for substitution values
+    $ini = parse_ini_file($file, true);
+    foreach ($ini as $key => $value) {
+      if (is_array($value)) {
+        // sub-arrays either describe prefixes or metrics
+        if (isset($value[':is_prefix'])) {
+          $prefixes[$key] = $value;
+
+        } else {
+          $metrics[$key] = $value;
+        }
+
+      } else {
+        // must be a general setting
+        $global[$key] = $value;
+      }
+    }
+    unset($ini);
+
+    // resolve all prefixes we found
+    foreach ($prefixes as $name => $conf) {
+      $prefixes[$name] = self::resolvePrefix($conf, $prefixes);
+    }
+
+    // apply global settings
+    foreach ($global as $setting => $args) {
+      $this->$setting($args);
+    }
+
+    // add metrics
+    foreach ($metrics as $name => $conf) {
+      // TODO: add support for preconfigured "types" like line, forecast, etc
+
+      if (isset($conf[':prefix'])) {
+        $this->prefix($prefixes[$conf[':prefix']]);
       }
 
-      $services = array();
-      foreach ($ini as $name => $data) {
-        // look for services first
-        if (isset($data[':is_service'])) {
-          $services[$name] = $data;
-          continue;
-        }
+      // metric name is either given explicitly or inferred from section label
+      $metricName = (isset($conf['metric']))? $conf['metric']: $name;
 
-        // TODO: support line
-        // TODO: support forecast
+      $this->metric($metricName, $conf);
 
-        // it must be a field
-        if (isset($data[':use_service'])) {
-          $svcData = $services[$data[':use_service']];
-          $svcName = (isset($svcData['service']))?
-              $svcData['service']: $data[':use_service'];
+      if (isset($conf[':prefix'])) {
+        $this->endPrefix();
+      }
+    } //end foreach
 
-          $this->service($svcName, $svcData['data']);
-        }
+  } //end ini
 
-        $fieldName = (isset($data['field']))? $data['field']: $name;
-        $this->field($fieldName, $data);
-        $this->endService();
 
-      } //end foreach
-    } //end if
-  } //end load
+  /**
+   * Create a fully qualified prefix for the given configuration.
+   *
+   * @param mixed $conf Literal prefix or array of config data
+   * @return string Literal prefix
+   */
+  static protected function resolvePrefix ($conf, $prefixes) {
+    if (is_array($conf)) {
+      $prefix = $conf['prefix'];
+      if (isset($conf[':prefix'])) {
+        // find our parent prefix
+        $mom = self::resolvePrefix($prefixes[$conf[':prefix']], $prefixes);
+        $prefix = "{$mom}.{$prefix}";
+      }
+      $conf = $prefix;
+    }
+
+    return $conf;
+  } //end resolvePrefix
 
 } //end Graphite_GraphBuilder
