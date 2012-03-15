@@ -25,6 +25,8 @@ class Graphite_GraphBuilder {
       'vtitle' => null,
       'width' => 500,
       'height' => 250,
+      'bgcolor' => '000000',
+      'fgcolor' => 'FFFFFF',
       'from' => '-1hour',
       'until' => 'now',
       'suppress' => false,
@@ -251,6 +253,8 @@ class Graphite_GraphBuilder {
       'until' => 'until',
       'width' => 'width',
       'height' => 'height',
+      'bgcolor' => 'bgcolor',
+      'fgcolor' => 'fgcolor',
       'area' => 'areaMode',
       'hide_legend' => 'hideLegend',
       'ymin' => 'yMin',
@@ -313,7 +317,23 @@ class Graphite_GraphBuilder {
       if (isset($conf['derivative']) && $conf['derivative']) {
         $target = "derivative({$target})";
       }
+      
+      if (isset($conf['nonnegativederivative']) && $conf['nonnegativederivative']) {
+        $target = "nonNegativeDerivative({$target})";
+      }
 
+      if ((isset($conf['sumseries']) && $conf['sumseries'])||(isset($conf['sum']) && $conf['sum'])) {
+        $target = "sumSeries({$target})";
+      }
+
+      if ((isset($conf['averageseries']) && $conf['averageseries'])||(isset($conf['avg']) && $conf['avg'])) {
+        $target = "averageSeries({$target})";
+      }
+
+      if (isset($conf['npercentile']) && $conf['npercentile']) {
+        $target = "nPercentile({$target},{$conf['npercentile']})";
+      }
+      
       if (isset($conf['scale'])) {
         $scale = urlencode($conf['scale']);
         $target = "scale({$target},{$scale})";
@@ -325,11 +345,13 @@ class Graphite_GraphBuilder {
 
       if (isset($conf['color'])) {
         $color = urlencode($conf['color']);
-        $target = "color({$target},\"{$color}\")";
+        $target = "color({$target},%22{$color}%22)";
       }
 
       if (isset($conf['dashed']) && $conf['dashed']) {
-        $target = "dashed({$target})";
+        if ($conf['dashed'] == 'true') $conf['dashed'] = '5.0';
+        $segs = urlencode($conf['dashed']);
+        $target = "dashed({$target},{$segs})";
       }
 
       if (isset($conf['second_y_axis']) && $conf['second_y_axis']) {
@@ -344,6 +366,10 @@ class Graphite_GraphBuilder {
       }
       $alias = urlencode($alias);
       $target = "alias({$target},%22{$alias}%22)";
+      
+      if (isset($conf['cactistyle']) && $conf['cactistyle']) {
+        $target = "cactiStyle({$target})";
+      }
 
     } //end if/else
 
