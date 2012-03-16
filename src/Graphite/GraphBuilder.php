@@ -447,15 +447,16 @@ class Graphite_GraphBuilder {
    * Load a graph description file.
    *
    * @param string $file Path to file
+   * @param array $vars Variables to substitute in the ini file
    * @return void
    */
-  public function ini ($file) {
+  public function ini ($file, $vars=null) {
     $global = array();
     $prefixes = array();
     $metrics = array();
 
-    // XXX: add support for substitution values
-    $ini = parse_ini_file($file, true);
+    $ini = Graphite_IniParser::parse($file, $vars);
+
     foreach ($ini as $key => $value) {
       if (is_array($value)) {
         // sub-arrays either describe prefixes or metrics
