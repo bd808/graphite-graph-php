@@ -124,7 +124,7 @@ class Graphite_GraphBuilder {
    * Metric prefix stack.
    * @var array
    */
-  protected $prefixStack = array();
+  protected $prefixStack;
 
   /**
    * Configuration for each target that will be rendered or retrieved.
@@ -135,10 +135,26 @@ class Graphite_GraphBuilder {
 
   /**
    * Constructor.
+   *
    * @param array $settings Default settings for graph
    */
   public function __construct ($settings=null) {
+    $this->reset($settings);
+  }
+
+
+  /**
+   * Reset builder to empty state.
+   *
+   * @param array $settings Default settings for graph
+   * @return Graphite_GraphBuilder Self, for message chaining
+   */
+  public function reset ($settings=null) {
     $this->settings = (is_array($settings))? $settings: array();
+    $this->prefixStack = array();
+    $this->targets = array();
+
+    return $this;
   }
 
 
@@ -267,6 +283,7 @@ class Graphite_GraphBuilder {
 
   /**
    * Get the current target prefix.
+   *
    * @return string Prefix including trailing period (may be empty string)
    */
   public function currentPrefix () {
@@ -431,7 +448,8 @@ class Graphite_GraphBuilder {
     }
 
     foreach ($this->targets as $target) {
-      $parms[] = 'target=' . self::generateTarget($target);
+      $parms[] = 'target=' .
+          urlencode(Graphite_TargetBuilder::generateTarget($target));
     } //end foreach
 
     if ($format) {
@@ -512,179 +530,6 @@ class Graphite_GraphBuilder {
     } //end foreach
 
   } //end ini
-
-
-  /**
-   * Metric manipulation functions.
-   * @var array
-   */
-  static protected $validFunctions = array(
-    'alias',
-    'aliasByNode',
-    'aliasSub',
-    'alpha',
-    'areaBetween',
-    'asPercent',
-    'averageAbove',
-    'averageBelow',
-    'averageSeries',
-    'averageSeriesWithWildcards',
-    'cactiStyle',
-    'color',
-    'constantLine',
-    'cumulative',
-    'currentAbove',
-    'currentBelow',
-    'dashed',
-    'derivative',
-    'diffSeries',
-    'divideSeries',
-    'drawAsInfinite',
-    'events',
-    'exclude',
-    'groupByNode',
-    'highestAverage',
-    'highestCurrent',
-    'highestMax',
-    'hitcount',
-    'holtWintersAberration',
-    'holtWintersConfidenceBands',
-    'holtWintersForecast',
-    'integral',
-    'keepLastValue',
-    'legendValue',
-    'limit',
-    'lineWidth',
-    'logarithm',
-    'lowestAverage',
-    'lowestCurrent',
-    'maxSeries',
-    'maximumAbove',
-    'maximumBelow',
-    'minSeries',
-    'minimumAbove',
-    'mostDeviant',
-    'movingAverage',
-    'movingMedian',
-    'multiplySeries',
-    'nPercentile',
-    'nonNegativeDerivative',
-    'offset',
-    'randomWalkFunction',
-    'rangeOfSeries',
-    'removeAbovePercentile',
-    'removeAboveValue',
-    'removeBelowPercentile',
-    'removeBelowValue',
-    'scale',
-    'secondYAxis',
-    'sinFunction',
-    'smartSummarize',
-    'sortByMaxima',
-    'sortByMinima',
-    'stacked',
-    'stdev',
-    'substr',
-    'sumSeries',
-    'sumSeriesWithWildcards',
-    'summarize',
-    'threshold',
-    'timeFunction',
-    'timeShift',
-  );
-
-  static protected $functionAliases = array(
-    'sum' => 'sumSeries',
-    'avg' => 'averageSeries',
-    'max' => 'maxSeries',
-    'min' => 'minSeries',
-    'cacti' => 'cactiStyle',
-    'centile' => 'npercentile',
-    'line' => 'drawAsInfinite',
-    'impulse' => 'drawAsInfinite',
-  );
-
-  /**
-   * Generate the target parameter for a given configuration.
-   * @param array $conf Configuration
-   * @return string Target parameter
-   * @throws Graphite_ConfigurationException If neither series nor target is set
-   * in conf
-   */
-  protected static function generateTarget ($conf) {
-    if (isset($conf['target']) && $conf['target']) {
-      // explict target has been provided by the user
-      $target = urlencode($conf['target']);
-
-    } else if (!isset($conf['series'])) {
-      throw new Graphite_ConfigurationException(
-        "metric {$name} does not have any data associated with it.");
-
-    } else {
-      // start from the provided series
-      $target = $conf['series'];
-
-      if (isset($conf['derivative']) && $conf['derivative']) {
-        $target = "derivative({$target})";
-      }
-
-      if (isset($conf['nonnegativederivative']) && $conf['nonnegativederivative']) {
-        $target = "nonNegativeDerivative({$target})";
-      }
-
-      if ((isset($conf['sumseries']) && $conf['sumseries'])||(isset($conf['sum']) && $conf['sum'])) {
-        $target = "sumSeries({$target})";
-      }
-
-      if ((isset($conf['averageseries']) && $conf['averageseries'])||(isset($conf['avg']) && $conf['avg'])) {
-        $target = "averageSeries({$target})";
-      }
-
-      if (isset($conf['npercentile']) && $conf['npercentile']) {
-        $target = "nPercentile({$target},{$conf['npercentile']})";
-      }
-
-      if (isset($conf['scale'])) {
-        $scale = urlencode($conf['scale']);
-        $target = "scale({$target},{$scale})";
-      }
-
-      if (isset($conf['line']) && $conf['line']) {
-        $target = "drawAsInfinite({$target})";
-      }
-
-      if (isset($conf['color'])) {
-        $color = urlencode($conf['color']);
-        $target = "color({$target},%22{$color}%22)";
-      }
-
-      if (isset($conf['dashed']) && $conf['dashed']) {
-        if ($conf['dashed'] == 'true') $conf['dashed'] = '5.0';
-        $segs = urlencode($conf['dashed']);
-        $target = "dashed({$target},{$segs})";
-      }
-
-      if (isset($conf['second_y_axis']) && $conf['second_y_axis']) {
-        $target = "secondYAxis({$target})";
-      }
-
-      if (isset($conf['alias'])) {
-        $alias = $conf['alias'];
-
-      } else {
-        $alias = ucfirst($name);
-      }
-      $alias = urlencode($alias);
-      $target = "alias({$target},%22{$alias}%22)";
-
-      if (isset($conf['cactistyle']) && $conf['cactistyle']) {
-        $target = "cactiStyle({$target})";
-      }
-
-    } //end if/else
-
-    return $target;
-  } //end generateTarget
 
 
   /**
