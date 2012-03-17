@@ -36,11 +36,11 @@ class Graphite_GraphBuilderTest extends PHPUnit_Framework_TestCase {
             'alias' => 'Batched IRQ',
           ))
         ->endPrefix()
-        ->url();
+        ->qs();
 
     $this->assertValidQueryStringChars($got);
 
-    $this->assertEquals('title=CPU+IRQ+Usage&vtitle=percent&from=-2days&width=100&height=100&areaMode=stacked&target=alias(color(scale(derivative(com.example.foo.munin.cpu.irq),0.001),%22red%22),%22IRQ%22)&target=alias(color(scale(derivative(com.example.foo.munin.cpu.softirq),0.001),%22yellow%22),%22Batched+IRQ%22)', $got);
+    $this->assertEquals('title=CPU+IRQ+Usage&vtitle=percent&from=-2days&width=100&height=100&areaMode=stacked&target=alias(color(scale(derivative(com.example.foo.munin.cpu.irq),0.001),\'red\'),\'IRQ\')&target=alias(color(scale(derivative(com.example.foo.munin.cpu.softirq),0.001),\'yellow\'),\'Batched+IRQ\')', $got);
   } //end testDsl
 
 
@@ -59,7 +59,7 @@ class Graphite_GraphBuilderTest extends PHPUnit_Framework_TestCase {
         'color' => 'red',
         'alias' => 'IRQ',
       ));
-    $this->assertEquals('title=CPU+IRQ+Usage&vtitle=percent&from=-2days&width=100&height=100&areaMode=stacked&target=alias(color(scale(derivative(irq),0.001),%22red%22),%22IRQ%22)', $g->url);
+    $this->assertEquals('title=CPU+IRQ+Usage&vtitle=percent&from=-2days&width=100&height=100&areaMode=stacked&target=alias(color(scale(derivative(irq),0.001),\'red\'),\'IRQ\')', $g->qs);
   } //end testAltDsl
 
 
@@ -71,7 +71,7 @@ class Graphite_GraphBuilderTest extends PHPUnit_Framework_TestCase {
     $g = new Graphite_GraphBuilder();
     $g->prefix('com.example.foo')
       ->ini(dirname(__FILE__) . '/testIni.ini');
-    $this->assertEquals('title=CPU+IRQ+Usage&vtitle=percent&from=-2days&width=100&height=100&areaMode=stacked&target=alias(color(scale(derivative(com.example.foo.munin.cpu.irq),0.001),%22red%22),%22IRQ%22)&target=alias(color(scale(derivative(com.example.foo.munin.cpu.softirq),0.001),%22yellow%22),%22Batched+IRQ%22)&target=alias(color(drawAsInfinite(puppet.time.total),%22blue%22),%22Puppet+Run%22)', $g->url);
+    $this->assertEquals('title=CPU+IRQ+Usage&vtitle=percent&from=-2days&width=100&height=100&areaMode=stacked&target=alias(color(scale(derivative(com.example.foo.munin.cpu.irq),0.001),\'red\'),\'IRQ\')&target=alias(color(scale(derivative(com.example.foo.munin.cpu.softirq),0.001),\'yellow\'),\'Batched+IRQ\')&target=alias(color(drawAsInfinite(puppet.time.total),\'blue\'),\'Puppet+Run\')', $g->qs);
   } //end testIni
 
 
@@ -82,7 +82,8 @@ class Graphite_GraphBuilderTest extends PHPUnit_Framework_TestCase {
   public function testDefaults () {
     $g = new Graphite_GraphBuilder();
     $g->metric('sample', array('data' => 'sample'));
-    $this->assertEquals('target=alias(sample,%22Sample%22)', $g->url);
+    $this->assertValidQueryStringChars($g->qs);
+    $this->assertEquals('target=alias(sample,\'Sample\')', $g->qs);
   } //end testDefaults
 
 
@@ -99,21 +100,22 @@ class Graphite_GraphBuilderTest extends PHPUnit_Framework_TestCase {
             'alias' => 'IRQ',
             'target' => 'explict_target(my.target)',
           ))
-        ->url();
-    $this->assertContains('target=explict_target%28my.target%29', $got);
+        ->qs();
+    $this->assertValidQueryStringChars($got);
+    $this->assertContains('target=explict_target(my.target)', $got);
   } //end testExplicitTarget
 
 
   /**
-   * Given: a format on the url call
+   * Given: a format on the qs call
    * Expect: a well formed query string with a format
    */
   public function testFormat () {
     $g = new Graphite_GraphBuilder();
     $g->metric('sample', array('data' => 'sample'));
-    $this->assertContains('format=json', $g->url('json'));
-    $this->assertContains('format=xml', $g->url('xml'));
-    $this->assertContains('format=csv', $g->url('csv'));
+    $this->assertContains('format=json', $g->qs('json'));
+    $this->assertContains('format=xml', $g->qs('xml'));
+    $this->assertContains('format=csv', $g->qs('csv'));
   } //end testFormat
 
   /**
@@ -127,7 +129,7 @@ class Graphite_GraphBuilderTest extends PHPUnit_Framework_TestCase {
         'critical' => array(100),
         'warning' => array(75),
       ));
-    $this->assertEquals('target=alias(color(holtWintersForecast(sample),%22blue%22),%22Sample+Forecast%22)&target=alias(dashed(color(holtWintersConfidenceBands(sample),%22grey%22),5.0),%22Sample+Confidence%22)&target=alias(color(holtWintersConfidenceAbberation(keepLastValue(sample)),%22orange%22),%22Sample+Aberration%22)&target=alias(dashed(color(threshold(100),%22red%22),5.0),%22Sample+Critical%22)&target=alias(dashed(color(threshold(75),%22orange%22),5.0),%22Sample+Warning%22)&target=alias(color(sample,%22yellow%22),%22Sample%22)', $g->url);
+    $this->assertEquals('target=alias(color(holtWintersForecast(sample),\'blue\'),\'Sample+Forecast\')&target=alias(dashed(color(holtWintersConfidenceBands(sample),\'grey\'),5.0),\'Sample+Confidence\')&target=alias(color(holtWintersConfidenceAbberation(keepLastValue(sample)),\'orange\'),\'Sample+Aberration\')&target=alias(dashed(color(threshold(100),\'red\'),5.0),\'Sample+Critical\')&target=alias(dashed(color(threshold(75),\'orange\'),5.0),\'Sample+Warning\')&target=alias(color(sample,\'yellow\'),\'Sample\')', $g->qs);
   } //end testForecast
 
 

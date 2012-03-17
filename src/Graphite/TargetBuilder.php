@@ -158,7 +158,7 @@ class Graphite_TargetBuilder {
 
     if (isset($conf['color'])) {
       $color = $conf['color'];
-      $target = "color({$target},\"{$color}\")";
+      $target = "color({$target},'{$color}')";
     }
 
     if (isset($conf['dashed']) && $conf['dashed']) {
@@ -178,7 +178,7 @@ class Graphite_TargetBuilder {
       $alias = ucfirst($name);
     }
     $alias = $alias;
-    $target = "alias({$target},\"{$alias}\")";
+    $target = "alias({$target},'{$alias}')";
 
     if (isset($conf['cactistyle']) && $conf['cactistyle']) {
       $target = "cactiStyle({$target})";

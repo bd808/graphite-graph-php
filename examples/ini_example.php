@@ -15,6 +15,6 @@ $g->prefix('com.example.host')
     <title></title>
   <head>
   <body>
-    <img src="http://graphite.example.com/render?<?php echo $g->url(); ?>">
+    <img src="http://graphite.example.com/render?<?php echo $g->qs(); ?>">
   </body>
 </html>

@@ -12,6 +12,35 @@
  * DSL and ini file driven API to assist in generating Graphite graph query
  * strings.
  *
+ * Example:
+ * <code>
+ * <?php
+ * $g = new Graphite_GraphBuilder(array('width' => 600, 'height' => 300));
+ * $g->title('Memory')
+ *   ->vtitle('Mbytes')
+ *   ->bgcolor('white')
+ *   ->fgcolor('black')
+ *   ->from('-2days')
+ *   ->area('stacked')
+ *   ->prefix('metrics.collectd')
+ *   ->prefix('com.example.host-1')
+ *   ->prefix('snmp')
+ *   ->metric('memory-free', array(
+ *     'cactistyle' => true,
+ *     'color' => '00c000',
+ *     'alias' => 'Free',
+ *     'scale' => '0.00000095367',
+ *   ))
+ *   ->metric('memory-used', array(
+ *     'cactistyle' => true,
+ *     'color' => 'c00000',
+ *     'alias' => 'Used',
+ *     'scale' => '0.00000095367',
+ *   ));
+ * ?>
+ * <img src="http://graphite.example.com/render?<?php echo $g->qs(); ?>">
+ * </code>
+ *
  * @package Graphite
  * @author Bryan Davis <bd808@bd808.com>
  * @copyright 2011 Bryan Davis and contributors. All Rights Reserved.
@@ -131,7 +160,6 @@ class Graphite_GraphBuilder {
    * @var array
    */
   protected $targets;
-
 
   /**
    * Constructor.
@@ -328,7 +356,7 @@ class Graphite_GraphBuilder {
       }
     }
 
-    $opts['series'] = 'threshold(' . urlencode($opts['value']) . ')';
+    $opts['series'] = "threshold({$opts['value']})";
     unset($opts['value']);
 
     return $this->metric('line_' . count($this->targets), $opts);
@@ -348,7 +376,7 @@ class Graphite_GraphBuilder {
       throw new Graphite_ConfigurationException(
         "'series' is required for a Holt-Winters Confidence forecast");
     }
-    $opts['series'] = urlencode($opts['series']);
+    $opts['series'] = $opts['series'];
 
     if (!isset($opts['alias'])) {
       $opts['alias'] = ucfirst($name);
@@ -437,23 +465,23 @@ class Graphite_GraphBuilder {
    * Generate a graphite graph description query string.
    * @param string $format Format to export data in (null for graph)
    * @return string Query string to append to graphite url to render this
-   *  graph
+   *    graph
    * @throws Graphite_ConfigurationException If required data is missing
    */
   public function qs ($format=null) {
     $parms = array();
 
     foreach ($this->settings as $name => $value) {
-      $parms[] = urlencode($name) . '=' . urlencode($value);
+      $parms[] = self::qsEncode($name) . '=' . self::qsEncode($value);
     }
 
     foreach ($this->targets as $target) {
       $parms[] = 'target=' .
-          urlencode(Graphite_TargetBuilder::generateTarget($target));
+        self::qsEncode(Graphite_TargetBuilder::generateTarget($target));
     } //end foreach
 
-    if ($format) {
-      $parms[] = 'format=' . urlencode($format);
+    if (null !== $format) {
+      $parms[] = 'format=' . self::qsEncode($format);
     }
 
     return implode('&', $parms);
@@ -584,5 +612,67 @@ class Graphite_GraphBuilder {
 
     return $conf;
   } //end resolvePrefix
+
+
+  /**
+   * Query string specific uri encoding.
+   *
+   * Per RFC-3986:
+   * <blockquote>
+   *   URI producing applications should percent-encode data octets that
+   *   correspond to characters in the reserved set unless these characters
+   *   are specifically allowed by the URI scheme to represent data in that
+   *   component.
+   * </blockquote>
+   *
+   * Php's builtin urlencode function is a general purpose encoder. This means
+   * that it takes the most conservative approach to encoding. This means
+   * percent-encoding all octets that are not in the "unreserved" set
+   * (ALPHA / DIGIT / "-" / "." / "_" / "~"). Actually it goes further than
+   * this and encodes the tilde as well for no apparent reason other than
+   * potential binary compatibility with the output of early non-conforming
+   * user-agents.
+   *
+   * Within the "query" section of a URI there is a broader set of valid
+   * characters allowed without percent-encoding:
+   * - query         = *( pchar / "/" / "?" )
+   * - pchar         = unreserved / pct-encoded / sub-delims / ":" / "@"
+   * - unreserved    = ALPHA / DIGIT / "-" / "." / "_" / "~"
+   * - pct-encoded   = "%" HEXDIG HEXDIG
+   * - sub-delims    = "!" / "$" / "&" / "'" / "(" / ")" /
+   *                   "*" / "+" / "," / ";" / "="
+   *
+   * This encoder will let php do the heavy lifting with it's assumed
+   * optomized encoder but will then decode _most_ query allowed characters.
+   * We will leave "&", "=" and ";" percent-encoded to preserve delimiters
+   * used in the application/x-www-form-urlencoded encoding.
+   *
+   * @param string $str String to encode for embedding in the query component
+   *    of a URI.
+   * @return string RFC-3986 conforming encoded string
+   * @see RFC-3986
+   * @see RFC-1738
+   * @see HTML 4.01 Specification
+   */
+  static public function qsEncode ($str) {
+    static $decode = array(
+      '%21' => '!',
+      '%24' => '$',
+      '%27' => '\'',
+      '%28' => '(',
+      '%29' => ')',
+      '%2A' => '*',
+      '%2B' => '+',
+      '%2C' => ',',
+      '%2F' => '/',
+      '%3A' => ':',
+      '%3F' => '?',
+      '%40' => '@',
+      '%7E' => '~',
+    );
+
+    $full = urlencode($str);
+    return str_replace(array_keys($decode), array_values($decode), $full);
+  } //end qsEncode
 
 } //end Graphite_GraphBuilder
