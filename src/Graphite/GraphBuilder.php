@@ -618,12 +618,10 @@ class Graphite_GraphBuilder {
    * Query string specific uri encoding.
    *
    * Per RFC-3986:
-   * <blockquote>
    *   URI producing applications should percent-encode data octets that
    *   correspond to characters in the reserved set unless these characters
    *   are specifically allowed by the URI scheme to represent data in that
    *   component.
-   * </blockquote>
    *
    * Php's builtin urlencode function is a general purpose encoder. This means
    * that it takes the most conservative approach to encoding. This means
@@ -642,10 +640,10 @@ class Graphite_GraphBuilder {
    * - sub-delims    = "!" / "$" / "&" / "'" / "(" / ")" /
    *                   "*" / "+" / "," / ";" / "="
    *
-   * This encoder will let php do the heavy lifting with it's assumed
-   * optomized encoder but will then decode _most_ query allowed characters.
-   * We will leave "&", "=" and ";" percent-encoded to preserve delimiters
-   * used in the application/x-www-form-urlencoded encoding.
+   * This encoder will let php do the heavy lifting with urlencode() but will
+   * then decode _most_ query allowed characters. We will leave "&", "=" and
+   * ";" percent-encoded to preserve delimiters used in the
+   * application/x-www-form-urlencoded encoding.
    *
    * @param string $str String to encode for embedding in the query component
    *    of a URI.
