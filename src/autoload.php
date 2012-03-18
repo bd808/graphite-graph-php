@@ -9,17 +9,19 @@
 
 /**
  * Simple autoloader that converts underscore and backslash to directories.
+ *
  * @param string $class Class to load
  * @return bool True if load succeeded, false otherwise
  */
 function graphite_graph_autoload ($class) {
   $path = dirname(__FILE__) . '/' . strtr($class, '_\\', '//') . '.php';
-  if (!stream_resolve_include_path($path)) {
+
+  if (file_exists($path)) {
+    require_once $path;
+    return true;
+  } else {
     return false;
   }
-
-  require_once $path;
-  return true;
 }
 
 spl_autoload_register('graphite_graph_autoload');
