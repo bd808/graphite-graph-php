@@ -1,0 +1,18 @@
+{
+  "name": "graphite-graph/graphite-graph",
+  "description": "Graphite graph DSL",
+  "keywords": ["graphite"],
+  "homepage": "https://github.com/bd808/graphite-graph-php",
+  "type": "library",
+  "license": "BSD-2",
+  "authors": [
+    {
+      "name": "Bryan Davis",
+      "email": "bd808@bd808.com",
+      "homepage": "http://bd808.github.com"
+    }
+  ],
+  "autoload": {
+    "classmap": ["src/"]
+  }
+}
