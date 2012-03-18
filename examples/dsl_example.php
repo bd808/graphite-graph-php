@@ -1,29 +1,43 @@
 <?php
+/**
+ * Example usage of the DSL API to construct a graph of memory usage.
+ */
+
 require_once dirname(__FILE__) . '/../src/autoload.php';
 
-$g = new Graphite_GraphBuilder(null,
-      array('width' => 800, 'height' => 400),
-      array( 'hostname' => 'com.example.foo'));
+$g = new Graphite_GraphBuilder();
 
-echo $g->title('CPU IRQ Usage')
-    ->vtitle('percent')
-    ->width(100)
-    ->height(100)
-    ->from('-2days')
-    ->area('stacked')
-    ->description('A really cool graph')
-    ->service('munin', 'cpu')
-    ->field('irq', array(
-        'derivative' => true,
-        'scale' => 0.001,
-        'color' => 'red',
-        'alias' => 'IRQ',
-      ))
-    ->field('softirq', array(
-        'derivative' => true,
-        'scale' => 0.001,
-        'color' => 'yellow',
-        'alias' => 'Batched IRQ',
-      ))
-    ->endService()
-    ->url(), "\n";
+$g->title('Memory')
+  ->vtitle('Mbytes')
+  ->width(800)
+  ->height(600)
+  ->bgcolor('white')
+  ->fgcolor('black')
+  ->from('-2days')
+  ->area('stacked')
+  ->prefix('collectd')
+  ->prefix('com.example.host')
+  ->prefix('snmp')
+  ->metric('memory-free', array(
+    'cactistyle' => true,
+    'color' => '00c000',
+    'alias' => 'Free',
+    'scale' => '0.00000095367',
+  ))
+  ->metric('memory-used', array(
+    'cactistyle' => true,
+    'color' => 'c00000',
+    'alias' => 'Used',
+    'scale' => '0.00000095367',
+  ))
+  ;
+?>
+<!DOCTYPE html>
+<html>
+  <head>
+    <title></title>
+  <head>
+  <body>
+    <img src="http://graphite.example.com/render?<?php echo $g->qs(); ?>">
+  </body>
+</html>

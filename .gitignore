@@ -3,4 +3,7 @@ build/code-browser
 build/coverage
 build/logs
 build/pdepend
+composer.lock
+composer.phar
 phpunit.xml
+vendor

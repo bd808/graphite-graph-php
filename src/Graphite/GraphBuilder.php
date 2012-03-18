@@ -9,6 +9,38 @@
 /**
  * Graphite graph query string generator.
  *
+ * DSL and ini file driven API to assist in generating Graphite graph query
+ * strings.
+ *
+ * Example:
+ * <code>
+ * <?php
+ * $g = new Graphite_GraphBuilder(array('width' => 600, 'height' => 300));
+ * $g->title('Memory')
+ *   ->vtitle('Mbytes')
+ *   ->bgcolor('white')
+ *   ->fgcolor('black')
+ *   ->from('-2days')
+ *   ->area('stacked')
+ *   ->prefix('metrics.collectd')
+ *   ->prefix('com.example.host-1')
+ *   ->prefix('snmp')
+ *   ->metric('memory-free', array(
+ *     'cactistyle' => true,
+ *     'color' => '00c000',
+ *     'alias' => 'Free',
+ *     'scale' => '0.00000095367',
+ *   ))
+ *   ->metric('memory-used', array(
+ *     'cactistyle' => true,
+ *     'color' => 'c00000',
+ *     'alias' => 'Used',
+ *     'scale' => '0.00000095367',
+ *   ));
+ * ?>
+ * <img src="http://graphite.example.com/render?<?php echo $g->qs(); ?>">
+ * </code>
+ *
  * @package Graphite
  * @author Bryan Davis <bd808@bd808.com>
  * @copyright 2011 Bryan Davis and contributors. All Rights Reserved.
@@ -17,109 +49,296 @@
 class Graphite_GraphBuilder {
 
   /**
-   * Properties for graph.
+   * Valid graph URI parameters.
+   *
    * @var array
+   * @see http://readthedocs.org/docs/graphite/en/latest/url-api.html
    */
-  protected $props = array(
-      'title' => null,
-      'vtitle' => null,
-      'width' => 500,
-      'height' => 250,
-      'bgcolor' => '000000',
-      'fgcolor' => 'FFFFFF',
-      'from' => '-1hour',
-      'until' => 'now',
-      'suppress' => false,
-      'description' => null,
-      'hide_legend' => null,
-      'ymin' => null,
-      'ymax' => null,
-      'area' => 'none',
-    );
+  static protected $validParams = array(
+    // request level
+    'cacheTimeout',
+    'from',
+    'graphType',
+    'jsonp',
+    'local',
+    'noCache',
+    'until',
+
+    // all graph types
+    'bgcolor',
+    'colorList',
+    'fgcolor',
+    'fontBold',
+    'fontItalic',
+    'fontName',
+    'fontSize',
+    'height',
+    'margin',
+    'outputFormat',
+    'template',
+    'width',
+    'yAxisSide',
+
+    // line graph
+    'areaAlpha',
+    'areaMode',
+    'drawNullAsZero',
+    'graphOnly',
+    'hideAxes',
+    'hideGrid',
+    'hideLegend',
+    'hideLegend',
+    'hideYAxis',
+    'leftColor',
+    'leftDashed',
+    'leftWidth',
+    'lineMode',
+    'lineWidth',
+    'logBase',
+    'majorGridLineColor',
+    'max',
+    'min',
+    'minorGridLineColor',
+    'minorY',
+    'minXStep',
+    'rightColor',
+    'rightDashed',
+    'rightWidth',
+    'thickness',
+    'title',
+    'tz',
+    'vtitle',
+    'xFormat',
+    'yLimit',
+    'yLimitLeft',
+    'yLimitRight',
+    'yMax',
+    'yMaxLeft',
+    'yMaxRight',
+    'yMin',
+    'yMinLeft',
+    'yMinRight',
+    'yStep',
+    'yStepLeft',
+    'yStepRight',
+    'yUnitSystem',
+
+    // pie graph
+    'pieLabels',
+    'pieMode',
+    'valueLabels',
+    'valueLabelsMin',
+  );
 
   /**
-   * Global graph information.
+   * Mapping from property names to Graphite parameter names.
    * @var array
    */
-  protected $info;
+  static protected $paramAliases = array(
+    'area'    => 'areaMode',
+    'axes'    => 'hideAxes',
+    'grid'    => 'hideGrid',
+    'legend'  => 'hideLegend',
+    'pie'     => 'pieMode',
+  );
+
 
   /**
-   * Service information.
+   * Graph settings.
    * @var array
    */
-  protected $service;
+  protected $settings;
 
   /**
-   * Configuration for each series that will be rendered or retrieved.
+   * Metric prefix stack.
    * @var array
    */
-  protected $series;
+  protected $prefixStack;
 
+  /**
+   * Configuration for each target that will be rendered or retrieved.
+   * @var array
+   */
+  protected $targets;
 
   /**
    * Constructor.
-   * @param string $file Graph description file (null for none)
-   * @param array $overrides Default settings for graph
-   * @param array $info Settings for service blocks
+   *
+   * @param array $settings Default settings for graph
    */
-  public function __construct ($file=null, $overrides=null, $info=null) {
-    if (is_array($overrides)) {
-      $this->props = array_merge($this->props, $overrides);
-    }
-    $this->info = (is_array($info))? $info: array();
-    $this->load($file);
+  public function __construct ($settings=null) {
+    $this->reset($settings);
   }
 
 
   /**
-   * Start a service block.
-   * @param string $service Name of service
-   * @param string $data Data collection of interest
+   * Reset builder to empty state.
+   *
+   * @param array $settings Default settings for graph
    * @return Graphite_GraphBuilder Self, for message chaining
-   * @throws Graphite_ConfigurationException if info[hostname] is not defined
    */
-  public function service ($service, $data) {
-    if (!isset($this->info['hostname'])) {
-      throw new Graphite_ConfigurationException(
-          "Hostname must be defined for services");
-    }
-    $this->service = array('service' => $service, 'data' => $data);
+  public function reset ($settings=null) {
+    $this->settings = (is_array($settings))? $settings: array();
+    $this->prefixStack = array();
+    $this->targets = array();
+
     return $this;
-  } //end service
+  }
 
 
   /**
-   * End service block.
+   * Handle attempts to read from non-existant members.
+   *
+   * Looks for $name in settings and returns value if found.
+   * If the setting isn't valid an E_USER_NOTICE warning will be raised.
+   *
+   * @param string $name Setting name
+   * @return mixed Setting value or null if not found
+   */
+  public function __get ($name) {
+    if ('qs' == $name || 'url' == $name) {
+      return $this->qs();
+    }
+
+    $cname = self::canonicalParamName($name);
+    if (array_key_exists($cname, $this->settings)) {
+      $val = $this->settings[$cname];
+
+      if ('hide' == mb_substr($cname, 0, 4) &&
+          'hide' != mb_substr(mb_strtolower($name), 0, 4)) {
+        // invert inverted alias
+        $val = !$val;
+      }
+
+      return $val;
+    }
+
+    if (false === $cname) {
+      // invalid request
+      $trace = debug_backtrace();
+      trigger_error("Undefined property via __get(): {$name} in " .
+          "{$trace[0]['file']} on line {$trace[0]['line']}", E_USER_NOTICE);
+    }
+    return null;
+  } //end __get
+
+
+  /**
+   * Handle attempts to write to non-existant members.
+   *
+   * Sets setting $name=$val if $name is a valid setting.
+   * If the setting isn't valid an E_USER_NOTICE warning will be raised.
+   *
+   * @param string $name Member name
+   * @param mixed $val Value to set
+   * @return void
+   */
+  public function __set ($name, $val) {
+    $cname = self::canonicalParamName($name);
+    if (false !== $cname) {
+      if ('hide' == mb_substr($cname, 0, 4) &&
+          'hide' != mb_substr(mb_strtolower($name), 0, 4)) {
+        // invert logical toggle
+        $val = !((bool) $val);
+      }
+
+      $this->settings[$cname] = $val;
+    } else {
+      // invalid request
+      $trace = debug_backtrace();
+      trigger_error("Undefined property via __set(): {$name} in " .
+          "{$trace[0]['file']} on line {$trace[0]['line']}", E_USER_NOTICE);
+    }
+  } //end __set
+
+
+  /**
+   * Handle attempts to call non-existant methods.
+   *
+   * Looks for $name in settings and gets/sets value if found.
+   * If the setting isn't valid an E_USER_NOTICE warning will be raised.
+   *
+   * @param string $name Method name
+   * @param array $args Invocation arguments
+   * @return mixed Property value or self
+   */
+  public function __call ($name, $args) {
+    if (count($args) > 0) {
+      // set property and return self for chaining
+      $this->__set($name, $args[0]);
+      return $this;
+
+    } else {
+      // return property
+      return $this->__get($name);
+    }
+  } //end __call
+
+
+  /**
+   * Set a prefix to add to subsequent metrics.
+   * @param string $prefix Prefix to add
    * @return Graphite_GraphBuilder Self, for message chaining
    */
-  public function endService () {
-    $this->service = null;
+  public function prefix ($prefix) {
+    if ('.' !== mb_substr($prefix, -1)) {
+      // ensure that prefix ends with period
+      // XXX: are we sure this is a good idea?
+      $prefix = "{$prefix}.";
+    }
+    if ('^' == $prefix[0]) {
+      // this is a rooted prefix, don't concat with current
+      $prefix = mb_substr($prefix, 1);
+    } else {
+      // join with the current prefix
+      $prefix = "{$this->currentPrefix()}{$prefix}";
+    }
+
+    $this->prefixStack[] = $prefix;
     return $this;
-  } //end endService
+  } //end prefix
+
+
+  /**
+   * End prefix block.
+   * @return Graphite_GraphBuilder Self, for message chaining
+   */
+  public function endPrefix () {
+    array_pop($this->prefixStack);
+    return $this;
+  } //end endPrefix
+
+
+  /**
+   * Get the current target prefix.
+   *
+   * @return string Prefix including trailing period (may be empty string)
+   */
+  public function currentPrefix () {
+    return (false !== end($this->prefixStack))?
+        current($this->prefixStack): '';
+  }
 
 
   /**
    * Add a data series to the graph.
    *
-   * @param string $name Name of data field to graph
+   * @param string $name Name of data metric to graph
    * @param array $opts Series options
    * @return Graphite_GraphBuilder Self, for message chaining
-   * @throws Graphite_ConfigurationException If name duplicates existing field
    */
-  public function field ($name, $opts=array()) {
-    if (isset($this->series[$name])) {
-      throw new Graphite_ConfigurationException(
-          "A field named {$name} already exists for this graph.");
-    }
-    $defaults = array();
-    if ($this->service) {
-      $defaults['data'] = "{$this->info['hostname']}." .
-          "{$this->service['service']}.{$this->service['data']}.{$name}";
-    }
-    $this->series[$name] = array_merge($defaults, $opts);
+  public function metric ($name, $opts=array()) {
+    $defaults = array(
+      // default alias is prettied up version of name
+      'alias'   => ucwords(strtr($name, '-_.', ' ')),
+
+      // default series is prefixed name
+      'series'  => "{$this->currentPrefix()}{$name}",
+    );
+    $this->targets[] = array_merge($defaults, $opts);
 
     return $this;
-  } //end field
+  } //end metric
 
 
   /**
@@ -133,19 +352,19 @@ class Graphite_GraphBuilder {
     foreach (array('value', 'alias') as $key) {
       if (!isset($opts[$key])) {
         throw new Graphite_ConfigurationException(
-            "lines require a {$key}");
+          "lines require a {$key}");
       }
     }
 
-    $opts['data'] = 'threshold(' . urlencode($opts['value']) . ')';
+    $opts['series'] = "threshold({$opts['value']})";
     unset($opts['value']);
 
-    return $this->field('line_' . count($this->series), $opts);
+    return $this->metric('line_' . count($this->targets), $opts);
   } //end line
 
 
   /**
-   * Add forecast, confidence bands, aberrations and fileds using the 
+   * Add forecast, confidence bands, aberrations and metrics using the
    * Holt-Winters Confidence Band prediction model.
    *
    * @param array $opts Line options
@@ -153,11 +372,11 @@ class Graphite_GraphBuilder {
    * @throws Graphite_ConfigurationException If required options are missing
    */
   public function forecast ($name, $opts) {
-    if (!isset($opts['data'])) {
+    if (!isset($opts['series'])) {
       throw new Graphite_ConfigurationException(
-          "'data' is required for a Holt-Winters Confidence forecast");
+        "'series' is required for a Holt-Winters Confidence forecast");
     }
-    $opts['data'] = urlencode($opts['data']);
+    $opts['series'] = $opts['series'];
 
     if (!isset($opts['alias'])) {
       $opts['alias'] = ucfirst($name);
@@ -165,34 +384,34 @@ class Graphite_GraphBuilder {
 
     if (!isset($opts['forecast_line']) || $opts['forecast_line']) {
       $args = $opts;
-      $args['data'] = "holtWintersForecast({$args['data']})";
+      $args['series'] = "holtWintersForecast({$args['series']})";
       $args['alias'] = "{$args['alias']} Forecast";
       $args['color'] = (isset($args['forecast_color']))?
-          $args['forecast_color']: 'blue';
-      $this->field("{$name}_forecast", $args);
+        $args['forecast_color']: 'blue';
+      $this->metric("{$name}_forecast", $args);
     }
 
     if (!isset($opts['bands_line']) || $opts['bands_line']) {
       $args = $opts;
-      $args['data'] = "holtWintersConfidenceBands({$args['data']})";
+      $args['series'] = "holtWintersConfidenceBands({$args['series']})";
       $args['alias'] = "{$args['alias']} Confidence";
       $args['color'] = (isset($args['bands_color']))?
-          $args['bands_color']: 'grey';
+        $args['bands_color']: 'grey';
       $args['dashed'] = true;
-      $this->field("{$name}_bands", $args);
+      $this->metric("{$name}_bands", $args);
     }
 
     if (!isset($opts['aberration_line']) || $opts['aberration_line']) {
       $args = $opts;
-      $args['data'] = "holtWintersConfidenceAbberation(keepLastValue(" .
-          $args['data'] . "))";
+      $args['series'] = "holtWintersConfidenceAbberation(keepLastValue(" .
+        $args['series'] . "))";
       $args['alias'] = "{$args['alias']} Aberration";
       $args['color'] = (isset($args['aberration_color']))?
-          $args['aberration_color']: 'orange';
+        $args['aberration_color']: 'orange';
       if (isset($args['aberration_second_y']) && $args['aberration_second_y']) {
         $args['second_y_axis'] = true;
       }
-      $this->field("{$name}_aberration", $args);
+      $this->metric("{$name}_aberration", $args);
     }
 
     if (isset($opts['critical'])) {
@@ -202,14 +421,14 @@ class Graphite_GraphBuilder {
       }
       foreach ($criticals as $value) {
         $color = (isset($opts['critical_color']))?
-            $opts['critical_color']: 'red';
+          $opts['critical_color']: 'red';
         $caption = "{$opts['alias']} Critical";
         $this->line(array(
-            'value' => $value,
-            'alias' => $caption,
-            'color' => $color,
-            'dashed' => true,
-          ));
+          'value' => $value,
+          'alias' => $caption,
+          'color' => $color,
+          'dashed' => true,
+        ));
       }
     }
 
@@ -220,14 +439,14 @@ class Graphite_GraphBuilder {
       }
       foreach ($warnings as $value) {
         $color = (isset($opts['warning_color']))?
-            $opts['warning_color']: 'orange';
+          $opts['warning_color']: 'orange';
         $caption = "{$opts['alias']} Warning";
         $this->line(array(
-            'value' => $value,
-            'alias' => $caption,
-            'color' => $color,
-            'dashed' => true,
-          ));
+          'value' => $value,
+          'alias' => $caption,
+          'color' => $color,
+          'dashed' => true,
+        ));
       }
     }
 
@@ -236,247 +455,222 @@ class Graphite_GraphBuilder {
     }
 
     if (!isset($opts['actual_line']) || $opts['actual_line']) {
-      $this->field($name, $opts);
+      $this->metric($name, $opts);
     }
     return $this;
   } //end forecast
 
 
   /**
-   * Mapping from property names to Graphite parameter names.
-   * @var array
-   */
-  protected static $parmMap = array(
-      'title' => 'title',
-      'vtitle' => 'vtitle',
-      'from' => 'from',
-      'until' => 'until',
-      'width' => 'width',
-      'height' => 'height',
-      'bgcolor' => 'bgcolor',
-      'fgcolor' => 'fgcolor',
-      'area' => 'areaMode',
-      'hide_legend' => 'hideLegend',
-      'ymin' => 'yMin',
-      'ymax' => 'yMax',
-    );
-
-
-  /**
-   * Generate a graphite graph description url.
+   * Generate a graphite graph description query string.
    * @param string $format Format to export data in (null for graph)
    * @return string Query string to append to graphite url to render this
-   *  graph
-   *  @throws Graphite_ConfigurationException If required data is missing
+   *    graph
+   * @throws Graphite_ConfigurationException If required data is missing
    */
-  public function url ($format=null) {
-    if ($this->props['suppress']) {
-      return null;
-    }
-
+  public function qs ($format=null) {
     $parms = array();
 
-    foreach (self::$parmMap as $item => $parm) {
-      if (isset($this->props[$item])) {
-        $parms[] = $parm . '=' . urlencode($this->props[$item]);
-      }
+    foreach ($this->settings as $name => $value) {
+      $parms[] = self::qsEncode($name) . '=' . self::qsEncode($value);
     }
 
-    foreach ($this->series as $name => $conf) {
-      $parms[] = 'target=' . self::generateTarget($name, $conf);
+    foreach ($this->targets as $target) {
+      $parms[] = 'target=' .
+        self::qsEncode(Graphite_TargetBuilder::generateTarget($target));
     } //end foreach
 
-    if ($format) {
-      $parms[] = 'format=' . urlencode($format);
+    if (null !== $format) {
+      $parms[] = 'format=' . self::qsEncode($format);
     }
 
     return implode('&', $parms);
+  } //end qs
+
+  /**
+   * Alias for qs().
+   *
+   * @deprecated
+   * @see qs()
+   */
+  public function url ($format=null) {
+    return $this->qs($format);
   } //end url
 
 
   /**
-   * Generate the target parameter for a given field.
-   * @param string $name Field name
-   * @param array $field Field configuration
-   * @return string Target parameter
-   * @throws Graphite_ConfigurationException If neither data nor target is set 
-   * in conf
-   */
-  protected static function generateTarget ($name, $conf) {
-    if (isset($conf['target']) && $conf['target']) {
-      // explict target has been provided by the user
-      $target = urlencode($conf['target']);
-
-    } else if (!isset($conf['data'])) {
-      throw new Graphite_ConfigurationException(
-          "field {$name} does not have any data associated with it.");
-
-    } else {
-      $target = urlencode($conf['data']);
-
-      if (isset($conf['derivative']) && $conf['derivative']) {
-        $target = "derivative({$target})";
-      }
-      
-      if (isset($conf['nonnegativederivative']) && $conf['nonnegativederivative']) {
-        $target = "nonNegativeDerivative({$target})";
-      }
-
-      if ((isset($conf['sumseries']) && $conf['sumseries'])||(isset($conf['sum']) && $conf['sum'])) {
-        $target = "sumSeries({$target})";
-      }
-
-      if ((isset($conf['averageseries']) && $conf['averageseries'])||(isset($conf['avg']) && $conf['avg'])) {
-        $target = "averageSeries({$target})";
-      }
-
-      if (isset($conf['npercentile']) && $conf['npercentile']) {
-        $target = "nPercentile({$target},{$conf['npercentile']})";
-      }
-      
-      if (isset($conf['scale'])) {
-        $scale = urlencode($conf['scale']);
-        $target = "scale({$target},{$scale})";
-      }
-
-      if (isset($conf['line']) && $conf['line']) {
-        $target = "drawAsInfinite({$target})";
-      }
-
-      if (isset($conf['color'])) {
-        $color = urlencode($conf['color']);
-        $target = "color({$target},%22{$color}%22)";
-      }
-
-      if (isset($conf['dashed']) && $conf['dashed']) {
-        if ($conf['dashed'] == 'true') $conf['dashed'] = '5.0';
-        $segs = urlencode($conf['dashed']);
-        $target = "dashed({$target},{$segs})";
-      }
-
-      if (isset($conf['second_y_axis']) && $conf['second_y_axis']) {
-        $target = "secondyAxis({$target})";
-      }
-
-      if (isset($conf['alias'])) {
-        $alias = $conf['alias'];
-
-      } else {
-        $alias = ucfirst($name);
-      }
-      $alias = urlencode($alias);
-      $target = "alias({$target},%22{$alias}%22)";
-      
-      if (isset($conf['cactistyle']) && $conf['cactistyle']) {
-        $target = "cactiStyle({$target})";
-      }
-
-    } //end if/else
-
-    return $target;
-  } //end generateTarget
-
-
-  /**
-   * Handle attempts to read from non-existant members.
-   *
-   * Looks for $name in properties and returns value if found.
-   *
-   * @param string $name Member name
-   * @return mixed Property value
-   */
-  public function __get ($name) {
-    if ('url' == $name) {
-      return $this->url();
-
-    } else if (array_key_exists($name, $this->props)) {
-      return $this->props[$name];
-    }
-  } //end __get
-
-
-  /**
-   * Handle attempts to write to non-existant members.
-   *
-   * Looks for $name in properties and sets value if found.
-   *
-   * @param string $name Member name
-   * @param mixed $val Value to set
-   * @return void
-   */
-  public function __set ($name, $val) {
-    if (array_key_exists($name, $this->props)) {
-      $this->props[$name] = $val;
-    }
-  } //end __set
-
-
-  /**
-   * Handle attempts to call non-existant methods.
-   *
-   * Looks for $name in properties and gets/sets value if found.
-   *
-   * @param string $name Method name
-   * @param array $args Invocation arguments
-   * @return mixed Property value or self
-   */
-  public function __call ($name, $args) {
-    if (array_key_exists($name, $this->props)) {
-      if (count($args) > 0) {
-        // set property and return self for chaining
-        $this->props[$name] = $args[0];
-        return $this;
-
-      } else {
-        // return property
-        return $this->props[$name];
-      }
-    }
-  } //end __call
-
-
-  /**
    * Load a graph description file.
+   *
    * @param string $file Path to file
+   * @param array $vars Variables to substitute in the ini file
    * @return void
    */
-  protected function load ($file) {
-    $this->series = array();
-    if (null !== $file) {
-      $ini = parse_ini_file($file, true, INI_SCANNER_RAW);
+  public function ini ($file, $vars=null) {
+    $global = array();
+    $prefixes = array();
+    $metrics = array();
 
-      // first section is graph description
-      $graph = array_shift($ini);
-      foreach ($graph as $key => $value) {
-        $this->$key($value);
+    $ini = Graphite_IniParser::parse($file, $vars);
+
+    foreach ($ini as $key => $value) {
+      if (is_array($value)) {
+        // sub-arrays either describe prefixes or metrics
+        if (isset($value[':is_prefix'])) {
+          $prefixes[$key] = $value;
+
+        } else {
+          $metrics[$key] = $value;
+        }
+
+      } else {
+        // must be a general setting
+        $global[$key] = $value;
+      }
+    }
+    unset($ini);
+
+    // resolve all prefixes we found
+    foreach ($prefixes as $name => $conf) {
+      $prefixes[$name] = self::resolvePrefix($conf, $prefixes);
+    }
+
+    // apply global settings
+    foreach ($global as $setting => $args) {
+      $this->$setting($args);
+    }
+
+    // add metrics
+    foreach ($metrics as $name => $conf) {
+      // TODO: add support for preconfigured "types" like line, forecast, etc
+
+      if (isset($conf[':prefix'])) {
+        $this->prefix($prefixes[$conf[':prefix']]);
       }
 
-      $services = array();
-      foreach ($ini as $name => $data) {
-        // look for services first
-        if (isset($data[':is_service'])) {
-          $services[$name] = $data;
-          continue;
-        }
+      // metric name is either given explicitly or inferred from section label
+      $metricName = (isset($conf['metric']))? $conf['metric']: $name;
 
-        // TODO: support line
-        // TODO: support forecast
+      $this->metric($metricName, $conf);
 
-        // it must be a field
-        if (isset($data[':use_service'])) {
-          $svcData = $services[$data[':use_service']];
-          $svcName = (isset($svcData['service']))?
-              $svcData['service']: $data[':use_service'];
+      if (isset($conf[':prefix'])) {
+        $this->endPrefix();
+      }
+    } //end foreach
 
-          $this->service($svcName, $svcData['data']);
-        }
+  } //end ini
 
-        $fieldName = (isset($data['field']))? $data['field']: $name;
-        $this->field($fieldName, $data);
-        $this->endService();
 
-      } //end foreach
-    } //end if
-  } //end load
+  /**
+   * Find the canonical name for a parameter.
+   *
+   * The value may be an alias or it may differ in case from the true
+   * parameter name.
+   *
+   * @param string $name Parameter to lookup
+   * @return string Proper name of parameter or false if not found
+   */
+  static public function canonicalParamName ($name) {
+    static $lookupMap;
+    if (null == $lookupMap) {
+      // lazily construct the lookup map
+      $tmp = array();
+      foreach (self::$validParams as $param) {
+        $tmp[mb_strtolower($param)] = $param;
+      }
+      foreach (self::$paramAliases as $alias => $param) {
+        $tmp[mb_strtolower($alias)] = $param;
+      }
+      $lookupMap = $tmp;
+    }
+
+    // convert to lowercase and strip "delimiter" characters
+    $name = strtr(mb_strtolower($name), '_.-', '');
+    if (array_key_exists($name, $lookupMap)) {
+      return $lookupMap[$name];
+    } else {
+      return false;
+    }
+  } //end canonicalParamName
+
+
+  /**
+   * Create a fully qualified prefix for the given configuration.
+   *
+   * @param mixed $conf Literal prefix or array of config data
+   * @return string Literal prefix
+   */
+  static public function resolvePrefix ($conf, $prefixes) {
+    if (is_array($conf)) {
+      $prefix = $conf['prefix'];
+      if (isset($conf[':prefix'])) {
+        // find our parent prefix
+        $mom = self::resolvePrefix($prefixes[$conf[':prefix']], $prefixes);
+        $prefix = "{$mom}.{$prefix}";
+      }
+      $conf = $prefix;
+    }
+
+    return $conf;
+  } //end resolvePrefix
+
+
+  /**
+   * Query string specific uri encoding.
+   *
+   * Per RFC-3986:
+   *   URI producing applications should percent-encode data octets that
+   *   correspond to characters in the reserved set unless these characters
+   *   are specifically allowed by the URI scheme to represent data in that
+   *   component.
+   *
+   * Php's builtin urlencode function is a general purpose encoder. This means
+   * that it takes the most conservative approach to encoding. This means
+   * percent-encoding all octets that are not in the "unreserved" set
+   * (ALPHA / DIGIT / "-" / "." / "_" / "~"). Actually it goes further than
+   * this and encodes the tilde as well for no apparent reason other than
+   * potential binary compatibility with the output of early non-conforming
+   * user-agents.
+   *
+   * Within the "query" section of a URI there is a broader set of valid
+   * characters allowed without percent-encoding:
+   * - query         = *( pchar / "/" / "?" )
+   * - pchar         = unreserved / pct-encoded / sub-delims / ":" / "@"
+   * - unreserved    = ALPHA / DIGIT / "-" / "." / "_" / "~"
+   * - pct-encoded   = "%" HEXDIG HEXDIG
+   * - sub-delims    = "!" / "$" / "&" / "'" / "(" / ")" /
+   *                   "*" / "+" / "," / ";" / "="
+   *
+   * This encoder will let php do the heavy lifting with urlencode() but will
+   * then decode _most_ query allowed characters. We will leave "&", "=" and
+   * ";" percent-encoded to preserve delimiters used in the
+   * application/x-www-form-urlencoded encoding.
+   *
+   * @param string $str String to encode for embedding in the query component
+   *    of a URI.
+   * @return string RFC-3986 conforming encoded string
+   * @see RFC-3986
+   * @see RFC-1738
+   * @see HTML 4.01 Specification
+   */
+  static public function qsEncode ($str) {
+    static $decode = array(
+      '%21' => '!',
+      '%24' => '$',
+      '%27' => '\'',
+      '%28' => '(',
+      '%29' => ')',
+      '%2A' => '*',
+      '%2B' => '+',
+      '%2C' => ',',
+      '%2F' => '/',
+      '%3A' => ':',
+      '%3F' => '?',
+      '%40' => '@',
+      '%7E' => '~',
+    );
+
+    $full = urlencode($str);
+    return str_replace(array_keys($decode), array_values($decode), $full);
+  } //end qsEncode
 
 } //end Graphite_GraphBuilder
