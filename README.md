@@ -9,11 +9,10 @@ in constructing query strings for use with [Graphite][].
 Goals
 -----
 
-[Graphite][] provides several interfaces for
-creating graphs and dashboards, but one of its powerful design features is
-that it provides a [URL API][url-api] for generating graphs and retrieving raw
-data. This allows easy embedding of graphs in custom dashboards and other
-applications.
+[Graphite][] provides several interfaces for creating graphs and dashboards,
+but one of its powerful features is an [API][url-api] for generating graphs
+and retrieving raw data. This allows easy embedding of graphs in custom
+dashboards and other applications.
 
 The process of describing complex graphs is however cumbersome at best.
 Graphite_GraphBuilder attempts to reduce the complexity of embedding Graphite
