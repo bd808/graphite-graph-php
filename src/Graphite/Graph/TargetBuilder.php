@@ -1,6 +1,7 @@
 <?php
 /**
  * @package Graphite
+ * @subpackage Graph
  * @author Bryan Davis <bd808@bd808.com>
  * @copyright 2012 Bryan Davis and contributors. All Rights Reserved.
  * @license http://www.opensource.org/licenses/BSD-2-Clause Simplified BSD License
@@ -10,14 +11,16 @@
  * DSL for building Graphite graph target components.
  *
  * @package Graphite
+ * @subpackage Graph
  * @author Bryan Davis <bd808@bd808.com>
  * @copyright 2012 Bryan Davis and contributors. All Rights Reserved.
  * @license http://www.opensource.org/licenses/BSD-2-Clause Simplified BSD License
  */
-class Graphite_TargetBuilder {
+class Graphite_Graph_TargetBuilder {
 
   /**
    * Metric manipulation functions.
+   *
    * @var array
    */
   static protected $validFunctions = array(
@@ -95,6 +98,12 @@ class Graphite_TargetBuilder {
     'timeShift',
   );
 
+
+  /**
+   * Function name aliases.
+   *
+   * @param array
+   */
   static protected $functionAliases = array(
     'sum' => 'sumSeries',
     'avg' => 'averageSeries',
@@ -187,4 +196,4 @@ class Graphite_TargetBuilder {
     return $target;
   } //end generateTarget
 
-} //end Graphite_TargetBuilder
+} //end Graphite_Graph_TargetBuilder

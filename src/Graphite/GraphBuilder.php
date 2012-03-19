@@ -43,105 +43,10 @@
  *
  * @package Graphite
  * @author Bryan Davis <bd808@bd808.com>
- * @copyright 2011 Bryan Davis and contributors. All Rights Reserved.
+ * @copyright 2012 Bryan Davis and contributors. All Rights Reserved.
  * @license http://www.opensource.org/licenses/BSD-2-Clause Simplified BSD License
  */
 class Graphite_GraphBuilder {
-
-  /**
-   * Valid graph URI parameters.
-   *
-   * @var array
-   * @see http://readthedocs.org/docs/graphite/en/latest/url-api.html
-   */
-  static protected $validParams = array(
-    // request level
-    'cacheTimeout',
-    'from',
-    'graphType',
-    'jsonp',
-    'local',
-    'noCache',
-    'until',
-
-    // all graph types
-    'bgcolor',
-    'colorList',
-    'fgcolor',
-    'fontBold',
-    'fontItalic',
-    'fontName',
-    'fontSize',
-    'height',
-    'margin',
-    'outputFormat',
-    'template',
-    'width',
-    'yAxisSide',
-
-    // line graph
-    'areaAlpha',
-    'areaMode',
-    'drawNullAsZero',
-    'graphOnly',
-    'hideAxes',
-    'hideGrid',
-    'hideLegend',
-    'hideLegend',
-    'hideYAxis',
-    'leftColor',
-    'leftDashed',
-    'leftWidth',
-    'lineMode',
-    'lineWidth',
-    'logBase',
-    'majorGridLineColor',
-    'max',
-    'min',
-    'minorGridLineColor',
-    'minorY',
-    'minXStep',
-    'rightColor',
-    'rightDashed',
-    'rightWidth',
-    'thickness',
-    'title',
-    'tz',
-    'vtitle',
-    'xFormat',
-    'yLimit',
-    'yLimitLeft',
-    'yLimitRight',
-    'yMax',
-    'yMaxLeft',
-    'yMaxRight',
-    'yMin',
-    'yMinLeft',
-    'yMinRight',
-    'yStep',
-    'yStepLeft',
-    'yStepRight',
-    'yUnitSystem',
-
-    // pie graph
-    'pieLabels',
-    'pieMode',
-    'valueLabels',
-    'valueLabelsMin',
-  );
-
-  /**
-   * Mapping from property names to Graphite parameter names.
-   * @var array
-   */
-  static protected $paramAliases = array(
-    'area'    => 'areaMode',
-    'axes'    => 'hideAxes',
-    'grid'    => 'hideGrid',
-    'legend'  => 'hideLegend',
-    'pie'     => 'pieMode',
-  );
-
 
   /**
    * Graph settings.
@@ -200,7 +105,7 @@ class Graphite_GraphBuilder {
       return $this->qs();
     }
 
-    $cname = self::canonicalParamName($name);
+    $cname = Graphite_Graph_Params::canonicalName($name);
     if (array_key_exists($cname, $this->settings)) {
       $val = $this->settings[$cname];
 
@@ -234,7 +139,7 @@ class Graphite_GraphBuilder {
    * @return void
    */
   public function __set ($name, $val) {
-    $cname = self::canonicalParamName($name);
+    $cname = Graphite_Graph_Params::canonicalName($name);
     if (false !== $cname) {
       if ('hide' == mb_substr($cname, 0, 4) &&
           'hide' != mb_substr(mb_strtolower($name), 0, 4)) {
@@ -477,7 +382,7 @@ class Graphite_GraphBuilder {
 
     foreach ($this->targets as $target) {
       $parms[] = 'target=' .
-        self::qsEncode(Graphite_TargetBuilder::generateTarget($target));
+        self::qsEncode(Graphite_Graph_TargetBuilder::generateTarget($target));
     } //end foreach
 
     if (null !== $format) {
@@ -558,39 +463,6 @@ class Graphite_GraphBuilder {
     } //end foreach
 
   } //end ini
-
-
-  /**
-   * Find the canonical name for a parameter.
-   *
-   * The value may be an alias or it may differ in case from the true
-   * parameter name.
-   *
-   * @param string $name Parameter to lookup
-   * @return string Proper name of parameter or false if not found
-   */
-  static public function canonicalParamName ($name) {
-    static $lookupMap;
-    if (null == $lookupMap) {
-      // lazily construct the lookup map
-      $tmp = array();
-      foreach (self::$validParams as $param) {
-        $tmp[mb_strtolower($param)] = $param;
-      }
-      foreach (self::$paramAliases as $alias => $param) {
-        $tmp[mb_strtolower($alias)] = $param;
-      }
-      $lookupMap = $tmp;
-    }
-
-    // convert to lowercase and strip "delimiter" characters
-    $name = strtr(mb_strtolower($name), '_.-', '');
-    if (array_key_exists($name, $lookupMap)) {
-      return $lookupMap[$name];
-    } else {
-      return false;
-    }
-  } //end canonicalParamName
 
 
   /**
