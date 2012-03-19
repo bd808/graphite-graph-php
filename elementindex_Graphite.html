@@ -44,7 +44,11 @@
 		</a><br>
 			<a href="Graphite/_src---Graphite---IniParser.php.html">		IniParser.php
 		</a><br>
-			<a href="Graphite/_src---Graphite---TargetBuilder.php.html">		TargetBuilder.php
+	  </div><br />
+	subpackage <b>Graph</b><br>  <div class="package">
+			<a href="Graphite/Graph/_src---Graphite---Graph---Params.php.html">		Params.php
+		</a><br>
+			<a href="Graphite/Graph/_src---Graphite---Graph---Target.php.html">		Target.php
 		</a><br>
 	  </div><br />
       
@@ -54,7 +58,10 @@
 		    		<a href="Graphite/Graphite_ConfigurationException.html">Graphite_ConfigurationException</a><br />
 	    		<a href="Graphite/Graphite_GraphBuilder.html">Graphite_GraphBuilder</a><br />
 	    		<a href="Graphite/Graphite_IniParser.html">Graphite_IniParser</a><br />
-	    		<a href="Graphite/Graphite_TargetBuilder.html">Graphite_TargetBuilder</a><br />
+	  </div>
+  <div class="package">
+	Graph<br />	    &nbsp;&nbsp;		<a href="Graphite/Graph/Graphite_Graph_Params.html">Graphite_Graph_Params</a><br />
+	    &nbsp;&nbsp;		<a href="Graphite/Graph/Graphite_Graph_Target.html">Graphite_Graph_Target</a><br />
 	  </div>
                 </td>
     <td>
@@ -110,12 +117,14 @@
 	<div>
 		<h2>c</h2>
 		<dl>
-							<dt><b>canonicalParamName</b></dt>
-				<dd>in file GraphBuilder.php, method <a href="Graphite/Graphite_GraphBuilder.html#methodcanonicalParamName">Graphite_GraphBuilder::canonicalParamName()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Find the canonical name for a parameter.</dd>
 							<dt><b>currentPrefix</b></dt>
 				<dd>in file GraphBuilder.php, method <a href="Graphite/Graphite_GraphBuilder.html#methodcurrentPrefix">Graphite_GraphBuilder::currentPrefix()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Get the current target prefix.</dd>
 							<dt><b>ConfigurationException.php</b></dt>
 				<dd>procedural page <a href="Graphite/_src---Graphite---ConfigurationException.php.html">ConfigurationException.php</a></dd>
+							<dt><b>canonicalName</b></dt>
+				<dd>in file Target.php, method <a href="Graphite/Graph/Graphite_Graph_Target.html#methodcanonicalName">Graphite_Graph_Target::canonicalName()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Find the canonical name for a target.</dd>
+							<dt><b>canonicalName</b></dt>
+				<dd>in file Params.php, method <a href="Graphite/Graph/Graphite_Graph_Params.html#methodcanonicalName">Graphite_Graph_Params::canonicalName()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Find the canonical name for a parameter.</dd>
 					</dl>
 	</div>
 	<a href="elementindex_Graphite.html#top">top</a><br>
@@ -134,10 +143,10 @@
 	<div>
 		<h2>f</h2>
 		<dl>
-							<dt><b>$functionAliases</b></dt>
-				<dd>in file TargetBuilder.php, variable <a href="Graphite/Graphite_TargetBuilder.html#var$functionAliases">Graphite_TargetBuilder::$functionAliases</a></dd>
 							<dt><b>forecast</b></dt>
 				<dd>in file GraphBuilder.php, method <a href="Graphite/Graphite_GraphBuilder.html#methodforecast">Graphite_GraphBuilder::forecast()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Add forecast, confidence bands, aberrations and metrics using the  Holt-Winters Confidence Band prediction model.</dd>
+							<dt><b>$functionAliases</b></dt>
+				<dd>in file Target.php, variable <a href="Graphite/Graph/Graphite_Graph_Target.html#var$functionAliases">Graphite_Graph_Target::$functionAliases</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Function name aliases.</dd>
 					</dl>
 	</div>
 	<a href="elementindex_Graphite.html#top">top</a><br>
@@ -146,8 +155,6 @@
 	<div>
 		<h2>g</h2>
 		<dl>
-							<dt><b>generateTarget</b></dt>
-				<dd>in file TargetBuilder.php, method <a href="Graphite/Graphite_TargetBuilder.html#methodgenerateTarget">Graphite_TargetBuilder::generateTarget()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Generate the target parameter for a given configuration.</dd>
 							<dt><b>Graphite_ConfigurationException</b></dt>
 				<dd>in file ConfigurationException.php, class <a href="Graphite/Graphite_ConfigurationException.html">Graphite_ConfigurationException</a></dd>
 							<dt><b>Graphite_GraphBuilder</b></dt>
@@ -156,10 +163,16 @@
 				<dd>in file autoload.php, function <a href="Graphite/_src---autoload.php.html#functiongraphite_graph_autoload">graphite_graph_autoload()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Simple autoloader that converts underscore and backslash to directories.</dd>
 							<dt><b>Graphite_IniParser</b></dt>
 				<dd>in file IniParser.php, class <a href="Graphite/Graphite_IniParser.html">Graphite_IniParser</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Ini file parser.</dd>
-							<dt><b>Graphite_TargetBuilder</b></dt>
-				<dd>in file TargetBuilder.php, class <a href="Graphite/Graphite_TargetBuilder.html">Graphite_TargetBuilder</a><br>&nbsp;&nbsp;&nbsp;&nbsp;DSL for building Graphite graph target components.</dd>
 							<dt><b>GraphBuilder.php</b></dt>
 				<dd>procedural page <a href="Graphite/_src---Graphite---GraphBuilder.php.html">GraphBuilder.php</a></dd>
+							<dt><b>$generators</b></dt>
+				<dd>in file Target.php, variable <a href="Graphite/Graph/Graphite_Graph_Target.html#var$generators">Graphite_Graph_Target::$generators</a></dd>
+							<dt><b>generate</b></dt>
+				<dd>in file Target.php, method <a href="Graphite/Graph/Graphite_Graph_Target.html#methodgenerate">Graphite_Graph_Target::generate()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Generate the target parameter for a given configuration.</dd>
+							<dt><b>Graphite_Graph_Params</b></dt>
+				<dd>in file Params.php, class <a href="Graphite/Graph/Graphite_Graph_Params.html">Graphite_Graph_Params</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Utility for graph level parameters.</dd>
+							<dt><b>Graphite_Graph_Target</b></dt>
+				<dd>in file Target.php, class <a href="Graphite/Graph/Graphite_Graph_Target.html">Graphite_Graph_Target</a><br>&nbsp;&nbsp;&nbsp;&nbsp;DSL for building Graphite graph target components.</dd>
 					</dl>
 	</div>
 	<a href="elementindex_Graphite.html#top">top</a><br>
@@ -200,14 +213,16 @@
 	<div>
 		<h2>p</h2>
 		<dl>
-							<dt><b>$paramAliases</b></dt>
-				<dd>in file GraphBuilder.php, variable <a href="Graphite/Graphite_GraphBuilder.html#var$paramAliases">Graphite_GraphBuilder::$paramAliases</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Mapping from property names to Graphite parameter names.</dd>
 							<dt><b>$prefixStack</b></dt>
 				<dd>in file GraphBuilder.php, variable <a href="Graphite/Graphite_GraphBuilder.html#var$prefixStack">Graphite_GraphBuilder::$prefixStack</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Metric prefix stack.</dd>
 							<dt><b>parse</b></dt>
 				<dd>in file IniParser.php, method <a href="Graphite/Graphite_IniParser.html#methodparse">Graphite_IniParser::parse()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Parse an ini file and return an array of it's contents.</dd>
 							<dt><b>prefix</b></dt>
 				<dd>in file GraphBuilder.php, method <a href="Graphite/Graphite_GraphBuilder.html#methodprefix">Graphite_GraphBuilder::prefix()</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Set a prefix to add to subsequent metrics.</dd>
+							<dt><b>$paramAliases</b></dt>
+				<dd>in file Params.php, variable <a href="Graphite/Graph/Graphite_Graph_Params.html#var$paramAliases">Graphite_Graph_Params::$paramAliases</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Mapping from property names to Graphite parameter names.</dd>
+							<dt><b>Params.php</b></dt>
+				<dd>procedural page <a href="Graphite/Graph/_src---Graphite---Graph---Params.php.html">Params.php</a></dd>
 					</dl>
 	</div>
 	<a href="elementindex_Graphite.html#top">top</a><br>
@@ -256,8 +271,8 @@
 		<dl>
 							<dt><b>$targets</b></dt>
 				<dd>in file GraphBuilder.php, variable <a href="Graphite/Graphite_GraphBuilder.html#var$targets">Graphite_GraphBuilder::$targets</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Configuration for each target that will be rendered or retrieved.</dd>
-							<dt><b>TargetBuilder.php</b></dt>
-				<dd>procedural page <a href="Graphite/_src---Graphite---TargetBuilder.php.html">TargetBuilder.php</a></dd>
+							<dt><b>Target.php</b></dt>
+				<dd>procedural page <a href="Graphite/Graph/_src---Graphite---Graph---Target.php.html">Target.php</a></dd>
 					</dl>
 	</div>
 	<a href="elementindex_Graphite.html#top">top</a><br>
@@ -277,15 +292,15 @@
 		<h2>v</h2>
 		<dl>
 							<dt><b>$validFunctions</b></dt>
-				<dd>in file TargetBuilder.php, variable <a href="Graphite/Graphite_TargetBuilder.html#var$validFunctions">Graphite_TargetBuilder::$validFunctions</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Metric manipulation functions.</dd>
+				<dd>in file Target.php, variable <a href="Graphite/Graph/Graphite_Graph_Target.html#var$validFunctions">Graphite_Graph_Target::$validFunctions</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Metric manipulation functions.</dd>
 							<dt><b>$validParams</b></dt>
-				<dd>in file GraphBuilder.php, variable <a href="Graphite/Graphite_GraphBuilder.html#var$validParams">Graphite_GraphBuilder::$validParams</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Valid graph URI parameters.</dd>
+				<dd>in file Params.php, variable <a href="Graphite/Graph/Graphite_Graph_Params.html#var$validParams">Graphite_Graph_Params::$validParams</a><br>&nbsp;&nbsp;&nbsp;&nbsp;Valid graph URI parameters.</dd>
 					</dl>
 	</div>
 	<a href="elementindex_Graphite.html#top">top</a><br>
         <div class="credit">
 		    <hr />
-		    Documentation generated on Sun, 18 Mar 2012 18:39:24 -0600 by <a href="http://www.phpdoc.org">phpDocumentor 1.4.3</a>
+		    Documentation generated on Mon, 19 Mar 2012 00:13:42 -0600 by <a href="http://www.phpdoc.org">phpDocumentor 1.4.3</a>
 	      </div>
       </td></tr></table>
     </td>
