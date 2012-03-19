@@ -382,7 +382,7 @@ class Graphite_GraphBuilder {
 
     foreach ($this->targets as $target) {
       $parms[] = 'target=' .
-        self::qsEncode(Graphite_Graph_TargetBuilder::generateTarget($target));
+        self::qsEncode(Graphite_Graph_Target::generate($target));
     } //end foreach
 
     if (null !== $format) {
@@ -408,7 +408,7 @@ class Graphite_GraphBuilder {
    *
    * @param string $file Path to file
    * @param array $vars Variables to substitute in the ini file
-   * @return void
+   * @return Graphite_GraphBuilder Self, for message chaining
    */
   public function ini ($file, $vars=null) {
     $global = array();
@@ -462,6 +462,7 @@ class Graphite_GraphBuilder {
       }
     } //end foreach
 
+    return $this;
   } //end ini
 
 
