@@ -1,0 +1,1103 @@
+<html>
+<head>
+<title>Docs For Class Graphite_GraphBuilder</title>
+<link rel="stylesheet" type="text/css" href="../media/style.css">
+</head>
+<body>
+
+<table border="0" cellspacing="0" cellpadding="0" height="48" width="100%">
+  <tr>
+    <td class="header_top">Graphite</td>
+  </tr>
+  <tr><td class="header_line"><img src="../media/empty.png" width="1" height="1" border="0" alt=""  /></td></tr>
+  <tr>
+    <td class="header_menu">
+        
+                                    
+                              		  [ <a href="../classtrees_Graphite.html" class="menu">class tree: Graphite</a> ]
+		  [ <a href="../elementindex_Graphite.html" class="menu">index: Graphite</a> ]
+		  	    [ <a href="../elementindex.html" class="menu">all elements</a> ]
+    </td>
+  </tr>
+  <tr><td class="header_line"><img src="../media/empty.png" width="1" height="1" border="0" alt=""  /></td></tr>
+</table>
+
+<table width="100%" border="0" cellpadding="0" cellspacing="0">
+  <tr valign="top">
+    <td width="200" class="menu">
+      <b>Packages:</b><br />
+              <a href="../li_Graphite.html">Graphite</a><br />
+            <br /><br />
+		<b>Tutorials/Manuals:</b><br />
+					<strong>Package-level:</strong>
+							<ul>
+	<li type="square"><a href="../Graphite/tutorial_Graphite.pkg.html">Graphite_GraphBuilder</a>
+</ul>
+
+									                        <b>Files:</b><br />
+      	  <div class="package">
+			<a href="../Graphite/_src---autoload.php.html">		autoload.php
+		</a><br>
+			<a href="../Graphite/_src---Graphite---ConfigurationException.php.html">		ConfigurationException.php
+		</a><br>
+			<a href="../Graphite/_src---Graphite---GraphBuilder.php.html">		GraphBuilder.php
+		</a><br>
+			<a href="../Graphite/_src---Graphite---IniParser.php.html">		IniParser.php
+		</a><br>
+			<a href="../Graphite/_src---Graphite---TargetBuilder.php.html">		TargetBuilder.php
+		</a><br>
+	  </div><br />
+      
+      
+            <b>Classes:</b><br />
+        <div class="package">
+		    		<a href="../Graphite/Graphite_ConfigurationException.html">Graphite_ConfigurationException</a><br />
+	    		<a href="../Graphite/Graphite_GraphBuilder.html">Graphite_GraphBuilder</a><br />
+	    		<a href="../Graphite/Graphite_IniParser.html">Graphite_IniParser</a><br />
+	    		<a href="../Graphite/Graphite_TargetBuilder.html">Graphite_TargetBuilder</a><br />
+	  </div>
+                </td>
+    <td>
+      <table cellpadding="10" cellspacing="0" width="100%" border="0"><tr><td valign="top">
+
+<h1>Class: Graphite_GraphBuilder</h1>
+Source Location: /src/Graphite/GraphBuilder.php<br /><br />
+
+
+<table width="100%" border="0">
+<tr><td valign="top">
+
+<h3><a href="#class_details">Class Overview</a></h3>
+<pre></pre><br />
+<div class="description">Graphite graph query string generator.</div><br /><br />
+<h4>Author(s):</h4>
+<ul>
+          <li>Bryan Davis &lt;<a href="mailto:bd808@bd808.com">bd808@bd808.com</a>&gt;</li>
+                  </ul>
+
+
+
+
+          
+      
+
+<h4>Copyright:</h4>
+<ul>
+  <li>2011 Bryan Davis and contributors. All Rights Reserved.</li>
+</ul>
+        
+</td>
+
+<td valign="top">
+<h3><a href="#class_vars">Variables</a></h3>
+<ul>
+    <li><a href="../Graphite/Graphite_GraphBuilder.html#var$paramAliases">$paramAliases</a></li>
+    <li><a href="../Graphite/Graphite_GraphBuilder.html#var$prefixStack">$prefixStack</a></li>
+    <li><a href="../Graphite/Graphite_GraphBuilder.html#var$settings">$settings</a></li>
+    <li><a href="../Graphite/Graphite_GraphBuilder.html#var$targets">$targets</a></li>
+    <li><a href="../Graphite/Graphite_GraphBuilder.html#var$validParams">$validParams</a></li>
+  </ul>
+</td>
+
+
+<td valign="top">
+<h3><a href="#class_methods">Methods</a></h3>
+<ul>
+    <li><a href="../Graphite/Graphite_GraphBuilder.html#method__construct">__construct</a></li>
+    <li><a href="../Graphite/Graphite_GraphBuilder.html#methodcanonicalParamName">canonicalParamName</a></li>
+    <li><a href="../Graphite/Graphite_GraphBuilder.html#methodcurrentPrefix">currentPrefix</a></li>
+    <li><a href="../Graphite/Graphite_GraphBuilder.html#methodendPrefix">endPrefix</a></li>
+    <li><a href="../Graphite/Graphite_GraphBuilder.html#methodforecast">forecast</a></li>
+    <li><a href="../Graphite/Graphite_GraphBuilder.html#methodini">ini</a></li>
+    <li><a href="../Graphite/Graphite_GraphBuilder.html#methodline">line</a></li>
+    <li><a href="../Graphite/Graphite_GraphBuilder.html#methodmetric">metric</a></li>
+    <li><a href="../Graphite/Graphite_GraphBuilder.html#methodprefix">prefix</a></li>
+    <li><a href="../Graphite/Graphite_GraphBuilder.html#methodqs">qs</a></li>
+    <li><a href="../Graphite/Graphite_GraphBuilder.html#methodqsEncode">qsEncode</a></li>
+    <li><a href="../Graphite/Graphite_GraphBuilder.html#methodreset">reset</a></li>
+    <li><a href="../Graphite/Graphite_GraphBuilder.html#methodresolvePrefix">resolvePrefix</a></li>
+    <li><a href="../Graphite/Graphite_GraphBuilder.html#methodurl">url</a></li>
+    <li><a href="../Graphite/Graphite_GraphBuilder.html#method__call">__call</a></li>
+    <li><a href="../Graphite/Graphite_GraphBuilder.html#method__get">__get</a></li>
+    <li><a href="../Graphite/Graphite_GraphBuilder.html#method__set">__set</a></li>
+  </ul>
+</td>
+
+</tr></table>
+<hr />
+
+<table width="100%" border="0"><tr>
+
+
+
+
+
+
+</tr></table>
+<hr />
+
+<a name="class_details"></a>
+<h3>Class Details</h3>
+<div class="tags">
+[line <a href="../__filesource/fsource_Graphite__srcGraphiteGraphBuilder.php.html#a49">49</a>]<br />
+Graphite graph query string generator.<br /><br /><p>DSL and ini file driven API to assist in generating Graphite graph query  strings.</p><p>Example:  <ol><li><div class="src-line">&nbsp;<span class="src-php">&lt;?php</span></div></li>
+<li><div class="src-line">&nbsp;<span class="src-var">$g&nbsp;</span>=&nbsp;<span class="src-key">new&nbsp;</span><span class="src-id"><a href="../Graphite/Graphite_GraphBuilder.html">Graphite_GraphBuilder</a></span><span class="src-sym">(</span><span class="src-key">array</span><span class="src-sym">(</span><span class="src-str">'width'&nbsp;</span>=&gt;&nbsp;<span class="src-num">600</span><span class="src-sym">,&nbsp;</span><span class="src-str">'height'&nbsp;</span>=&gt;&nbsp;<span class="src-num">300</span><span class="src-sym">))</span><span class="src-sym">;</span></div></li>
+<li><div class="src-line">&nbsp;<span class="src-var">$g</span><span class="src-sym">-&gt;</span><span class="src-id">title</span><span class="src-sym">(</span><span class="src-str">'Memory'</span><span class="src-sym">)</span></div></li>
+<li><div class="src-line">&nbsp;&nbsp;&nbsp;<span class="src-sym">-&gt;</span><span class="src-id">vtitle</span><span class="src-sym">(</span><span class="src-str">'Mbytes'</span><span class="src-sym">)</span></div></li>
+<li><div class="src-line">&nbsp;&nbsp;&nbsp;<span class="src-sym">-&gt;</span><span class="src-id">bgcolor</span><span class="src-sym">(</span><span class="src-str">'white'</span><span class="src-sym">)</span></div></li>
+<li><div class="src-line">&nbsp;&nbsp;&nbsp;<span class="src-sym">-&gt;</span><span class="src-id">fgcolor</span><span class="src-sym">(</span><span class="src-str">'black'</span><span class="src-sym">)</span></div></li>
+<li><div class="src-line">&nbsp;&nbsp;&nbsp;<span class="src-sym">-&gt;</span><span class="src-id">from</span><span class="src-sym">(</span><span class="src-str">'-2days'</span><span class="src-sym">)</span></div></li>
+<li><div class="src-line">&nbsp;&nbsp;&nbsp;<span class="src-sym">-&gt;</span><span class="src-id">area</span><span class="src-sym">(</span><span class="src-str">'stacked'</span><span class="src-sym">)</span></div></li>
+<li><div class="src-line">&nbsp;&nbsp;&nbsp;<span class="src-sym">-&gt;</span><a href="../Graphite/Graphite_GraphBuilder.html#methodprefix">prefix</a><span class="src-sym">(</span><span class="src-str">'metrics.collectd'</span><span class="src-sym">)</span></div></li>
+<li><div class="src-line">&nbsp;&nbsp;&nbsp;<span class="src-sym">-&gt;</span><a href="../Graphite/Graphite_GraphBuilder.html#methodprefix">prefix</a><span class="src-sym">(</span><span class="src-str">'com.example.host-1'</span><span class="src-sym">)</span></div></li>
+<li><div class="src-line">&nbsp;&nbsp;&nbsp;<span class="src-sym">-&gt;</span><a href="../Graphite/Graphite_GraphBuilder.html#methodprefix">prefix</a><span class="src-sym">(</span><span class="src-str">'snmp'</span><span class="src-sym">)</span></div></li>
+<li><div class="src-line">&nbsp;&nbsp;&nbsp;<span class="src-sym">-&gt;</span><a href="../Graphite/Graphite_GraphBuilder.html#methodmetric">metric</a><span class="src-sym">(</span><span class="src-str">'memory-free'</span><span class="src-sym">,&nbsp;</span><span class="src-key">array</span><span class="src-sym">(</span></div></li>
+<li><div class="src-line">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="src-str">'cactistyle'&nbsp;</span>=&gt;&nbsp;<span class="src-id">true</span><span class="src-sym">,</span></div></li>
+<li><div class="src-line">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="src-str">'color'&nbsp;</span>=&gt;&nbsp;<span class="src-str">'00c000'</span><span class="src-sym">,</span></div></li>
+<li><div class="src-line">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="src-str">'alias'&nbsp;</span>=&gt;&nbsp;<span class="src-str">'Free'</span><span class="src-sym">,</span></div></li>
+<li><div class="src-line">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="src-str">'scale'&nbsp;</span>=&gt;&nbsp;<span class="src-str">'0.00000095367'</span><span class="src-sym">,</span></div></li>
+<li><div class="src-line">&nbsp;&nbsp;&nbsp;<span class="src-sym">))</span></div></li>
+<li><div class="src-line">&nbsp;&nbsp;&nbsp;<span class="src-sym">-&gt;</span><a href="../Graphite/Graphite_GraphBuilder.html#methodmetric">metric</a><span class="src-sym">(</span><span class="src-str">'memory-used'</span><span class="src-sym">,&nbsp;</span><span class="src-key">array</span><span class="src-sym">(</span></div></li>
+<li><div class="src-line">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="src-str">'cactistyle'&nbsp;</span>=&gt;&nbsp;<span class="src-id">true</span><span class="src-sym">,</span></div></li>
+<li><div class="src-line">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="src-str">'color'&nbsp;</span>=&gt;&nbsp;<span class="src-str">'c00000'</span><span class="src-sym">,</span></div></li>
+<li><div class="src-line">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="src-str">'alias'&nbsp;</span>=&gt;&nbsp;<span class="src-str">'Used'</span><span class="src-sym">,</span></div></li>
+<li><div class="src-line">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="src-str">'scale'&nbsp;</span>=&gt;&nbsp;<span class="src-str">'0.00000095367'</span><span class="src-sym">,</span></div></li>
+<li><div class="src-line">&nbsp;&nbsp;&nbsp;<span class="src-sym">))</span><span class="src-sym">;</span></div></li>
+<li><div class="src-line">&nbsp;<span class="src-php">?&gt;</span></div></li>
+<li><div class="src-line">&nbsp;&lt;img&nbsp;src=&quot;http://graphite.example.com/render?<span class="src-php">&lt;?php&nbsp;</span>echo&nbsp;<span class="src-var">$g</span><span class="src-sym">-&gt;</span><a href="../Graphite/Graphite_GraphBuilder.html#methodqs">qs</a><span class="src-sym">(</span><span class="src-sym">)</span><span class="src-sym">;&nbsp;</span><span class="src-php">?&gt;</span>&quot;&gt;</div></li>
+</ol></p><br /><br /><br />
+<h4>Tags:</h4>
+<div class="tags">
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td><b>author:</b>&nbsp;&nbsp;</td><td>Bryan Davis &lt;<a href="mailto:bd808@bd808.com">bd808@bd808.com</a>&gt;</td>
+  </tr>
+  <tr>
+    <td><b>copyright:</b>&nbsp;&nbsp;</td><td>2011 Bryan Davis and contributors. All Rights Reserved.</td>
+  </tr>
+  <tr>
+    <td><b>license:</b>&nbsp;&nbsp;</td><td><a href="http://www.opensource.org/licenses/BSD-2-Clause">Simplified BSD License</a></td>
+  </tr>
+</table>
+</div>
+</div><br /><br />
+<div class="top">[ <a href="#top">Top</a> ]</div><br />
+
+<hr />
+<a name="class_vars"></a>
+<h3>Class Variables</h3>
+<div class="tags">
+	<a name="var$paramAliases"></a>
+	<p></p>
+	<h4>static $paramAliases = <span class="value">array(<br>
+&nbsp;&nbsp;&nbsp;&nbsp;'area'&nbsp;&nbsp;&nbsp;&nbsp;=&gt;&nbsp;'areaMode',<br>
+&nbsp;&nbsp;&nbsp;&nbsp;'axes'&nbsp;&nbsp;&nbsp;&nbsp;=&gt;&nbsp;'hideAxes',<br>
+&nbsp;&nbsp;&nbsp;&nbsp;'grid'&nbsp;&nbsp;&nbsp;&nbsp;=&gt;&nbsp;'hideGrid',<br>
+&nbsp;&nbsp;&nbsp;&nbsp;'legend'&nbsp;&nbsp;=&gt;&nbsp;'hideLegend',<br>
+&nbsp;&nbsp;&nbsp;&nbsp;'pie'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&gt;&nbsp;'pieMode',<br>
+&nbsp;&nbsp;)</span></h4>
+	<p>[line <a href="../__filesource/fsource_Graphite__srcGraphiteGraphBuilder.php.html#a137">137</a>]</p>
+  Mapping from property names to Graphite parameter names.<br /><br /><br /><br />
+<h4>Tags:</h4>
+<div class="tags">
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td><b>access:</b>&nbsp;&nbsp;</td><td>protected</td>
+  </tr>
+</table>
+</div>
+
+  <br />
+	<div class="tags">
+  <table border="0" cellspacing="0" cellpadding="0">
+    <tr>
+      <td><b>Type:</b>&nbsp;&nbsp;</td>
+      <td>array</td>
+    </tr>
+      </table>
+	</div><br /><br />
+	<div class="top">[ <a href="#top">Top</a> ]</div><br />
+	<a name="var$validParams"></a>
+	<p></p>
+	<h4>static $validParams = <span class="value">array(<br>
+&nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;request&nbsp;level<br>
+&nbsp;&nbsp;&nbsp;&nbsp;'cacheTimeout',<br>
+&nbsp;&nbsp;&nbsp;&nbsp;'from',<br>
+&nbsp;&nbsp;&nbsp;&nbsp;'graphType',<br>
+&nbsp;&nbsp;&nbsp;&nbsp;'jsonp',<br>
+&nbsp;&nbsp;&nbsp;&nbsp;'local',<br>
+&nbsp;&nbsp;&nbsp;&nbsp;'noCache',<br>
+&nbsp;&nbsp;&nbsp;&nbsp;'until',<br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;all&nbsp;graph&nbsp;types<br>
+&nbsp;&nbsp;&nbsp;&nbsp;'bgcolor',<br>
+&nbsp;&nbsp;&nbsp;&nbsp;'colorList',<br>
+&nbsp;&nbsp;&nbsp;&nbsp;'fgcolor',<br>
+&nbsp;&nbsp;&nbsp;&nbsp;'fontBold',<br>
+&nbsp;&nbsp;&nbsp;&nbsp;'fontItalic',<br>
+&nbsp;&nbsp;&nbsp;&nbsp;'fontName',<br>
+&nbsp;&nbsp;&nbsp;&nbsp;'fontSize',<br>
+&nbsp;&nbsp;&nbsp;&nbsp;'height',<br>
+&nbsp;&nbsp;&nbsp;&nbsp;'margin',<br>
+&nbsp;&nbsp;&nbsp;&nbsp;'outputFormat',<br>
+&nbsp;&nbsp;&nbsp;&nbsp;'template',<br>
+&nbsp;&nbsp;&nbsp;&nbsp;'width',<br>
+&nbsp;&nbsp;&nbsp;&nbsp;'yAxisSide',<br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;line&nbsp;graph<br>
+&nbsp;&nbsp;&nbsp;&nbsp;'areaAlpha',<br>
+&nbsp;&nbsp;&nbsp;&nbsp;'areaMode',<br>
+&nbsp;&nbsp;&nbsp;&nbsp;'drawNullAsZero',<br>
+&nbsp;&nbsp;&nbsp;&nbsp;'graphOnly',<br>
+&nbsp;&nbsp;&nbsp;&nbsp;'hideAxes',<br>
+&nbsp;&nbsp;&nbsp;&nbsp;'hideGrid',<br>
+&nbsp;&nbsp;&nbsp;&nbsp;'hideLegend',<br>
+&nbsp;&nbsp;&nbsp;&nbsp;'hideLegend',<br>
+&nbsp;&nbsp;&nbsp;&nbsp;'hideYAxis',<br>
+&nbsp;&nbsp;&nbsp;&nbsp;'leftColor',<br>
+&nbsp;&nbsp;&nbsp;&nbsp;'leftDashed',<br>
+&nbsp;&nbsp;&nbsp;&nbsp;'leftWidth',<br>
+&nbsp;&nbsp;&nbsp;&nbsp;'lineMode',<br>
+&nbsp;&nbsp;&nbsp;&nbsp;'lineWidth',<br>
+&nbsp;&nbsp;&nbsp;&nbsp;'logBase',<br>
+&nbsp;&nbsp;&nbsp;&nbsp;'majorGridLineColor',<br>
+&nbsp;&nbsp;&nbsp;&nbsp;'max',<br>
+&nbsp;&nbsp;&nbsp;&nbsp;'min',<br>
+&nbsp;&nbsp;&nbsp;&nbsp;'minorGridLineColor',<br>
+&nbsp;&nbsp;&nbsp;&nbsp;'minorY',<br>
+&nbsp;&nbsp;&nbsp;&nbsp;'minXStep',<br>
+&nbsp;&nbsp;&nbsp;&nbsp;'rightColor',<br>
+&nbsp;&nbsp;&nbsp;&nbsp;'rightDashed',<br>
+&nbsp;&nbsp;&nbsp;&nbsp;'rightWidth',<br>
+&nbsp;&nbsp;&nbsp;&nbsp;'thickness',<br>
+&nbsp;&nbsp;&nbsp;&nbsp;'title',<br>
+&nbsp;&nbsp;&nbsp;&nbsp;'tz',<br>
+&nbsp;&nbsp;&nbsp;&nbsp;'vtitle',<br>
+&nbsp;&nbsp;&nbsp;&nbsp;'xFormat',<br>
+&nbsp;&nbsp;&nbsp;&nbsp;'yLimit',<br>
+&nbsp;&nbsp;&nbsp;&nbsp;'yLimitLeft',<br>
+&nbsp;&nbsp;&nbsp;&nbsp;'yLimitRight',<br>
+&nbsp;&nbsp;&nbsp;&nbsp;'yMax',<br>
+&nbsp;&nbsp;&nbsp;&nbsp;'yMaxLeft',<br>
+&nbsp;&nbsp;&nbsp;&nbsp;'yMaxRight',<br>
+&nbsp;&nbsp;&nbsp;&nbsp;'yMin',<br>
+&nbsp;&nbsp;&nbsp;&nbsp;'yMinLeft',<br>
+&nbsp;&nbsp;&nbsp;&nbsp;'yMinRight',<br>
+&nbsp;&nbsp;&nbsp;&nbsp;'yStep',<br>
+&nbsp;&nbsp;&nbsp;&nbsp;'yStepLeft',<br>
+&nbsp;&nbsp;&nbsp;&nbsp;'yStepRight',<br>
+&nbsp;&nbsp;&nbsp;&nbsp;'yUnitSystem',<br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;pie&nbsp;graph<br>
+&nbsp;&nbsp;&nbsp;&nbsp;'pieLabels',<br>
+&nbsp;&nbsp;&nbsp;&nbsp;'pieMode',<br>
+&nbsp;&nbsp;&nbsp;&nbsp;'valueLabels',<br>
+&nbsp;&nbsp;&nbsp;&nbsp;'valueLabelsMin',<br>
+&nbsp;&nbsp;)</span></h4>
+	<p>[line <a href="../__filesource/fsource_Graphite__srcGraphiteGraphBuilder.php.html#a57">57</a>]</p>
+  Valid graph URI parameters.<br /><br /><br /><br />
+<h4>Tags:</h4>
+<div class="tags">
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td><b>see:</b>&nbsp;&nbsp;</td><td><a href="http://readthedocs.org/docs/graphite/en/latest/url-api.html">http://readthedocs.org/docs/graphite/en/latest/url-api.html</a></td>
+  </tr>
+  <tr>
+    <td><b>access:</b>&nbsp;&nbsp;</td><td>protected</td>
+  </tr>
+</table>
+</div>
+
+  <br />
+	<div class="tags">
+  <table border="0" cellspacing="0" cellpadding="0">
+    <tr>
+      <td><b>Type:</b>&nbsp;&nbsp;</td>
+      <td>array</td>
+    </tr>
+      </table>
+	</div><br /><br />
+	<div class="top">[ <a href="#top">Top</a> ]</div><br />
+	<a name="var$prefixStack"></a>
+	<p></p>
+	<h4>$prefixStack = <span class="value"></span></h4>
+	<p>[line <a href="../__filesource/fsource_Graphite__srcGraphiteGraphBuilder.php.html#a156">156</a>]</p>
+  Metric prefix stack.<br /><br /><br /><br />
+<h4>Tags:</h4>
+<div class="tags">
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td><b>access:</b>&nbsp;&nbsp;</td><td>protected</td>
+  </tr>
+</table>
+</div>
+
+  <br />
+	<div class="tags">
+  <table border="0" cellspacing="0" cellpadding="0">
+    <tr>
+      <td><b>Type:</b>&nbsp;&nbsp;</td>
+      <td>array</td>
+    </tr>
+      </table>
+	</div><br /><br />
+	<div class="top">[ <a href="#top">Top</a> ]</div><br />
+	<a name="var$settings"></a>
+	<p></p>
+	<h4>$settings = <span class="value"></span></h4>
+	<p>[line <a href="../__filesource/fsource_Graphite__srcGraphiteGraphBuilder.php.html#a150">150</a>]</p>
+  Graph settings.<br /><br /><br /><br />
+<h4>Tags:</h4>
+<div class="tags">
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td><b>access:</b>&nbsp;&nbsp;</td><td>protected</td>
+  </tr>
+</table>
+</div>
+
+  <br />
+	<div class="tags">
+  <table border="0" cellspacing="0" cellpadding="0">
+    <tr>
+      <td><b>Type:</b>&nbsp;&nbsp;</td>
+      <td>array</td>
+    </tr>
+      </table>
+	</div><br /><br />
+	<div class="top">[ <a href="#top">Top</a> ]</div><br />
+	<a name="var$targets"></a>
+	<p></p>
+	<h4>$targets = <span class="value"></span></h4>
+	<p>[line <a href="../__filesource/fsource_Graphite__srcGraphiteGraphBuilder.php.html#a162">162</a>]</p>
+  Configuration for each target that will be rendered or retrieved.<br /><br /><br /><br />
+<h4>Tags:</h4>
+<div class="tags">
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td><b>access:</b>&nbsp;&nbsp;</td><td>protected</td>
+  </tr>
+</table>
+</div>
+
+  <br />
+	<div class="tags">
+  <table border="0" cellspacing="0" cellpadding="0">
+    <tr>
+      <td><b>Type:</b>&nbsp;&nbsp;</td>
+      <td>array</td>
+    </tr>
+      </table>
+	</div><br /><br />
+	<div class="top">[ <a href="#top">Top</a> ]</div><br />
+</div><br />
+
+<hr />
+<a name="class_methods"></a>
+<h3>Class Methods</h3>
+<div class="tags">
+  <hr />
+	<a name="methodcanonicalParamName"></a>
+	<h3>static method canonicalParamName <span class="smalllinenumber">[line <a href="../__filesource/fsource_Graphite__srcGraphiteGraphBuilder.php.html#a572">572</a>]</span></h3>
+	<div class="function">
+    <table width="90%" border="0" cellspacing="0" cellpadding="1"><tr><td class="code_border">
+    <table width="100%" border="0" cellspacing="0" cellpadding="2"><tr><td class="code">
+		<code>static string canonicalParamName(
+string
+$name)</code>
+    </td></tr></table>
+    </td></tr></table><br />
+	
+		Find the canonical name for a parameter.<br /><br /><p>The value may be an alias or it may differ in case from the true  parameter name.</p><br /><br /><br />
+<h4>Tags:</h4>
+<div class="tags">
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td><b>return:</b>&nbsp;&nbsp;</td><td>Proper name of parameter or false if not found</td>
+  </tr>
+  <tr>
+    <td><b>access:</b>&nbsp;&nbsp;</td><td>public</td>
+  </tr>
+</table>
+</div>
+<br /><br />
+
+	
+        <h4>Parameters:</h4>
+    <div class="tags">
+    <table border="0" cellspacing="0" cellpadding="0">
+          <tr>
+        <td class="type">string&nbsp;&nbsp;</td>
+        <td><b>$name</b>&nbsp;&nbsp;</td>
+        <td>Parameter to lookup</td>
+      </tr>
+        </table>
+    </div><br />
+        <div class="top">[ <a href="#top">Top</a> ]</div>
+  </div>
+  <hr />
+	<a name="methodqsEncode"></a>
+	<h3>static method qsEncode <span class="smalllinenumber">[line <a href="../__filesource/fsource_Graphite__srcGraphiteGraphBuilder.php.html#a655">655</a>]</span></h3>
+	<div class="function">
+    <table width="90%" border="0" cellspacing="0" cellpadding="1"><tr><td class="code_border">
+    <table width="100%" border="0" cellspacing="0" cellpadding="2"><tr><td class="code">
+		<code>static string qsEncode(
+string
+$str)</code>
+    </td></tr></table>
+    </td></tr></table><br />
+	
+		Query string specific uri encoding.<br /><br /><p>Per RFC-3986:    URI producing applications should percent-encode data octets that    correspond to characters in the reserved set unless these characters    are specifically allowed by the URI scheme to represent data in that    component.</p><p>Php's builtin urlencode function is a general purpose encoder. This means  that it takes the most conservative approach to encoding. This means  percent-encoding all octets that are not in the &quot;unreserved&quot; set  (ALPHA / DIGIT / &quot;-&quot; / &quot;.&quot; / &quot;_&quot; / &quot;~&quot;). Actually it goes further than  this and encodes the tilde as well for no apparent reason other than  potential binary compatibility with the output of early non-conforming  user-agents.</p><p>Within the &quot;query&quot; section of a URI there is a broader set of valid  characters allowed without percent-encoding: <ul><li>query         = *( pchar / &quot;/&quot; / &quot;?&quot; )</li><li>pchar         = unreserved / pct-encoded / sub-delims / &quot;:&quot; / &quot;@&quot;</li><li>unreserved    = ALPHA / DIGIT / &quot;-&quot; / &quot;.&quot; / &quot;_&quot; / &quot;~&quot;</li><li>pct-encoded   = &quot;%&quot; HEXDIG HEXDIG</li><li>sub-delims    = &quot;!&quot; / &quot;$&quot; / &quot;&amp;&quot; / &quot;'&quot; / &quot;(&quot; / &quot;)&quot; /
+                   &quot;*&quot; / &quot;+&quot; / &quot;,&quot; / &quot;;&quot; / &quot;=&quot;</li></ul>  This encoder will let php do the heavy lifting with urlencode() but will  then decode _most_ query allowed characters. We will leave &quot;&amp;&quot;, &quot;=&quot; and  &quot;;&quot; percent-encoded to preserve delimiters used in the  application/x-www-form-urlencoded encoding.</p><br /><br /><br />
+<h4>Tags:</h4>
+<div class="tags">
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td><b>return:</b>&nbsp;&nbsp;</td><td>RFC-3986 conforming encoded string</td>
+  </tr>
+  <tr>
+    <td><b>see:</b>&nbsp;&nbsp;</td><td>RFC-3986</td>
+  </tr>
+  <tr>
+    <td><b>see:</b>&nbsp;&nbsp;</td><td>HTML 4.01 Specification</td>
+  </tr>
+  <tr>
+    <td><b>see:</b>&nbsp;&nbsp;</td><td>RFC-1738</td>
+  </tr>
+  <tr>
+    <td><b>access:</b>&nbsp;&nbsp;</td><td>public</td>
+  </tr>
+</table>
+</div>
+<br /><br />
+
+	
+        <h4>Parameters:</h4>
+    <div class="tags">
+    <table border="0" cellspacing="0" cellpadding="0">
+          <tr>
+        <td class="type">string&nbsp;&nbsp;</td>
+        <td><b>$str</b>&nbsp;&nbsp;</td>
+        <td>String to encode for embedding in the query component     of a URI.</td>
+      </tr>
+        </table>
+    </div><br />
+        <div class="top">[ <a href="#top">Top</a> ]</div>
+  </div>
+  <hr />
+	<a name="methodresolvePrefix"></a>
+	<h3>static method resolvePrefix <span class="smalllinenumber">[line <a href="../__filesource/fsource_Graphite__srcGraphiteGraphBuilder.php.html#a602">602</a>]</span></h3>
+	<div class="function">
+    <table width="90%" border="0" cellspacing="0" cellpadding="1"><tr><td class="code_border">
+    <table width="100%" border="0" cellspacing="0" cellpadding="2"><tr><td class="code">
+		<code>static string resolvePrefix(
+mixed
+$conf, 
+$prefixes)</code>
+    </td></tr></table>
+    </td></tr></table><br />
+	
+		Create a fully qualified prefix for the given configuration.<br /><br /><br /><br />
+<h4>Tags:</h4>
+<div class="tags">
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td><b>return:</b>&nbsp;&nbsp;</td><td>Literal prefix</td>
+  </tr>
+  <tr>
+    <td><b>access:</b>&nbsp;&nbsp;</td><td>public</td>
+  </tr>
+</table>
+</div>
+<br /><br />
+
+	
+        <h4>Parameters:</h4>
+    <div class="tags">
+    <table border="0" cellspacing="0" cellpadding="0">
+          <tr>
+        <td class="type">mixed&nbsp;&nbsp;</td>
+        <td><b>$conf</b>&nbsp;&nbsp;</td>
+        <td>Literal prefix or array of config data</td>
+      </tr>
+          <tr>
+        <td class="type">&nbsp;&nbsp;</td>
+        <td><b>$prefixes</b>&nbsp;&nbsp;</td>
+        <td></td>
+      </tr>
+        </table>
+    </div><br />
+        <div class="top">[ <a href="#top">Top</a> ]</div>
+  </div>
+
+  <hr />
+	<a name="method__construct"></a>
+	<h3>constructor __construct <span class="smalllinenumber">[line <a href="../__filesource/fsource_Graphite__srcGraphiteGraphBuilder.php.html#a169">169</a>]</span></h3>
+	<div class="function">
+    <table width="90%" border="0" cellspacing="0" cellpadding="1"><tr><td class="code_border">
+    <table width="100%" border="0" cellspacing="0" cellpadding="2"><tr><td class="code">
+		<code>Graphite_GraphBuilder __construct(
+[array
+$settings = null])</code>
+    </td></tr></table>
+    </td></tr></table><br />
+	
+		Constructor.<br /><br /><br /><br />
+<h4>Tags:</h4>
+<div class="tags">
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td><b>access:</b>&nbsp;&nbsp;</td><td>public</td>
+  </tr>
+</table>
+</div>
+<br /><br />
+
+	
+        <h4>Parameters:</h4>
+    <div class="tags">
+    <table border="0" cellspacing="0" cellpadding="0">
+          <tr>
+        <td class="type">array&nbsp;&nbsp;</td>
+        <td><b>$settings</b>&nbsp;&nbsp;</td>
+        <td>Default settings for graph</td>
+      </tr>
+        </table>
+    </div><br />
+        <div class="top">[ <a href="#top">Top</a> ]</div>
+  </div>
+  <hr />
+	<a name="methodcurrentPrefix"></a>
+	<h3>method currentPrefix <span class="smalllinenumber">[line <a href="../__filesource/fsource_Graphite__srcGraphiteGraphBuilder.php.html#a317">317</a>]</span></h3>
+	<div class="function">
+    <table width="90%" border="0" cellspacing="0" cellpadding="1"><tr><td class="code_border">
+    <table width="100%" border="0" cellspacing="0" cellpadding="2"><tr><td class="code">
+		<code>string currentPrefix(
+)</code>
+    </td></tr></table>
+    </td></tr></table><br />
+	
+		Get the current target prefix.<br /><br /><br /><br />
+<h4>Tags:</h4>
+<div class="tags">
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td><b>return:</b>&nbsp;&nbsp;</td><td>Prefix including trailing period (may be empty string)</td>
+  </tr>
+  <tr>
+    <td><b>access:</b>&nbsp;&nbsp;</td><td>public</td>
+  </tr>
+</table>
+</div>
+<br /><br />
+
+	
+        <div class="top">[ <a href="#top">Top</a> ]</div>
+  </div>
+  <hr />
+	<a name="methodendPrefix"></a>
+	<h3>method endPrefix <span class="smalllinenumber">[line <a href="../__filesource/fsource_Graphite__srcGraphiteGraphBuilder.php.html#a306">306</a>]</span></h3>
+	<div class="function">
+    <table width="90%" border="0" cellspacing="0" cellpadding="1"><tr><td class="code_border">
+    <table width="100%" border="0" cellspacing="0" cellpadding="2"><tr><td class="code">
+		<code><a href="../Graphite/Graphite_GraphBuilder.html">Graphite_GraphBuilder</a> endPrefix(
+)</code>
+    </td></tr></table>
+    </td></tr></table><br />
+	
+		End prefix block.<br /><br /><br /><br />
+<h4>Tags:</h4>
+<div class="tags">
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td><b>return:</b>&nbsp;&nbsp;</td><td>Self, for message chaining</td>
+  </tr>
+  <tr>
+    <td><b>access:</b>&nbsp;&nbsp;</td><td>public</td>
+  </tr>
+</table>
+</div>
+<br /><br />
+
+	
+        <div class="top">[ <a href="#top">Top</a> ]</div>
+  </div>
+  <hr />
+	<a name="methodforecast"></a>
+	<h3>method forecast <span class="smalllinenumber">[line <a href="../__filesource/fsource_Graphite__srcGraphiteGraphBuilder.php.html#a374">374</a>]</span></h3>
+	<div class="function">
+    <table width="90%" border="0" cellspacing="0" cellpadding="1"><tr><td class="code_border">
+    <table width="100%" border="0" cellspacing="0" cellpadding="2"><tr><td class="code">
+		<code><a href="../Graphite/Graphite_GraphBuilder.html">Graphite_GraphBuilder</a> forecast(
+
+$name, array
+$opts)</code>
+    </td></tr></table>
+    </td></tr></table><br />
+	
+		Add forecast, confidence bands, aberrations and metrics using the  Holt-Winters Confidence Band prediction model.<br /><br /><br /><br />
+<h4>Tags:</h4>
+<div class="tags">
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td><b>return:</b>&nbsp;&nbsp;</td><td>Self, for message chaining</td>
+  </tr>
+  <tr>
+    <td><b>throws:</b>&nbsp;&nbsp;</td><td>Graphite_ConfigurationException If required options are missing</td>
+  </tr>
+  <tr>
+    <td><b>access:</b>&nbsp;&nbsp;</td><td>public</td>
+  </tr>
+</table>
+</div>
+<br /><br />
+
+	
+        <h4>Parameters:</h4>
+    <div class="tags">
+    <table border="0" cellspacing="0" cellpadding="0">
+          <tr>
+        <td class="type">array&nbsp;&nbsp;</td>
+        <td><b>$opts</b>&nbsp;&nbsp;</td>
+        <td>Line options</td>
+      </tr>
+          <tr>
+        <td class="type">&nbsp;&nbsp;</td>
+        <td><b>$name</b>&nbsp;&nbsp;</td>
+        <td></td>
+      </tr>
+        </table>
+    </div><br />
+        <div class="top">[ <a href="#top">Top</a> ]</div>
+  </div>
+  <hr />
+	<a name="methodini"></a>
+	<h3>method ini <span class="smalllinenumber">[line <a href="../__filesource/fsource_Graphite__srcGraphiteGraphBuilder.php.html#a508">508</a>]</span></h3>
+	<div class="function">
+    <table width="90%" border="0" cellspacing="0" cellpadding="1"><tr><td class="code_border">
+    <table width="100%" border="0" cellspacing="0" cellpadding="2"><tr><td class="code">
+		<code>void ini(
+string
+$file, [array
+$vars = null])</code>
+    </td></tr></table>
+    </td></tr></table><br />
+	
+		Load a graph description file.<br /><br /><br /><br />
+<h4>Tags:</h4>
+<div class="tags">
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td><b>access:</b>&nbsp;&nbsp;</td><td>public</td>
+  </tr>
+</table>
+</div>
+<br /><br />
+
+	
+        <h4>Parameters:</h4>
+    <div class="tags">
+    <table border="0" cellspacing="0" cellpadding="0">
+          <tr>
+        <td class="type">string&nbsp;&nbsp;</td>
+        <td><b>$file</b>&nbsp;&nbsp;</td>
+        <td>Path to file</td>
+      </tr>
+          <tr>
+        <td class="type">array&nbsp;&nbsp;</td>
+        <td><b>$vars</b>&nbsp;&nbsp;</td>
+        <td>Variables to substitute in the ini file</td>
+      </tr>
+        </table>
+    </div><br />
+        <div class="top">[ <a href="#top">Top</a> ]</div>
+  </div>
+  <hr />
+	<a name="methodline"></a>
+	<h3>method line <span class="smalllinenumber">[line <a href="../__filesource/fsource_Graphite__srcGraphiteGraphBuilder.php.html#a351">351</a>]</span></h3>
+	<div class="function">
+    <table width="90%" border="0" cellspacing="0" cellpadding="1"><tr><td class="code_border">
+    <table width="100%" border="0" cellspacing="0" cellpadding="2"><tr><td class="code">
+		<code><a href="../Graphite/Graphite_GraphBuilder.html">Graphite_GraphBuilder</a> line(
+array
+$opts)</code>
+    </td></tr></table>
+    </td></tr></table><br />
+	
+		Draws a straight line on the graph.<br /><br /><br /><br />
+<h4>Tags:</h4>
+<div class="tags">
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td><b>return:</b>&nbsp;&nbsp;</td><td>Self, for message chaining</td>
+  </tr>
+  <tr>
+    <td><b>throws:</b>&nbsp;&nbsp;</td><td>Graphite_ConfigurationException If required options are missing</td>
+  </tr>
+  <tr>
+    <td><b>access:</b>&nbsp;&nbsp;</td><td>public</td>
+  </tr>
+</table>
+</div>
+<br /><br />
+
+	
+        <h4>Parameters:</h4>
+    <div class="tags">
+    <table border="0" cellspacing="0" cellpadding="0">
+          <tr>
+        <td class="type">array&nbsp;&nbsp;</td>
+        <td><b>$opts</b>&nbsp;&nbsp;</td>
+        <td>Line options</td>
+      </tr>
+        </table>
+    </div><br />
+        <div class="top">[ <a href="#top">Top</a> ]</div>
+  </div>
+  <hr />
+	<a name="methodmetric"></a>
+	<h3>method metric <span class="smalllinenumber">[line <a href="../__filesource/fsource_Graphite__srcGraphiteGraphBuilder.php.html#a330">330</a>]</span></h3>
+	<div class="function">
+    <table width="90%" border="0" cellspacing="0" cellpadding="1"><tr><td class="code_border">
+    <table width="100%" border="0" cellspacing="0" cellpadding="2"><tr><td class="code">
+		<code><a href="../Graphite/Graphite_GraphBuilder.html">Graphite_GraphBuilder</a> metric(
+string
+$name, [array
+$opts = array()])</code>
+    </td></tr></table>
+    </td></tr></table><br />
+	
+		Add a data series to the graph.<br /><br /><br /><br />
+<h4>Tags:</h4>
+<div class="tags">
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td><b>return:</b>&nbsp;&nbsp;</td><td>Self, for message chaining</td>
+  </tr>
+  <tr>
+    <td><b>access:</b>&nbsp;&nbsp;</td><td>public</td>
+  </tr>
+</table>
+</div>
+<br /><br />
+
+	
+        <h4>Parameters:</h4>
+    <div class="tags">
+    <table border="0" cellspacing="0" cellpadding="0">
+          <tr>
+        <td class="type">string&nbsp;&nbsp;</td>
+        <td><b>$name</b>&nbsp;&nbsp;</td>
+        <td>Name of data metric to graph</td>
+      </tr>
+          <tr>
+        <td class="type">array&nbsp;&nbsp;</td>
+        <td><b>$opts</b>&nbsp;&nbsp;</td>
+        <td>Series options</td>
+      </tr>
+        </table>
+    </div><br />
+        <div class="top">[ <a href="#top">Top</a> ]</div>
+  </div>
+  <hr />
+	<a name="methodprefix"></a>
+	<h3>method prefix <span class="smalllinenumber">[line <a href="../__filesource/fsource_Graphite__srcGraphiteGraphBuilder.php.html#a283">283</a>]</span></h3>
+	<div class="function">
+    <table width="90%" border="0" cellspacing="0" cellpadding="1"><tr><td class="code_border">
+    <table width="100%" border="0" cellspacing="0" cellpadding="2"><tr><td class="code">
+		<code><a href="../Graphite/Graphite_GraphBuilder.html">Graphite_GraphBuilder</a> prefix(
+string
+$prefix)</code>
+    </td></tr></table>
+    </td></tr></table><br />
+	
+		Set a prefix to add to subsequent metrics.<br /><br /><br /><br />
+<h4>Tags:</h4>
+<div class="tags">
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td><b>return:</b>&nbsp;&nbsp;</td><td>Self, for message chaining</td>
+  </tr>
+  <tr>
+    <td><b>access:</b>&nbsp;&nbsp;</td><td>public</td>
+  </tr>
+</table>
+</div>
+<br /><br />
+
+	
+        <h4>Parameters:</h4>
+    <div class="tags">
+    <table border="0" cellspacing="0" cellpadding="0">
+          <tr>
+        <td class="type">string&nbsp;&nbsp;</td>
+        <td><b>$prefix</b>&nbsp;&nbsp;</td>
+        <td>Prefix to add</td>
+      </tr>
+        </table>
+    </div><br />
+        <div class="top">[ <a href="#top">Top</a> ]</div>
+  </div>
+  <hr />
+	<a name="methodqs"></a>
+	<h3>method qs <span class="smalllinenumber">[line <a href="../__filesource/fsource_Graphite__srcGraphiteGraphBuilder.php.html#a471">471</a>]</span></h3>
+	<div class="function">
+    <table width="90%" border="0" cellspacing="0" cellpadding="1"><tr><td class="code_border">
+    <table width="100%" border="0" cellspacing="0" cellpadding="2"><tr><td class="code">
+		<code>string qs(
+[string
+$format = null])</code>
+    </td></tr></table>
+    </td></tr></table><br />
+	
+		Generate a graphite graph description query string.<br /><br /><br /><br />
+<h4>Tags:</h4>
+<div class="tags">
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td><b>return:</b>&nbsp;&nbsp;</td><td>Query string to append to graphite url to render this     graph</td>
+  </tr>
+  <tr>
+    <td><b>throws:</b>&nbsp;&nbsp;</td><td>Graphite_ConfigurationException If required data is missing</td>
+  </tr>
+  <tr>
+    <td><b>access:</b>&nbsp;&nbsp;</td><td>public</td>
+  </tr>
+</table>
+</div>
+<br /><br />
+
+	
+        <h4>Parameters:</h4>
+    <div class="tags">
+    <table border="0" cellspacing="0" cellpadding="0">
+          <tr>
+        <td class="type">string&nbsp;&nbsp;</td>
+        <td><b>$format</b>&nbsp;&nbsp;</td>
+        <td>Format to export data in (null for graph)</td>
+      </tr>
+        </table>
+    </div><br />
+        <div class="top">[ <a href="#top">Top</a> ]</div>
+  </div>
+  <hr />
+	<a name="methodreset"></a>
+	<h3>method reset <span class="smalllinenumber">[line <a href="../__filesource/fsource_Graphite__srcGraphiteGraphBuilder.php.html#a180">180</a>]</span></h3>
+	<div class="function">
+    <table width="90%" border="0" cellspacing="0" cellpadding="1"><tr><td class="code_border">
+    <table width="100%" border="0" cellspacing="0" cellpadding="2"><tr><td class="code">
+		<code><a href="../Graphite/Graphite_GraphBuilder.html">Graphite_GraphBuilder</a> reset(
+[array
+$settings = null])</code>
+    </td></tr></table>
+    </td></tr></table><br />
+	
+		Reset builder to empty state.<br /><br /><br /><br />
+<h4>Tags:</h4>
+<div class="tags">
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td><b>return:</b>&nbsp;&nbsp;</td><td>Self, for message chaining</td>
+  </tr>
+  <tr>
+    <td><b>access:</b>&nbsp;&nbsp;</td><td>public</td>
+  </tr>
+</table>
+</div>
+<br /><br />
+
+	
+        <h4>Parameters:</h4>
+    <div class="tags">
+    <table border="0" cellspacing="0" cellpadding="0">
+          <tr>
+        <td class="type">array&nbsp;&nbsp;</td>
+        <td><b>$settings</b>&nbsp;&nbsp;</td>
+        <td>Default settings for graph</td>
+      </tr>
+        </table>
+    </div><br />
+        <div class="top">[ <a href="#top">Top</a> ]</div>
+  </div>
+  <hr />
+	<a name="methodurl"></a>
+	<h3>method url <span class="smalllinenumber">[line <a href="../__filesource/fsource_Graphite__srcGraphiteGraphBuilder.php.html#a496">496</a>]</span></h3>
+	<div class="function">
+    <table width="90%" border="0" cellspacing="0" cellpadding="1"><tr><td class="code_border">
+    <table width="100%" border="0" cellspacing="0" cellpadding="2"><tr><td class="code">
+		<code>void url(
+[
+$format = null])</code>
+    </td></tr></table>
+    </td></tr></table><br />
+	
+		Alias for qs().<br /><br /><br /><br />
+<h4>Tags:</h4>
+<div class="tags">
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td><b>see:</b>&nbsp;&nbsp;</td><td><a href="../Graphite/Graphite_GraphBuilder.html#methodqs">Graphite_GraphBuilder::qs()</a></td>
+  </tr>
+  <tr>
+    <td><b>deprecated:</b>&nbsp;&nbsp;</td><td></td>
+  </tr>
+  <tr>
+    <td><b>access:</b>&nbsp;&nbsp;</td><td>public</td>
+  </tr>
+</table>
+</div>
+<br /><br />
+
+	
+        <h4>Parameters:</h4>
+    <div class="tags">
+    <table border="0" cellspacing="0" cellpadding="0">
+          <tr>
+        <td class="type">&nbsp;&nbsp;</td>
+        <td><b>$format</b>&nbsp;&nbsp;</td>
+        <td></td>
+      </tr>
+        </table>
+    </div><br />
+        <div class="top">[ <a href="#top">Top</a> ]</div>
+  </div>
+  <hr />
+	<a name="method__call"></a>
+	<h3>method __call <span class="smalllinenumber">[line <a href="../__filesource/fsource_Graphite__srcGraphiteGraphBuilder.php.html#a265">265</a>]</span></h3>
+	<div class="function">
+    <table width="90%" border="0" cellspacing="0" cellpadding="1"><tr><td class="code_border">
+    <table width="100%" border="0" cellspacing="0" cellpadding="2"><tr><td class="code">
+		<code>mixed __call(
+string
+$name, array
+$args)</code>
+    </td></tr></table>
+    </td></tr></table><br />
+	
+		Handle attempts to call non-existant methods.<br /><br /><p>Looks for $name in settings and gets/sets value if found.  If the setting isn't valid an E_USER_NOTICE warning will be raised.</p><br /><br /><br />
+<h4>Tags:</h4>
+<div class="tags">
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td><b>return:</b>&nbsp;&nbsp;</td><td>Property value or self</td>
+  </tr>
+  <tr>
+    <td><b>access:</b>&nbsp;&nbsp;</td><td>public</td>
+  </tr>
+</table>
+</div>
+<br /><br />
+
+	
+        <h4>Parameters:</h4>
+    <div class="tags">
+    <table border="0" cellspacing="0" cellpadding="0">
+          <tr>
+        <td class="type">string&nbsp;&nbsp;</td>
+        <td><b>$name</b>&nbsp;&nbsp;</td>
+        <td>Method name</td>
+      </tr>
+          <tr>
+        <td class="type">array&nbsp;&nbsp;</td>
+        <td><b>$args</b>&nbsp;&nbsp;</td>
+        <td>Invocation arguments</td>
+      </tr>
+        </table>
+    </div><br />
+        <div class="top">[ <a href="#top">Top</a> ]</div>
+  </div>
+  <hr />
+	<a name="method__get"></a>
+	<h3>method __get <span class="smalllinenumber">[line <a href="../__filesource/fsource_Graphite__srcGraphiteGraphBuilder.php.html#a198">198</a>]</span></h3>
+	<div class="function">
+    <table width="90%" border="0" cellspacing="0" cellpadding="1"><tr><td class="code_border">
+    <table width="100%" border="0" cellspacing="0" cellpadding="2"><tr><td class="code">
+		<code>mixed __get(
+string
+$name)</code>
+    </td></tr></table>
+    </td></tr></table><br />
+	
+		Handle attempts to read from non-existant members.<br /><br /><p>Looks for $name in settings and returns value if found.  If the setting isn't valid an E_USER_NOTICE warning will be raised.</p><br /><br /><br />
+<h4>Tags:</h4>
+<div class="tags">
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td><b>return:</b>&nbsp;&nbsp;</td><td>Setting value or null if not found</td>
+  </tr>
+  <tr>
+    <td><b>access:</b>&nbsp;&nbsp;</td><td>public</td>
+  </tr>
+</table>
+</div>
+<br /><br />
+
+	
+        <h4>Parameters:</h4>
+    <div class="tags">
+    <table border="0" cellspacing="0" cellpadding="0">
+          <tr>
+        <td class="type">string&nbsp;&nbsp;</td>
+        <td><b>$name</b>&nbsp;&nbsp;</td>
+        <td>Setting name</td>
+      </tr>
+        </table>
+    </div><br />
+        <div class="top">[ <a href="#top">Top</a> ]</div>
+  </div>
+  <hr />
+	<a name="method__set"></a>
+	<h3>method __set <span class="smalllinenumber">[line <a href="../__filesource/fsource_Graphite__srcGraphiteGraphBuilder.php.html#a236">236</a>]</span></h3>
+	<div class="function">
+    <table width="90%" border="0" cellspacing="0" cellpadding="1"><tr><td class="code_border">
+    <table width="100%" border="0" cellspacing="0" cellpadding="2"><tr><td class="code">
+		<code>void __set(
+string
+$name, mixed
+$val)</code>
+    </td></tr></table>
+    </td></tr></table><br />
+	
+		Handle attempts to write to non-existant members.<br /><br /><p>Sets setting $name=$val if $name is a valid setting.  If the setting isn't valid an E_USER_NOTICE warning will be raised.</p><br /><br /><br />
+<h4>Tags:</h4>
+<div class="tags">
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td><b>access:</b>&nbsp;&nbsp;</td><td>public</td>
+  </tr>
+</table>
+</div>
+<br /><br />
+
+	
+        <h4>Parameters:</h4>
+    <div class="tags">
+    <table border="0" cellspacing="0" cellpadding="0">
+          <tr>
+        <td class="type">string&nbsp;&nbsp;</td>
+        <td><b>$name</b>&nbsp;&nbsp;</td>
+        <td>Member name</td>
+      </tr>
+          <tr>
+        <td class="type">mixed&nbsp;&nbsp;</td>
+        <td><b>$val</b>&nbsp;&nbsp;</td>
+        <td>Value to set</td>
+      </tr>
+        </table>
+    </div><br />
+        <div class="top">[ <a href="#top">Top</a> ]</div>
+  </div>
+</div><br />
+
+
+        <div class="credit">
+		    <hr />
+		    Documentation generated on Sun, 18 Mar 2012 18:39:25 -0600 by <a href="http://www.phpdoc.org">phpDocumentor 1.4.3</a>
+	      </div>
+      </td></tr></table>
+    </td>
+  </tr>
+</table>
+
+</body>
+</html>
