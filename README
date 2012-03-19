@@ -1,0 +1,16 @@
+phpdoc generated documentation for Graphite_GraphBuilder.
+
+To initialize in local checkout:
+
+    cd build/api
+    git init
+    git remote add -t gh-pages \
+      -f origin git@github.com:bd808/graphite-graph-php.git
+    git checkout gh-pages
+
+To update:
+    cd build/api
+    ant -find build.xml phpdoc
+    git add .
+    git ci -m "Generated docs"
+    git push
