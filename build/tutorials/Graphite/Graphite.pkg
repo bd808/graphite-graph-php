@@ -1,0 +1,51 @@
+<refentry id="{@id}">
+  <refnamediv>
+    <refname>Graphite_GraphBuilder</refname>
+    <refpurpose>
+      A DSL and ini-based templating language to assist
+      in constructing query strings for use with Graphite.
+    </refpurpose>
+  </refnamediv>
+  <refsect1 id="{@id intro}">
+    <title>About</title>
+    <para>
+      {@link http://graphite.wikidot.com/ Graphite} provides several
+      interfaces for creating graphs and dashboards, but one of its powerful
+      features is an
+      {@link http://readthedocs.org/docs/graphite/en/latest/url-api.html API}
+      for generating graphs and retrieving raw data. This allows easy
+      embedding of graphs in custom dashboards and other applications.
+    </para>
+    <para>
+      The process of describing complex graphs is however cumbersome at best.
+      Graphite_GraphBuilder attempts to reduce the complexity of embedding
+      Graphite graphs in PHP based applications.
+    </para>
+  </refsect1>
+  <refsect1 id="{@id download}">
+    <title>Download</title>
+    <para>
+      You can download this project in either
+      {@link https://github.com/bd808/graphite-graph-php/zipball/master zip} or
+      {@link https://github.com/bd808/graphite-graph-php/tarball/master tar}
+      formats.
+    </para>
+    <para>
+      You can also clone the project with {@link http://git-scm.com Git} by
+      running:
+      <screen><![CDATA[
+$ git clone git://github.com/bd808/graphite-graph-php
+        ]]></screen>
+    </para>
+    <para>
+      Get the source code on GitHub : {@link https://github.com/bd808/graphite-graph-php bd808/graphite-graph-php}
+    </para>
+  </refsect1>
+  <refsect1 id="{@id examples}">
+    <title>Examples</title>
+    <para>
+      {@example dsl_example.php}
+    </para>
+  </refsect1>
+</refentry>
+<!-- vim:ft=xml: -->

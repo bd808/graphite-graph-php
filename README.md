@@ -6,7 +6,7 @@ in constructing query strings for use with [Graphite][].
 
 [![Build Status][ci-status]][ci-home]
 
-Goals
+About
 -----
 
 [Graphite][] provides several interfaces for creating graphs and dashboards,
