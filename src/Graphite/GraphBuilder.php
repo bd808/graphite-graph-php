@@ -514,8 +514,8 @@ class Graphite_GraphBuilder {
    *                   "*" / "+" / "," / ";" / "="
    *
    * This encoder will let php do the heavy lifting with urlencode() but will
-   * then decode _most_ query allowed characters. We will leave "&", "=" and
-   * ";" percent-encoded to preserve delimiters used in the
+   * then decode _most_ query allowed characters. We will leave "&", "=", ";"
+   * and "+" percent-encoded to preserve delimiters used in the
    * application/x-www-form-urlencoded encoding.
    *
    * @param string $str String to encode for embedding in the query component
@@ -533,7 +533,6 @@ class Graphite_GraphBuilder {
       '%28' => '(',
       '%29' => ')',
       '%2A' => '*',
-      '%2B' => '+',
       '%2C' => ',',
       '%2F' => '/',
       '%3A' => ':',
