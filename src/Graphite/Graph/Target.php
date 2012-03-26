@@ -24,7 +24,7 @@ class Graphite_Graph_Target {
    * @var array
    */
   static protected $validFunctions = array(
-    // args, order
+    // args, priority
     // args   == 0: no args
     //        == 1..N: verbatum args
     //        == string: format spec
@@ -33,7 +33,7 @@ class Graphite_Graph_Target {
     //          ~ '<': arg comes before series
     //          ~ '*': var args (one or more)
     //        == array(): positional args as above
-    'alias' => array('"', 100),
+    'alias' => array('"', 99),
     'aliasByNode' => array('*', 50),
     'aliasSub' => array(array('"','"'), 50),
     'alpha' => array(1, 50),
@@ -44,7 +44,7 @@ class Graphite_Graph_Target {
     'averageSeries' => array(0, 50),
     'averageSeriesWithWildcards' => array('*', 50),
     'cactiStyle' => array(0, 100),
-    'color' => array('"', 50),
+    'color' => array('"', 98),
     'cumulative' => array(0, 50),
     'currentAbove' => array(1, 50),
     'currentBelow' => array(1, 50),
@@ -89,7 +89,7 @@ class Graphite_Graph_Target {
     'removeAboveValue' => array(1, 50),
     'removeBelowPercentile' => array(1, 50),
     'removeBelowValue' => array(1, 50),
-    'scale' => array(1, 50),
+    'scale' => array(1, 75),
     'secondYAxis' => array(0, 50),
     'smartSummarize' => array(array('"', '"?'), 50),
     'sortByMaxima' => array(0, 50),
@@ -136,6 +136,22 @@ class Graphite_Graph_Target {
 
 
   /**
+   * Compare two function names for sort ordering based on priority.
+   *
+   * @param string $a First function name
+   * @param string $b Second function name
+   * @return an integer less than, equal to, or greater than zero if the first
+   *    argument is considered to be respectively less than, equal to, or
+   *    greater than the second.
+   */
+  static public function functionPriorityCmp ($a, $b) {
+    $aCfg = self::$validFunctions[$a];
+    $bCfg = self::$validFunctions[$b];
+    return $aCfg[1] - $bCfg[1];
+  }
+
+
+  /**
    * Generate the target parameter for a given configuration.
    * @param array $conf Configuration
    * @return string Target parameter
@@ -143,75 +159,81 @@ class Graphite_Graph_Target {
    *    in $conf
    */
   static public function generate ($conf) {
-    if (isset($conf['target']) && $conf['target']) {
+    if (isset($conf['target'])) {
       // explict target has been provided by the user
       return $conf['target'];
     }
 
     if (!isset($conf['series'])) {
       throw new Graphite_ConfigurationException(
-        "metric {$name} does not have any data associated with it.");
+        "metric does not have any data associated with it.");
     }
+
+    // find functions named in the conf data
+    $funcs = array();
+    foreach ($conf as $key => $args) {
+      $funcName = self::canonicalName($key);
+      if ($funcName) {
+        $funcs[$funcName] = $args;
+      }
+    }
+    // sort the found functions by priority
+    uksort($funcs, array(__CLASS__, 'functionPriorityCmp'));
 
     // start from the provided series
     $target = $conf['series'];
 
-    if (isset($conf['derivative']) && $conf['derivative']) {
-      $target = "derivative({$target})";
-    }
+    // build up target string
+    foreach ($funcs as $name => $args) {
+      list($spec, $priority) = self::$validFunctions[$name];
+      if (is_scalar($args)) {
+        $args = array($args);
+      }
 
-    if (isset($conf['nonnegativederivative']) && $conf['nonnegativederivative']) {
-      $target = "nonNegativeDerivative({$target})";
-    }
+      if (0 === $spec) {
+        // no args to function
+        $target = "{$name}({$target})";
 
-    if ((isset($conf['sumseries']) && $conf['sumseries'])||(isset($conf['sum']) && $conf['sum'])) {
-      $target = "sumSeries({$target})";
-    }
+      } else {
+        if (is_scalar($spec)) {
+          $spec = array($spec);
+        }
 
-    if ((isset($conf['averageseries']) && $conf['averageseries'])||(isset($conf['avg']) && $conf['avg'])) {
-      $target = "averageSeries({$target})";
-    }
+        $tArgs = array($target);
+        foreach ($spec as $idx => $type) {
+          switch ($type) {
+            case '"':
+              // quote arg
+              $tArgs[] = "'{$args[$idx]}'";
+              break;
 
-    if (isset($conf['npercentile']) && $conf['npercentile']) {
-      $target = "nPercentile({$target},{$conf['npercentile']})";
-    }
+            case '<':
+              // arg comes before series
+              array_unshift($tArgs, $args[$idx]);
+              break;
 
-    if (isset($conf['scale'])) {
-      $scale = $conf['scale'];
-      $target = "scale({$target},{$scale})";
-    }
+            case '?':
+              // optional arg
+              if (isset($args[$idx]) && !is_bool($args[$idx])) {
+                $tArgs[] = $args[$idx];
+              }
+              break;
 
-    if (isset($conf['line']) && $conf['line']) {
-      $target = "drawAsInfinite({$target})";
-    }
+            case '*':
+              // var args
+              $tArgs = array_merge($targs, $args);
+              break;
 
-    if (isset($conf['color'])) {
-      $color = $conf['color'];
-      $target = "color({$target},'{$color}')";
-    }
+            default:
+              // verbatum arg
+              $tArgs[] = $args[$idx];
+              break;
+          } //end switch
+        } //end foreach $spec
 
-    if (isset($conf['dashed']) && $conf['dashed']) {
-      if ($conf['dashed'] == 'true') $conf['dashed'] = '5.0';
-      $segs = $conf['dashed'];
-      $target = "dashed({$target},{$segs})";
-    }
-
-    if (isset($conf['second_y_axis']) && $conf['second_y_axis']) {
-      $target = "secondYAxis({$target})";
-    }
-
-    if (isset($conf['alias'])) {
-      $alias = $conf['alias'];
-
-    } else {
-      $alias = ucfirst($name);
-    }
-    $alias = $alias;
-    $target = "alias({$target},'{$alias}')";
-
-    if (isset($conf['cactistyle']) && $conf['cactistyle']) {
-      $target = "cactiStyle({$target})";
-    }
+        $target = "{$name}(" . implode(',', $tArgs) . ")";
+      }
+    } //end foreach $funcs
 
     return $target;
   } //end generateTarget

@@ -129,7 +129,7 @@ class Graphite_GraphBuilderTest extends PHPUnit_Framework_TestCase {
         'critical' => array(100),
         'warning' => array(75),
       ));
-    $this->assertEquals('target=alias(color(holtWintersForecast(sample),\'blue\'),\'Sample+Forecast\')&target=alias(dashed(color(holtWintersConfidenceBands(sample),\'grey\'),5.0),\'Sample+Confidence\')&target=alias(color(holtWintersConfidenceAbberation(keepLastValue(sample)),\'orange\'),\'Sample+Aberration\')&target=alias(dashed(color(threshold(100),\'red\'),5.0),\'Sample+Critical\')&target=alias(dashed(color(threshold(75),\'orange\'),5.0),\'Sample+Warning\')&target=alias(color(sample,\'yellow\'),\'Sample\')', $g->qs);
+    $this->assertEquals('target=alias(color(holtWintersForecast(sample),\'blue\'),\'Sample+Forecast\')&target=alias(color(dashed(holtWintersConfidenceBands(sample)),\'grey\'),\'Sample+Confidence\')&target=alias(color(holtWintersConfidenceAbberation(keepLastValue(sample)),\'orange\'),\'Sample+Aberration\')&target=alias(color(dashed(threshold(100)),\'red\'),\'Sample+Critical\')&target=alias(color(dashed(threshold(75)),\'orange\'),\'Sample+Warning\')&target=alias(color(sample,\'yellow\'),\'Sample\')', $g->qs);
   } //end testForecast
 
 
