@@ -4,24 +4,24 @@
  * This Converter takes output from the {@link Parser} and converts it to HTML-ready output for use with {@link Smarty}.
  *
  * phpDocumentor :: automatic documentation generator
- * 
+ *
  * PHP versions 4 and 5
  *
  * Copyright (c) 2000-2006 Joshua Eichorn, Gregory Beaver
- * 
+ *
  * LICENSE:
- * 
+ *
  * This library is free software; you can redistribute it
  * and/or modify it under the terms of the GNU Lesser General
  * Public License as published by the Free Software Foundation;
  * either version 2.1 of the License, or (at your option) any
  * later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
@@ -74,36 +74,36 @@ class HTMLGraphiteConverter extends Converter
      * @var array
      */
     var $leftindex = array('classes' => true, 'pages' => true, 'functions' => true, 'defines' => false, 'globals' => false);
-    
+
     /**
      * output directory for the current procedural page being processed
      * @var string
      */
     var $page_dir;
-    
+
     /**
      * target directory passed on the command-line.
      * {@link $targetDir} is malleable, always adding package/ and package/subpackage/ subdirectories onto it.
      * @var string
      */
     var $base_dir;
-    
+
     /**
      * output directory for the current class being processed
      * @var string
      */
     var $class_dir;
-    
+
     /**
      * array of converted package page names.
      * Used to link to the package page in the left index
      * @var array Format: array(package => 1)
      */
     var $package_pages = array();
-    
+
     /**
      * controls formatting of parser informative output
-     * 
+     *
      * Converter prints:
      * "Converting /path/to/file.php... Procedural Page Elements... Classes..."
      * Since HTMLdefaultConverter outputs files while converting, it needs to send a \n to start a new line.  However, if there
@@ -112,13 +112,13 @@ class HTMLGraphiteConverter extends Converter
      * @var boolean
      */
     var $juststarted = false;
-    
+
     /**
      * contains all of the template procedural page element loop data needed for the current template
      * @var array
      */
     var $current;
-    
+
     /**
      * contains all of the template class element loop data needed for the current template
      * @var array
@@ -126,12 +126,12 @@ class HTMLGraphiteConverter extends Converter
     var $currentclass;
     var $wrote = false;
     var $ric_set = array();
-    
+
     /**
      * sets {@link $base_dir} to $targetDir
      * @see Converter()
      */
-    
+
     /**#@+
      * @access private
      */
@@ -144,13 +144,13 @@ class HTMLGraphiteConverter extends Converter
     var $_wrote_tdir = false;
     var $ric_contents = array();
     /**#@-*/
-    
+
     function HTMLGraphiteConverter(&$allp, &$packp, &$classes, &$procpages, $po, $pp, $qm, $targetDir, $templateDir, $title)
     {
         Converter::Converter($allp, $packp, $classes, $procpages,$po, $pp, $qm, $targetDir, $templateDir, $title);
         $this->base_dir = $targetDir;
     }
-    
+
     function writeSource($path, $value)
     {
         $templ = &$this->newSmarty();
@@ -168,7 +168,7 @@ class HTMLGraphiteConverter extends Converter
         $this->setSourcePaths($path);
         $this->writefile($this->getFileSourceName($path).'.html',$templ->fetch('filesource.tpl'));
     }
-    
+
     function writeExample($title, $path, $source)
     {
         $templ = &$this->newSmarty();
@@ -191,7 +191,7 @@ class HTMLGraphiteConverter extends Converter
     {
         return $this->returnLink('{$subdir}__examplesource' . PATH_DELIMITER . 'exsource_'.$path.'.html',$title);
     }
-    
+
     function getSourceLink($path)
     {
         return $this->returnLink('{$subdir}__filesource/' .
@@ -245,7 +245,7 @@ class HTMLGraphiteConverter extends Converter
             return '<li><div class="src-line">' . str_replace("\n",'',$line) . "$extra</div></li>\n";
         }
     }
-    
+
     /**
      * Used to convert the <<code>> tag in a docblock
      * @param string
@@ -266,7 +266,7 @@ class HTMLGraphiteConverter extends Converter
         if (!isset($this->template_options['desctranslate']['/code'])) return $example;
         return $example . $this->template_options['desctranslate']['/code'];
     }
-    
+
     /**
      * @param string
      */
@@ -283,7 +283,7 @@ class HTMLGraphiteConverter extends Converter
         if (!isset($this->template_options['desctranslate']['/code'])) return $example;
         return $example . $this->template_options['desctranslate']['/code'];
     }
-    
+
     function getCurrentPageLink()
     {
         return $this->curname . '.html';
@@ -300,7 +300,7 @@ class HTMLGraphiteConverter extends Converter
         $sourcecode = str_replace('&gt;','>',$sourcecode);
         return $sourcecode;
     }
-    
+
     /**
      * Uses htmlspecialchars() on the input
      */
@@ -312,7 +312,7 @@ class HTMLGraphiteConverter extends Converter
         }
         return htmlspecialchars($text);
     }
-    
+
     /**
      * Use the template tutorial_toc.tpl to generate a table of contents for HTML
      * @return string table of contents formatted for use in the current output format
@@ -324,7 +324,7 @@ class HTMLGraphiteConverter extends Converter
         $template->assign('toc',$toc);
         return $template->fetch('tutorial_toc.tpl');
     }
-    
+
     function &SmartyInit(&$templ)
     {
         $this->makeLeft();
@@ -335,7 +335,7 @@ class HTMLGraphiteConverter extends Converter
         $templ->assign("subdir",'');
         return $templ;
     }
-    
+
     /**
      * Writes out the template file of {@link $class_data} and unsets the template to save memory
      * @see registerCurrentClass()
@@ -365,7 +365,7 @@ class HTMLGraphiteConverter extends Converter
         $this->writefile($this->class . '.html',$this->class_data->fetch('class.tpl'));
         unset($this->class_data);
     }
-    
+
     function getTutorialList()
     {
         static $cache = false;
@@ -392,7 +392,7 @@ class HTMLGraphiteConverter extends Converter
         $cache[$this->package] = $tutes;
         return $tutes;
     }
-    
+
     function getTutorialTree($tutorial,$k = false)
     {
         $ret = '';
@@ -432,7 +432,7 @@ class HTMLGraphiteConverter extends Converter
         $template->assign('main',$main);
         return $template->fetch('tutorial_tree.tpl');
     }
-    
+
     function getClassLeft()
     {
         if ($this->_classleft_cache)
@@ -462,7 +462,7 @@ class HTMLGraphiteConverter extends Converter
             $interfacearr;
         return $this->_classleft_cache[$this->package][$this->subpackage];
     }
-    
+
     function getClassContents()
     {
         if ($this->_classcontents_cache)
@@ -478,7 +478,7 @@ class HTMLGraphiteConverter extends Converter
         $this->_classcontents_cache[$this->package][$this->subpackage][$this->class] = $arr;
         return $arr;
     }
-    
+
     function getPageContents()
     {
         if (!isset($this->path)) $this->path = '#####';
@@ -495,7 +495,7 @@ class HTMLGraphiteConverter extends Converter
         $this->_pagecontents_cache[$this->package][$this->subpackage][$this->path] = $arr;
         return $arr;
     }
-    
+
     function getPageLeft()
     {
         if ($this->_pageleft_cache)
@@ -514,7 +514,7 @@ class HTMLGraphiteConverter extends Converter
         $this->_pageleft_cache[$this->package][$this->subpackage] = $arr;
         return $arr;
     }
-    
+
     /**
      * Writes out the template file of {@link $page_data} and unsets the template to save memory
      * @see registerCurrent()
@@ -540,7 +540,7 @@ class HTMLGraphiteConverter extends Converter
         $this->writefile($this->page . '.html',$this->page_data->fetch('page.tpl'));
         unset($this->page_data);
     }
-    
+
     /**
      * @param string
      * @param string
@@ -550,7 +550,7 @@ class HTMLGraphiteConverter extends Converter
     {
         return '<a href="'.$link.'">'.$text.'</a>';
     }
-    
+
     function makeLeft()
     {
         if ($this->_done_package_index) return;
@@ -562,7 +562,7 @@ class HTMLGraphiteConverter extends Converter
             {
                 if (!isset($start)) $start = $key;
                 $this->package_index[] = array(
-            'link'  =>  "classtrees_{$key}.html", 
+            'link'  =>  "classtrees_{$key}.html",
             'title' =>  $key
         );
             }
@@ -598,7 +598,7 @@ class HTMLGraphiteConverter extends Converter
             }
         }
     }
-    
+
     /**
      * HTMLdefaultConverter chooses to format both package indexes and the complete index here
      *
@@ -631,7 +631,7 @@ class HTMLGraphiteConverter extends Converter
         phpDocumentor_out("\n");
         flush();
         }
-    
+
     /**
      * HTMLdefaultConverter uses this function to format template index.html and packages.html
      *
@@ -705,12 +705,12 @@ class HTMLGraphiteConverter extends Converter
         unset($index);
 
     }
-    
+
     function writeNewPPage($key)
     {
 // NOTICE
 // WRITES THE DEFAULT PACKAGE INDEX PAGE
-    
+
         $template = &$this->newSmarty();
         $this->package = $key;
         $this->subpackage = '';
@@ -729,7 +729,7 @@ class HTMLGraphiteConverter extends Converter
         $this->writefile("li_$key.html",$template->fetch('index.tpl'));
         unset($template);
     }
-    
+
     /**
      * Generate indexes for li_package.html and classtree output files
      *
@@ -737,7 +737,7 @@ class HTMLGraphiteConverter extends Converter
      * iterating through each of the $page_elements, $class_elements and  $function_elements arrays to retrieve
      * the pre-sorted {@link abstractLink} descendants needed for index generation.  Conversion of these links to
      * text is done by {@link returnSee()}.
-     * 
+     *
      * Then it uses {@link generateFormattedClassTrees()} to create class trees from the template file classtrees.html.  Output
      * filename is classtrees_packagename.html.  This function also unsets {@link $elements} and {@link $pkg_elements} to free
      * up the considerable memory these two class vars use
@@ -777,8 +777,8 @@ class HTMLGraphiteConverter extends Converter
         unset($this->elements);
         unset($this->pkg_elements);
     }
-    
-    
+
+
     /**
      * This function takes an {@link abstractLink} descendant and returns an html link
      *
@@ -816,7 +816,7 @@ class HTMLGraphiteConverter extends Converter
         }
         return '<a href="'.$this->getId($element).'">'.$eltext.'</a>';
     }
-    
+
     function getId($element, $fullpath = true)
     {
         if (phpDocumentor_get_class($element) == 'parserdata')
@@ -869,7 +869,7 @@ class HTMLGraphiteConverter extends Converter
             return $b.$element->package.$c.'/tutorial_'.$element->name.'.html'.$d;
         }
     }
-    
+
     /**
      * Convert README/INSTALL/CHANGELOG file contents to output format
      * @param README|INSTALL|CHANGELOG
@@ -880,7 +880,7 @@ class HTMLGraphiteConverter extends Converter
         $this->ric_contents[$name] = $contents;
         $this->ric_set[] = array('file' => 'ric_'.$name . '.html','name' => $name);
     }
-    
+
     function writeRIC()
     {
         if ($this->_ric_done) return;
@@ -895,7 +895,7 @@ class HTMLGraphiteConverter extends Converter
             $this->writefile('ric_'.$name . '.html',$template->fetch('ric.tpl'));
         }
     }
-    
+
     function ConvertTodoList()
     {
         $todolist = array();
@@ -924,7 +924,7 @@ class HTMLGraphiteConverter extends Converter
         $this->setTargetDir($this->base_dir);
         $this->writefile('todolist.html',$templ->fetch('todolist.tpl'));
     }
-    
+
     /**
      * Create errors.html template file output
      *
@@ -992,12 +992,12 @@ class HTMLGraphiteConverter extends Converter
         phpDocumentor_out("\n\nTo view errors and warnings, look at ".$this->base_dir. PATH_DELIMITER . "errors.html\n");
         flush();
     }
-    
+
     function getCData($value)
     {
         return '<pre>'.htmlentities($value).'</pre>';
     }
-    
+
     function getTutorialId($package,$subpackage,$tutorial,$id)
     {
         return $id;
@@ -1033,7 +1033,7 @@ class HTMLGraphiteConverter extends Converter
         $this->writefile("li_".$element->package.".html",$template->fetch('index.tpl'));
         unset($template);
     }
-    
+
     /**
      * @param parserTutorial
      */
@@ -1088,7 +1088,7 @@ class HTMLGraphiteConverter extends Converter
         if (!empty($element->docblock->subpackage)) $this->class_dir .= PATH_DELIMITER . $element->docblock->subpackage;
         $a = '../classtrees_';
         if ($element->docblock->subpackage != '') $a = "../$a";
-        
+
         $this->class_data->assign('subdir',$a);
         $this->class_data->assign("title","Docs For Class " . $element->getName());
         $this->class_data->assign("page",$element->getName() . '.html');
@@ -1127,32 +1127,32 @@ class HTMLGraphiteConverter extends Converter
             if (!in_array($tag['keyword'], array('throws', 'exception'))) {
                 continue;
             }
-            
+
             $parts = preg_split('#\s+#', $tag['data']);
-            
+
             $type = trim(array_shift($parts));
             $data = trim(implode(' ', $parts));
-            
+
             if (is_object($link = $this->getLink($type))) {
                 if (($link = $this->getClassLink($link->name, $link->package)) !== false) {
                     $type = $link;
                 }
-            }            
+            }
             $exceptions[] = array(
                 'type'  =>  $type,
                 'data'  =>  $data
             );
         }
-        
+
         parent::convertMethod(
-            $element, 
+            $element,
             array(
                 'method_dest' => $this->getId($element,false),
                 'exceptions'  => $exceptions
             )
         );
     }
-    
+
     /**
      * Converts function for template output
      * @see prepareDocBlock(), parserFunction::getFunctionCall(), getFormattedConflicts()
@@ -1163,7 +1163,7 @@ class HTMLGraphiteConverter extends Converter
         $funcloc = $this->getId($this->addLink($element));
         parent::convertFunction($element,array('function_dest' => $this->getId($element,false)));
     }
-    
+
     /**
      * Converts include elements for template output
      * @see prepareDocBlock()
@@ -1173,7 +1173,7 @@ class HTMLGraphiteConverter extends Converter
     {
         parent::convertInclude($element, array('include_file'    => '_'.strtr($element->getValue(),array('"' => '', "'" => '','.' => '_'))));
     }
-    
+
     /**
      * Converts defines for template output
      * @see prepareDocBlock(), getFormattedConflicts()
@@ -1183,7 +1183,7 @@ class HTMLGraphiteConverter extends Converter
     {
         parent::convertDefine($element, array('define_link' => $this->getId($element,false)));
     }
-    
+
     /**
      * Converts global variables for template output
      * @param parserGlobal
@@ -1193,7 +1193,7 @@ class HTMLGraphiteConverter extends Converter
     {
         parent::convertGlobal($element, array('global_link' => $this->getId($element,false)));
     }
-    
+
     /**
      * converts procedural pages for template output
      * @see prepareDocBlock(), getClassesOnPage()
@@ -1212,7 +1212,7 @@ class HTMLGraphiteConverter extends Converter
         $this->page_data->assign("page",$this->getPageName($element) . '.html');
         $this->page_data->assign("title","Docs for page ".$element->parent->getFile());
     }
-    
+
     function getPageName(&$element)
     {
         if (phpDocumentor_get_class($element) == 'parserpage') return '_'.$element->getName();
@@ -1226,7 +1226,7 @@ class HTMLGraphiteConverter extends Converter
      * @return array Format: array(root,child,child,child,...,$class)
      * @uses parserClass::getParentClassTree()
      */
-    
+
     function generateFormattedClassTree($class)
     {
         $tree = $class->getParentClassTree($this);
@@ -1247,7 +1247,7 @@ class HTMLGraphiteConverter extends Converter
                     $x = $parent->getLink($this);
                     if (!$x) $x = $parent->getName();
                 }
-                $result[] = 
+                $result[] =
                     $x;
                 $distance[] =
                     "\n%s|\n" .
@@ -1270,13 +1270,13 @@ class HTMLGraphiteConverter extends Converter
             return array('classes'=>$class->getName(),'distance'=>array(''));
         }
     }
-    
+
     /** @access private */
     function sortVar($a, $b)
     {
         return strnatcasecmp($a->getName(),$b->getName());
     }
-    
+
     /** @access private */
     function sortMethod($a, $b)
     {
@@ -1287,7 +1287,7 @@ class HTMLGraphiteConverter extends Converter
 
     /**
      * returns a template-enabled array of class trees
-     * 
+     *
      * @param    string    $package    package to generate a class tree for
      * @see $roots, HTMLConverter::getRootTree()
      */
@@ -1341,7 +1341,7 @@ class HTMLGraphiteConverter extends Converter
 
     /**
      * returns a template-enabled array of interface inheritance trees
-     * 
+     *
      * @param    string    $package    package to generate a class tree for
      * @see $roots, HTMLConverter::getRootTree()
      */
@@ -1392,7 +1392,7 @@ class HTMLGraphiteConverter extends Converter
         }
         return $trees;
     }
-    
+
     /**
      * return formatted class tree for the Class Trees page
      *
@@ -1474,7 +1474,7 @@ class HTMLGraphiteConverter extends Converter
                     $my_tree .= '</ul></li>'."\n";
                     if ($dopar && ($cur == '#root' || !$cur)) $my_tree .= '</ul></li>';
                 }
-            } else 
+            } else
             {
 //                debug("$cur has no children");
                 $my_tree .= '<li>'.$this->returnSee($tree[$cur]['link'])."</li>";
@@ -1487,7 +1487,7 @@ class HTMLGraphiteConverter extends Converter
 
     /**
      * Generate indexing information for given element
-     * 
+     *
      * @param parserElement descendant of parserElement
      * @see generateElementIndex()
      * @return array
@@ -1497,11 +1497,11 @@ class HTMLGraphiteConverter extends Converter
         $Result['type'] = $elt->type;
         $Result['file_name'] = $elt->file;
         $Result['path'] = $elt->getPath();
-        
+
         if (isset($elt->docblock))
                     {
                         $Result['description'] = $elt->docblock->getSDesc($this);
-                        
+
                         if ($elt->docblock->hasaccess)
                             $Result['access'] = $elt->docblock->tags['access'][0]->value;
                         else
@@ -1511,7 +1511,7 @@ class HTMLGraphiteConverter extends Converter
                     }
         else
             $Result['description'] = '';
-        
+
         $aa = $Result['description'];
         if (!empty($aa)) $aa = "<br>&nbsp;&nbsp;&nbsp;&nbsp;$aa";
 
@@ -1642,7 +1642,7 @@ class HTMLGraphiteConverter extends Converter
         }
         return array($elementindex,$letters);
     }
-    
+
     function copyMediaRecursively($media,$targetdir,$subdir = '')
     {
         $versionControlDirectories = array ('CVS', 'media/CVS', 'media\\CVS', '.svn', 'media/.svn', 'media\\.svn');
@@ -1651,7 +1651,7 @@ class HTMLGraphiteConverter extends Converter
         }
         foreach($media as $dir => $files)
         {
-            if ($dir === '/') 
+            if ($dir === '/')
             {
                 $this->copyMediaRecursively($files,$targetdir);
             } else
@@ -1667,13 +1667,13 @@ class HTMLGraphiteConverter extends Converter
                         // create the subdir
                         phpDocumentor_out("creating $targetdir" . PATH_DELIMITER . "$dir\n");
                         Converter::setTargetDir($targetdir . PATH_DELIMITER . $dir);
-                        if (!empty($subdir)) 
+                        if (!empty($subdir))
                         {
                             $subdir .= PATH_DELIMITER;
                         }
                         $this->copyMediaRecursively($files,"$targetdir/$dir",$subdir . $dir);
                     }
-                } 
+                }
                 else
                 {
                     // copy the file
@@ -1683,7 +1683,7 @@ class HTMLGraphiteConverter extends Converter
             }
         }
     }
-    
+
     /**
      * calls the converter setTargetDir, and then copies any template images and the stylesheet if they haven't been copied
      * @see Converter::setTargetDir()
@@ -1701,7 +1701,7 @@ class HTMLGraphiteConverter extends Converter
         $info = new Io;
         $this->copyMediaRecursively($info->getDirTree($this->templateDir.'media',$this->templateDir),$tdir);
     }
-    
+
     /**
      * Generate alphabetical index of all elements by package and subpackage
      *
@@ -1753,7 +1753,7 @@ class HTMLGraphiteConverter extends Converter
         } else $letters = array();
         return array($elementindex,$letters);
     }
-    
+
     /**
      *
      * @see generatePkgElementIndex()
@@ -1788,7 +1788,7 @@ class HTMLGraphiteConverter extends Converter
         }
         return array($packages,$package_names,$letters);
     }
-    
+
     /**
      * @param string name of class
      * @param string package name
@@ -1920,7 +1920,7 @@ class HTMLGraphiteConverter extends Converter
         if (!$a) return false;
         return $this->returnSee($a, $text);
     }
-    
+
     /**
      * does a nat case sort on the specified second level value of the array
      *
@@ -1932,10 +1932,10 @@ class HTMLGraphiteConverter extends Converter
     {
         $aa = strtoupper($a[$this->rcnatcmpkey]);
         $bb = strtoupper($b[$this->rcnatcmpkey]);
-        
+
         return strnatcasecmp($aa, $bb);
     }
-    
+
     /**
      * does a nat case sort on the specified second level value of the array.
      * this one puts constructors first
@@ -1948,7 +1948,7 @@ class HTMLGraphiteConverter extends Converter
     {
         $aa = strtoupper($a[$this->rcnatcmpkey]);
         $bb = strtoupper($b[$this->rcnatcmpkey]);
-        
+
         if (strpos($aa,'CONSTRUCTOR') === 0)
         {
             return -1;
@@ -1967,7 +1967,7 @@ class HTMLGraphiteConverter extends Converter
         }
         return strnatcasecmp($aa, $bb);
     }
-    
+
     /**
      * This function is not used by HTMLdefaultConverter, but is required by Converter
      */

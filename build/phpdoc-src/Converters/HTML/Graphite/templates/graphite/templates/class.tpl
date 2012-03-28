@@ -4,7 +4,7 @@
 <h2>{if $is_interface}Interface{else}Class{/if} {$class_name}</h2>
 
 {include file="docblock.tpl" type="class" sdesc=$sdesc desc=$desc}
-		
+
 {if $implements}
   <h2>Implements interfaces:</h2>
   <ul>
