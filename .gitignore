@@ -1,3 +1,4 @@
+.ant-targets-build.xml
 build/api
 build/code-browser
 build/coverage
