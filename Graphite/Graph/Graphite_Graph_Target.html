@@ -109,6 +109,7 @@ Source Location: /src/Graphite/Graph/Target.php<br /><br />
 <h3><a href="#class_methods">Methods</a></h3>
 <ul>
     <li><a href="../../Graphite/Graph/Graphite_Graph_Target.html#methodcanonicalName">canonicalName</a></li>
+    <li><a href="../../Graphite/Graph/Graphite_Graph_Target.html#methodfunctionPriorityCmp">functionPriorityCmp</a></li>
     <li><a href="../../Graphite/Graph/Graphite_Graph_Target.html#methodgenerate">generate</a></li>
   </ul>
 </td>
@@ -191,7 +192,7 @@ DSL for building Graphite graph target components.<br /><br /><br /><br />
 	<a name="var$generators"></a>
 	<p></p>
 	<h4>static $generators = <span class="value">array(<br>
-&nbsp;&nbsp;&nbsp;&nbsp;'constantLine'&nbsp;=&gt;&nbsp;array('&quot;',&nbsp;1),'randomWalkFunction'=&gt;array('&quot;',1),'sinFunction'=&gt;array(array('&quot;','?'),1),'threshold'=&gt;array(array(1,'&quot;','&quot;'),1),'timeFunction'=&gt;array('&quot;',1),)</span></h4>
+&nbsp;&nbsp;&nbsp;&nbsp;'constantLine'&nbsp;=&gt;&nbsp;array('&quot;',&nbsp;1,&nbsp;false),'randomWalkFunction'=&gt;array('&quot;',1,false),'sinFunction'=&gt;array(array('&quot;','?'),1,false),'threshold'=&gt;array(array(1,'&quot;','&quot;'),1,true),'timeFunction'=&gt;array('&quot;',1,false),)</span></h4>
 	<p>[line <a href="../../__filesource/fsource_Graphite_Graph_srcGraphiteGraphTarget.php.html#a109">109</a>]</p>
   <br /><br />
 <h4>Tags:</h4>
@@ -216,7 +217,7 @@ DSL for building Graphite graph target components.<br /><br /><br /><br />
 	<a name="var$validFunctions"></a>
 	<p></p>
 	<h4>static $validFunctions = <span class="value">array(<br>
-&nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;args,&nbsp;order<br>
+&nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;args,&nbsp;priority,&nbsp;isAlias<br>
 &nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;args&nbsp;&nbsp;&nbsp;==&nbsp;0:&nbsp;no&nbsp;args<br>
 &nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;==&nbsp;1..N:&nbsp;verbatum&nbsp;args<br>
 &nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;==&nbsp;string:&nbsp;format&nbsp;spec<br>
@@ -225,7 +226,7 @@ DSL for building Graphite graph target components.<br /><br /><br /><br />
 &nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;~&nbsp;'&lt;':&nbsp;arg&nbsp;comes&nbsp;before&nbsp;series<br>
 &nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;~&nbsp;'*':&nbsp;var&nbsp;args&nbsp;(one&nbsp;or&nbsp;more)<br>
 &nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;==&nbsp;array():&nbsp;positional&nbsp;args&nbsp;as&nbsp;above<br>
-&nbsp;&nbsp;&nbsp;&nbsp;'alias'&nbsp;=&gt;&nbsp;array('&quot;',&nbsp;100),'aliasByNode'=&gt;array('*',50),'aliasSub'=&gt;array(array('&quot;','&quot;'),50),'alpha'=&gt;array(1,50),'areaBetween'=&gt;array(0,50),'asPercent'=&gt;array('?',50),'averageAbove'=&gt;array(1,50),'averageBelow'=&gt;array(1,50),'averageSeries'=&gt;array(0,50),'averageSeriesWithWildcards'=&gt;array('*',50),'cactiStyle'=&gt;array(0,100),'color'=&gt;array('&quot;',50),'cumulative'=&gt;array(0,50),'currentAbove'=&gt;array(1,50),'currentBelow'=&gt;array(1,50),'dashed'=&gt;array('?',50),'derivative'=&gt;array(0,50),'diffSeries'=&gt;array('*',50),'divideSeries'=&gt;array(1,50),'drawAsInfinite'=&gt;array(0,50),'events'=&gt;array(0,1),'exclude'=&gt;array('&quot;',50),'groupByNode'=&gt;array(array(1,'&quot;'),50),'highestAverage'=&gt;array(1,50),'highestCurrent'=&gt;array(1,50),'highestMax'=&gt;array(1,50),'hitcount'=&gt;array('&quot;',50),'holtWintersAberration'=&gt;array('?',50),'holtWintersConfidenceBands'=&gt;array('?',50),'holtWintersForecast'=&gt;array(0,50),'integral'=&gt;array(0,50),'keepLastValue'=&gt;array(0,50),'legendValue'=&gt;array('&quot;',50),'limit'=&gt;array(1,50),'lineWidth'=&gt;array(1,90),'logarithm'=&gt;array('?',50),'lowestAverage'=&gt;array(1,50),'lowestCurrent'=&gt;array(1,50),'maxSeries'=&gt;array(0,50),'maximumAbove'=&gt;array(1,50),'maximumBelow'=&gt;array(1,50),'minSeries'=&gt;array(0,50),'minimumAbove'=&gt;array(1,50),'mostDeviant'=&gt;array('&lt;',50),'movingAverage'=&gt;array(1,50),'movingMedian'=&gt;array(1,50),'multiplySeries'=&gt;array('*',50),'nPercentile'=&gt;array(1,50),'nonNegativeDerivative'=&gt;array('?',50),'offset'=&gt;array(1,50),'percentileOfSeries'=&gt;array(array(1,'?'),50),'rangeOfSeries'=&gt;array(0,50),'removeAbovePercentile'=&gt;array(1,50),'removeAboveValue'=&gt;array(1,50),'removeBelowPercentile'=&gt;array(1,50),'removeBelowValue'=&gt;array(1,50),'scale'=&gt;array(1,50),'secondYAxis'=&gt;array(0,50),'smartSummarize'=&gt;array(array('&quot;','&quot;?'),50),'sortByMaxima'=&gt;array(0,50),'sortByMinima'=&gt;array(0,50),'stacked'=&gt;array(0,50),'stdev'=&gt;array(array(1,'?'),50),'substr'=&gt;array(array(1,'?'),50),'sumSeries'=&gt;array('*',50),'sumSeriesWithWildcards'=&gt;array('*',50),'summarize'=&gt;array(array('&quot;','&quot;?','?'),50),'timeShift'=&gt;array('&quot;',50),)</span></h4>
+&nbsp;&nbsp;&nbsp;&nbsp;'alias'&nbsp;=&gt;&nbsp;array('&quot;',&nbsp;99,&nbsp;true),'aliasByNode'=&gt;array('*',50,true),'aliasSub'=&gt;array(array('&quot;','&quot;'),50,true),'alpha'=&gt;array(1,50,false),'areaBetween'=&gt;array(0,50,false),'asPercent'=&gt;array('?',50,false),'averageAbove'=&gt;array(1,50,false),'averageBelow'=&gt;array(1,50,false),'averageSeries'=&gt;array(0,50,false),'averageSeriesWithWildcards'=&gt;array('*',50,false),'cactiStyle'=&gt;array(0,100,false),'color'=&gt;array('&quot;',98,false),'cumulative'=&gt;array(0,50,false),'currentAbove'=&gt;array(1,50,false),'currentBelow'=&gt;array(1,50,false),'dashed'=&gt;array('?',50,false),'derivative'=&gt;array(0,50,false),'diffSeries'=&gt;array('*',50,false),'divideSeries'=&gt;array(1,50,false),'drawAsInfinite'=&gt;array(0,50,false),'events'=&gt;array(0,1,false),'exclude'=&gt;array('&quot;',50,false),'groupByNode'=&gt;array(array(1,'&quot;'),50,true),'highestAverage'=&gt;array(1,50,false),'highestCurrent'=&gt;array(1,50,false),'highestMax'=&gt;array(1,50,false),'hitcount'=&gt;array('&quot;',50,false),'holtWintersAberration'=&gt;array('?',50,false),'holtWintersConfidenceBands'=&gt;array('?',50,false),'holtWintersForecast'=&gt;array(0,50,false),'integral'=&gt;array(0,50,false),'keepLastValue'=&gt;array(0,50,false),'legendValue'=&gt;array('&quot;',50,false),'limit'=&gt;array(1,50,false),'lineWidth'=&gt;array(1,90,false),'logarithm'=&gt;array('?',50,false),'lowestAverage'=&gt;array(1,50,false),'lowestCurrent'=&gt;array(1,50,false),'maxSeries'=&gt;array(0,50,false),'maximumAbove'=&gt;array(1,50,false),'maximumBelow'=&gt;array(1,50,false),'minSeries'=&gt;array(0,50,false),'minimumAbove'=&gt;array(1,50,false),'mostDeviant'=&gt;array('&lt;',50,false),'movingAverage'=&gt;array(1,50,false),'movingMedian'=&gt;array(1,50,false),'multiplySeries'=&gt;array('*',50,false),'nPercentile'=&gt;array(1,50,false),'nonNegativeDerivative'=&gt;array('?',50,false),'offset'=&gt;array(1,50,false),'percentileOfSeries'=&gt;array(array(1,'?'),50,false),'rangeOfSeries'=&gt;array(0,50,false),'removeAbovePercentile'=&gt;array(1,50,false),'removeAboveValue'=&gt;array(1,50,false),'removeBelowPercentile'=&gt;array(1,50,false),'removeBelowValue'=&gt;array(1,50,false),'scale'=&gt;array(1,75,false),'secondYAxis'=&gt;array(0,50,false),'smartSummarize'=&gt;array(array('&quot;','&quot;?'),50,false),'sortByMaxima'=&gt;array(0,50,false),'sortByMinima'=&gt;array(0,50,false),'stacked'=&gt;array(0,50,false),'stdev'=&gt;array(array(1,'?'),50,false),'substr'=&gt;array(array(1,'?'),50,true),'sumSeries'=&gt;array('*',50,false),'sumSeriesWithWildcards'=&gt;array('*',50,false),'summarize'=&gt;array(array('&quot;','&quot;?','?'),50,false),'timeShift'=&gt;array('&quot;',50,false),)</span></h4>
 	<p>[line <a href="../../__filesource/fsource_Graphite_Graph_srcGraphiteGraphTarget.php.html#a26">26</a>]</p>
   Metric manipulation functions.<br /><br /><br /><br />
 <h4>Tags:</h4>
@@ -255,7 +256,7 @@ DSL for building Graphite graph target components.<br /><br /><br /><br />
 <div class="tags">
   <hr />
 	<a name="methodcanonicalName"></a>
-	<h3>static method canonicalName <span class="smalllinenumber">[line <a href="../../__filesource/fsource_Graphite_Graph_srcGraphiteGraphTarget.php.html#a229">229</a>]</span></h3>
+	<h3>static method canonicalName <span class="smalllinenumber">[line <a href="../../__filesource/fsource_Graphite_Graph_srcGraphiteGraphTarget.php.html#a266">266</a>]</span></h3>
 	<div class="function">
     <table width="90%" border="0" cellspacing="0" cellpadding="1"><tr><td class="code_border">
     <table width="100%" border="0" cellspacing="0" cellpadding="2"><tr><td class="code">
@@ -293,8 +294,53 @@ $name)</code>
         <div class="top">[ <a href="#top">Top</a> ]</div>
   </div>
   <hr />
+	<a name="methodfunctionPriorityCmp"></a>
+	<h3>static method functionPriorityCmp <span class="smalllinenumber">[line <a href="../../__filesource/fsource_Graphite_Graph_srcGraphiteGraphTarget.php.html#a147">147</a>]</span></h3>
+	<div class="function">
+    <table width="90%" border="0" cellspacing="0" cellpadding="1"><tr><td class="code_border">
+    <table width="100%" border="0" cellspacing="0" cellpadding="2"><tr><td class="code">
+		<code>static an functionPriorityCmp(
+string
+$a, string
+$b)</code>
+    </td></tr></table>
+    </td></tr></table><br />
+	
+		Compare two function names for sort ordering based on priority.<br /><br /><br /><br />
+<h4>Tags:</h4>
+<div class="tags">
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td><b>return:</b>&nbsp;&nbsp;</td><td>integer less than, equal to, or greater than zero if the first     argument is considered to be respectively less than, equal to, or     greater than the second.</td>
+  </tr>
+  <tr>
+    <td><b>access:</b>&nbsp;&nbsp;</td><td>public</td>
+  </tr>
+</table>
+</div>
+<br /><br />
+
+	
+        <h4>Parameters:</h4>
+    <div class="tags">
+    <table border="0" cellspacing="0" cellpadding="0">
+          <tr>
+        <td class="type">string&nbsp;&nbsp;</td>
+        <td><b>$a</b>&nbsp;&nbsp;</td>
+        <td>First function name</td>
+      </tr>
+          <tr>
+        <td class="type">string&nbsp;&nbsp;</td>
+        <td><b>$b</b>&nbsp;&nbsp;</td>
+        <td>Second function name</td>
+      </tr>
+        </table>
+    </div><br />
+        <div class="top">[ <a href="#top">Top</a> ]</div>
+  </div>
+  <hr />
 	<a name="methodgenerate"></a>
-	<h3>static method generate <span class="smalllinenumber">[line <a href="../../__filesource/fsource_Graphite_Graph_srcGraphiteGraphTarget.php.html#a145">145</a>]</span></h3>
+	<h3>static method generate <span class="smalllinenumber">[line <a href="../../__filesource/fsource_Graphite_Graph_srcGraphiteGraphTarget.php.html#a161">161</a>]</span></h3>
 	<div class="function">
     <table width="90%" border="0" cellspacing="0" cellpadding="1"><tr><td class="code_border">
     <table width="100%" border="0" cellspacing="0" cellpadding="2"><tr><td class="code">
@@ -340,7 +386,7 @@ $conf)</code>
 
         <div class="credit">
 		    <hr />
-		    Documentation generated on Mon, 19 Mar 2012 00:13:43 -0600 by <a href="http://www.phpdoc.org">phpDocumentor 1.4.3</a>
+		    Documentation generated on Tue, 27 Mar 2012 17:50:30 -0700 by <a href="http://www.phpdoc.org">phpDocumentor 1.4.3</a>
 	      </div>
       </td></tr></table>
     </td>

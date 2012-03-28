@@ -282,7 +282,7 @@ $str)</code>
     </td></tr></table><br />
 	
 		Query string specific uri encoding.<br /><br /><p>Per RFC-3986:    URI producing applications should percent-encode data octets that    correspond to characters in the reserved set unless these characters    are specifically allowed by the URI scheme to represent data in that    component.</p><p>Php's builtin urlencode function is a general purpose encoder. This means  that it takes the most conservative approach to encoding. This means  percent-encoding all octets that are not in the &quot;unreserved&quot; set  (ALPHA / DIGIT / &quot;-&quot; / &quot;.&quot; / &quot;_&quot; / &quot;~&quot;). Actually it goes further than  this and encodes the tilde as well for no apparent reason other than  potential binary compatibility with the output of early non-conforming  user-agents.</p><p>Within the &quot;query&quot; section of a URI there is a broader set of valid  characters allowed without percent-encoding: <ul><li>query         = *( pchar / &quot;/&quot; / &quot;?&quot; )</li><li>pchar         = unreserved / pct-encoded / sub-delims / &quot;:&quot; / &quot;@&quot;</li><li>unreserved    = ALPHA / DIGIT / &quot;-&quot; / &quot;.&quot; / &quot;_&quot; / &quot;~&quot;</li><li>pct-encoded   = &quot;%&quot; HEXDIG HEXDIG</li><li>sub-delims    = &quot;!&quot; / &quot;$&quot; / &quot;&amp;&quot; / &quot;'&quot; / &quot;(&quot; / &quot;)&quot; /
-                   &quot;*&quot; / &quot;+&quot; / &quot;,&quot; / &quot;;&quot; / &quot;=&quot;</li></ul>  This encoder will let php do the heavy lifting with urlencode() but will  then decode _most_ query allowed characters. We will leave &quot;&amp;&quot;, &quot;=&quot; and  &quot;;&quot; percent-encoded to preserve delimiters used in the  application/x-www-form-urlencoded encoding.</p><br /><br /><br />
+                   &quot;*&quot; / &quot;+&quot; / &quot;,&quot; / &quot;;&quot; / &quot;=&quot;</li></ul>  This encoder will let php do the heavy lifting with urlencode() but will  then decode _most_ query allowed characters. We will leave &quot;&amp;&quot;, &quot;=&quot;, &quot;;&quot;  and &quot;+&quot; percent-encoded to preserve delimiters used in the  application/x-www-form-urlencoded encoding.</p><br /><br /><br />
 <h4>Tags:</h4>
 <div class="tags">
 <table border="0" cellspacing="0" cellpadding="0">
@@ -929,7 +929,7 @@ $val)</code>
 
         <div class="credit">
 		    <hr />
-		    Documentation generated on Mon, 19 Mar 2012 00:13:43 -0600 by <a href="http://www.phpdoc.org">phpDocumentor 1.4.3</a>
+		    Documentation generated on Tue, 27 Mar 2012 17:50:29 -0700 by <a href="http://www.phpdoc.org">phpDocumentor 1.4.3</a>
 	      </div>
       </td></tr></table>
     </td>

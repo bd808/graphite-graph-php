@@ -553,8 +553,8 @@
 <li><div class="src-line"><a name="a514"></a><span class="src-doc">&nbsp;&nbsp;&nbsp;*&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&quot;*&quot;&nbsp;/&nbsp;&quot;+&quot;&nbsp;/&nbsp;&quot;,&quot;&nbsp;/&nbsp;&quot;;&quot;&nbsp;/&nbsp;&quot;=&quot;</span></div></li>
 <li><div class="src-line"><a name="a515"></a><span class="src-doc">&nbsp;&nbsp;&nbsp;*</span></div></li>
 <li><div class="src-line"><a name="a516"></a><span class="src-doc">&nbsp;&nbsp;&nbsp;*&nbsp;This&nbsp;encoder&nbsp;will&nbsp;let&nbsp;php&nbsp;do&nbsp;the&nbsp;heavy&nbsp;lifting&nbsp;with&nbsp;urlencode()&nbsp;but&nbsp;will</span></div></li>
-<li><div class="src-line"><a name="a517"></a><span class="src-doc">&nbsp;&nbsp;&nbsp;*&nbsp;then&nbsp;decode&nbsp;_most_&nbsp;query&nbsp;allowed&nbsp;characters.&nbsp;We&nbsp;will&nbsp;leave&nbsp;&quot;&amp;&quot;,&nbsp;&quot;=&quot;&nbsp;and</span></div></li>
-<li><div class="src-line"><a name="a518"></a><span class="src-doc">&nbsp;&nbsp;&nbsp;*&nbsp;&quot;;&quot;&nbsp;percent-encoded&nbsp;to&nbsp;preserve&nbsp;delimiters&nbsp;used&nbsp;in&nbsp;the</span></div></li>
+<li><div class="src-line"><a name="a517"></a><span class="src-doc">&nbsp;&nbsp;&nbsp;*&nbsp;then&nbsp;decode&nbsp;_most_&nbsp;query&nbsp;allowed&nbsp;characters.&nbsp;We&nbsp;will&nbsp;leave&nbsp;&quot;&amp;&quot;,&nbsp;&quot;=&quot;,&nbsp;&quot;;&quot;</span></div></li>
+<li><div class="src-line"><a name="a518"></a><span class="src-doc">&nbsp;&nbsp;&nbsp;*&nbsp;and&nbsp;&quot;+&quot;&nbsp;percent-encoded&nbsp;to&nbsp;preserve&nbsp;delimiters&nbsp;used&nbsp;in&nbsp;the</span></div></li>
 <li><div class="src-line"><a name="a519"></a><span class="src-doc">&nbsp;&nbsp;&nbsp;*&nbsp;application/x-www-form-urlencoded&nbsp;encoding.</span></div></li>
 <li><div class="src-line"><a name="a520"></a><span class="src-doc">&nbsp;&nbsp;&nbsp;*</span></div></li>
 <li><div class="src-line"><a name="a521"></a><span class="src-doc">&nbsp;&nbsp;&nbsp;*&nbsp;</span><span class="src-doc-coretag">@param&nbsp;</span><span class="src-doc-type">string&nbsp;</span><span class="src-doc-var">$str&nbsp;</span><span class="src-doc">String&nbsp;to&nbsp;encode&nbsp;for&nbsp;embedding&nbsp;in&nbsp;the&nbsp;query&nbsp;component</span></div></li>
@@ -572,25 +572,24 @@
 <li><div class="src-line"><a name="a533"></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="src-str">'%28'&nbsp;</span>=&gt;&nbsp;<span class="src-str">'('</span><span class="src-sym">,</span></div></li>
 <li><div class="src-line"><a name="a534"></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="src-str">'%29'&nbsp;</span>=&gt;&nbsp;<span class="src-str">')'</span><span class="src-sym">,</span></div></li>
 <li><div class="src-line"><a name="a535"></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="src-str">'%2A'&nbsp;</span>=&gt;&nbsp;<span class="src-str">'*'</span><span class="src-sym">,</span></div></li>
-<li><div class="src-line"><a name="a536"></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="src-str">'%2B'&nbsp;</span>=&gt;&nbsp;<span class="src-str">'+'</span><span class="src-sym">,</span></div></li>
-<li><div class="src-line"><a name="a537"></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="src-str">'%2C'&nbsp;</span>=&gt;&nbsp;<span class="src-str">','</span><span class="src-sym">,</span></div></li>
-<li><div class="src-line"><a name="a538"></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="src-str">'%2F'&nbsp;</span>=&gt;&nbsp;<span class="src-str">'/'</span><span class="src-sym">,</span></div></li>
-<li><div class="src-line"><a name="a539"></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="src-str">'%3A'&nbsp;</span>=&gt;&nbsp;<span class="src-str">':'</span><span class="src-sym">,</span></div></li>
-<li><div class="src-line"><a name="a540"></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="src-str">'%3F'&nbsp;</span>=&gt;&nbsp;<span class="src-str">'?'</span><span class="src-sym">,</span></div></li>
-<li><div class="src-line"><a name="a541"></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="src-str">'%40'&nbsp;</span>=&gt;&nbsp;<span class="src-str">'@'</span><span class="src-sym">,</span></div></li>
-<li><div class="src-line"><a name="a542"></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="src-str">'%7E'&nbsp;</span>=&gt;&nbsp;<span class="src-str">'~'</span><span class="src-sym">,</span></div></li>
-<li><div class="src-line"><a name="a543"></a>&nbsp;&nbsp;&nbsp;&nbsp;<span class="src-sym">)</span><span class="src-sym">;</span></div></li>
-<li><div class="src-line"><a name="a544"></a>&nbsp;</div></li>
-<li><div class="src-line"><a name="a545"></a>&nbsp;&nbsp;&nbsp;&nbsp;<span class="src-var">$full&nbsp;</span>=&nbsp;<span class="src-id">urlencode</span><span class="src-sym">(</span><span class="src-var">$str</span><span class="src-sym">)</span><span class="src-sym">;</span></div></li>
-<li><div class="src-line"><a name="a546"></a>&nbsp;&nbsp;&nbsp;&nbsp;<span class="src-key">return&nbsp;</span><span class="src-id">str_replace</span><span class="src-sym">(</span><span class="src-id">array_keys</span><span class="src-sym">(</span><span class="src-var">$decode</span><span class="src-sym">)</span><span class="src-sym">,&nbsp;</span><span class="src-id">array_values</span><span class="src-sym">(</span><span class="src-var">$decode</span><span class="src-sym">)</span><span class="src-sym">,&nbsp;</span><span class="src-var">$full</span><span class="src-sym">)</span><span class="src-sym">;</span></div></li>
-<li><div class="src-line"><a name="a547"></a>&nbsp;&nbsp;<span class="src-sym">}&nbsp;</span><span class="src-comm">//end&nbsp;qsEncode</span></div></li>
-<li><div class="src-line"><a name="a548"></a>&nbsp;</div></li>
-<li><div class="src-line"><a name="a549"></a><span class="src-sym">}&nbsp;</span><span class="src-comm">//end&nbsp;Graphite_GraphBuilder</span></div></li>
+<li><div class="src-line"><a name="a536"></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="src-str">'%2C'&nbsp;</span>=&gt;&nbsp;<span class="src-str">','</span><span class="src-sym">,</span></div></li>
+<li><div class="src-line"><a name="a537"></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="src-str">'%2F'&nbsp;</span>=&gt;&nbsp;<span class="src-str">'/'</span><span class="src-sym">,</span></div></li>
+<li><div class="src-line"><a name="a538"></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="src-str">'%3A'&nbsp;</span>=&gt;&nbsp;<span class="src-str">':'</span><span class="src-sym">,</span></div></li>
+<li><div class="src-line"><a name="a539"></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="src-str">'%3F'&nbsp;</span>=&gt;&nbsp;<span class="src-str">'?'</span><span class="src-sym">,</span></div></li>
+<li><div class="src-line"><a name="a540"></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="src-str">'%40'&nbsp;</span>=&gt;&nbsp;<span class="src-str">'@'</span><span class="src-sym">,</span></div></li>
+<li><div class="src-line"><a name="a541"></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="src-str">'%7E'&nbsp;</span>=&gt;&nbsp;<span class="src-str">'~'</span><span class="src-sym">,</span></div></li>
+<li><div class="src-line"><a name="a542"></a>&nbsp;&nbsp;&nbsp;&nbsp;<span class="src-sym">)</span><span class="src-sym">;</span></div></li>
+<li><div class="src-line"><a name="a543"></a>&nbsp;</div></li>
+<li><div class="src-line"><a name="a544"></a>&nbsp;&nbsp;&nbsp;&nbsp;<span class="src-var">$full&nbsp;</span>=&nbsp;<span class="src-id">urlencode</span><span class="src-sym">(</span><span class="src-var">$str</span><span class="src-sym">)</span><span class="src-sym">;</span></div></li>
+<li><div class="src-line"><a name="a545"></a>&nbsp;&nbsp;&nbsp;&nbsp;<span class="src-key">return&nbsp;</span><span class="src-id">str_replace</span><span class="src-sym">(</span><span class="src-id">array_keys</span><span class="src-sym">(</span><span class="src-var">$decode</span><span class="src-sym">)</span><span class="src-sym">,&nbsp;</span><span class="src-id">array_values</span><span class="src-sym">(</span><span class="src-var">$decode</span><span class="src-sym">)</span><span class="src-sym">,&nbsp;</span><span class="src-var">$full</span><span class="src-sym">)</span><span class="src-sym">;</span></div></li>
+<li><div class="src-line"><a name="a546"></a>&nbsp;&nbsp;<span class="src-sym">}&nbsp;</span><span class="src-comm">//end&nbsp;qsEncode</span></div></li>
+<li><div class="src-line"><a name="a547"></a>&nbsp;</div></li>
+<li><div class="src-line"><a name="a548"></a><span class="src-sym">}&nbsp;</span><span class="src-comm">//end&nbsp;Graphite_GraphBuilder</span></div></li>
 </ol>
 </div>
         <div class="credit">
 		    <hr />
-		    Documentation generated on Mon, 19 Mar 2012 00:13:43 -0600 by <a href="http://www.phpdoc.org">phpDocumentor 1.4.3</a>
+		    Documentation generated on Tue, 27 Mar 2012 17:50:29 -0700 by <a href="http://www.phpdoc.org">phpDocumentor 1.4.3</a>
 	      </div>
       </td></tr></table>
     </td>
