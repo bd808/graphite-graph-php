@@ -77,7 +77,7 @@
 
   <target name="phpdoc" description="Generate API documentation using PHPDocumentor">
     <exec executable="phpdoc">
-      <arg line="-c ${build}/phpdoc.ini"/>
+      <arg line="-c ${build}/phpdoc-src/phpdoc.ini"/>
     </exec>
   </target>
 
