@@ -132,6 +132,16 @@ class Graphite_GraphBuilderTest extends PHPUnit_Framework_TestCase {
     $this->assertEquals('target=alias(color(holtWintersForecast(sample),\'blue\'),\'Sample+Forecast\')&target=alias(color(dashed(holtWintersConfidenceBands(sample)),\'grey\'),\'Sample+Confidence\')&target=alias(color(holtWintersConfidenceAbberation(keepLastValue(sample)),\'orange\'),\'Sample+Aberration\')&target=alias(color(dashed(threshold(100)),\'red\'),\'Sample+Critical\')&target=alias(color(dashed(threshold(75)),\'orange\'),\'Sample+Warning\')&target=alias(color(sample,\'yellow\'),\'Sample\')', $g->qs);
   } //end testForecast
 
+  /**
+   * Given: ini with an aliasing function
+   * Expect: default alias is omitted
+   */
+  public function testAliasOverride () {
+    $g = new Graphite_GraphBuilder();
+    $g->ini(dirname(__FILE__) . '/testAliasOverride.ini');
+    $this->assertEquals('target=cactiStyle(aliasByNode(something.prod.*.requests.count,3))&target=*', $g->qs);
+  }
+
 
   /**
    * Assert that the given query string only contains RFC-3986 valid

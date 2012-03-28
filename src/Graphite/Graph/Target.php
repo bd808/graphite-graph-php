@@ -24,7 +24,7 @@ class Graphite_Graph_Target {
    * @var array
    */
   static protected $validFunctions = array(
-    // args, priority
+    // args, priority, isAlias
     // args   == 0: no args
     //        == 1..N: verbatum args
     //        == string: format spec
@@ -33,85 +33,85 @@ class Graphite_Graph_Target {
     //          ~ '<': arg comes before series
     //          ~ '*': var args (one or more)
     //        == array(): positional args as above
-    'alias' => array('"', 99),
-    'aliasByNode' => array('*', 50),
-    'aliasSub' => array(array('"','"'), 50),
-    'alpha' => array(1, 50),
-    'areaBetween' => array(0, 50),
-    'asPercent' => array('?', 50),
-    'averageAbove' => array(1, 50),
-    'averageBelow' => array(1, 50),
-    'averageSeries' => array(0, 50),
-    'averageSeriesWithWildcards' => array('*', 50),
-    'cactiStyle' => array(0, 100),
-    'color' => array('"', 98),
-    'cumulative' => array(0, 50),
-    'currentAbove' => array(1, 50),
-    'currentBelow' => array(1, 50),
-    'dashed' => array('?', 50),
-    'derivative' => array(0, 50),
-    'diffSeries' => array('*', 50),
-    'divideSeries' => array(1, 50),
-    'drawAsInfinite' => array(0, 50),
-    'events' => array(0, 1),
-    'exclude' => array('"', 50),
-    'groupByNode' => array(array(1, '"'), 50),
-    'highestAverage' => array(1, 50),
-    'highestCurrent' => array(1, 50),
-    'highestMax' => array(1, 50),
-    'hitcount' => array('"', 50),
-    'holtWintersAberration' => array('?', 50),
-    'holtWintersConfidenceBands' => array('?', 50),
-    'holtWintersForecast' => array(0, 50),
-    'integral' => array(0, 50),
-    'keepLastValue' => array(0, 50),
-    'legendValue' => array('"', 50),
-    'limit' => array(1, 50),
-    'lineWidth' => array(1, 90),
-    'logarithm' => array('?', 50),
-    'lowestAverage' => array(1, 50),
-    'lowestCurrent' => array(1, 50),
-    'maxSeries' => array(0, 50),
-    'maximumAbove' => array(1, 50),
-    'maximumBelow' => array(1, 50),
-    'minSeries' => array(0, 50),
-    'minimumAbove' => array(1, 50),
-    'mostDeviant' => array('<', 50),
-    'movingAverage' => array(1, 50),
-    'movingMedian' => array(1, 50),
-    'multiplySeries' => array('*', 50),
-    'nPercentile' => array(1, 50),
-    'nonNegativeDerivative' => array('?', 50),
-    'offset' => array(1, 50),
-    'percentileOfSeries' => array(array(1, '?'), 50),
-    'rangeOfSeries' => array(0, 50),
-    'removeAbovePercentile' => array(1, 50),
-    'removeAboveValue' => array(1, 50),
-    'removeBelowPercentile' => array(1, 50),
-    'removeBelowValue' => array(1, 50),
-    'scale' => array(1, 75),
-    'secondYAxis' => array(0, 50),
-    'smartSummarize' => array(array('"', '"?'), 50),
-    'sortByMaxima' => array(0, 50),
-    'sortByMinima' => array(0, 50),
-    'stacked' => array(0, 50),
-    'stdev' => array(array(1, '?'), 50),
-    'substr' => array(array(1, '?'), 50),
-    'sumSeries' => array('*', 50),
-    'sumSeriesWithWildcards' => array('*', 50),
-    'summarize' => array(array('"', '"?', '?'), 50),
-    'timeShift' => array('"', 50),
+    'alias' => array('"', 99, true),
+    'aliasByNode' => array('*', 50, true),
+    'aliasSub' => array(array('"','"'), 50, true),
+    'alpha' => array(1, 50, false),
+    'areaBetween' => array(0, 50, false),
+    'asPercent' => array('?', 50, false),
+    'averageAbove' => array(1, 50, false),
+    'averageBelow' => array(1, 50, false),
+    'averageSeries' => array(0, 50, false),
+    'averageSeriesWithWildcards' => array('*', 50, false),
+    'cactiStyle' => array(0, 100, false),
+    'color' => array('"', 98, false),
+    'cumulative' => array(0, 50, false),
+    'currentAbove' => array(1, 50, false),
+    'currentBelow' => array(1, 50, false),
+    'dashed' => array('?', 50, false),
+    'derivative' => array(0, 50, false),
+    'diffSeries' => array('*', 50, false),
+    'divideSeries' => array(1, 50, false),
+    'drawAsInfinite' => array(0, 50, false),
+    'events' => array(0, 1, false),
+    'exclude' => array('"', 50, false),
+    'groupByNode' => array(array(1, '"'), 50, true),
+    'highestAverage' => array(1, 50, false),
+    'highestCurrent' => array(1, 50, false),
+    'highestMax' => array(1, 50, false),
+    'hitcount' => array('"', 50, false),
+    'holtWintersAberration' => array('?', 50, false),
+    'holtWintersConfidenceBands' => array('?', 50, false),
+    'holtWintersForecast' => array(0, 50, false),
+    'integral' => array(0, 50, false),
+    'keepLastValue' => array(0, 50, false),
+    'legendValue' => array('"', 50, false),
+    'limit' => array(1, 50, false),
+    'lineWidth' => array(1, 90, false),
+    'logarithm' => array('?', 50, false),
+    'lowestAverage' => array(1, 50, false),
+    'lowestCurrent' => array(1, 50, false),
+    'maxSeries' => array(0, 50, false),
+    'maximumAbove' => array(1, 50, false),
+    'maximumBelow' => array(1, 50, false),
+    'minSeries' => array(0, 50, false),
+    'minimumAbove' => array(1, 50, false),
+    'mostDeviant' => array('<', 50, false),
+    'movingAverage' => array(1, 50, false),
+    'movingMedian' => array(1, 50, false),
+    'multiplySeries' => array('*', 50, false),
+    'nPercentile' => array(1, 50, false),
+    'nonNegativeDerivative' => array('?', 50, false),
+    'offset' => array(1, 50, false),
+    'percentileOfSeries' => array(array(1, '?'), 50, false),
+    'rangeOfSeries' => array(0, 50, false),
+    'removeAbovePercentile' => array(1, 50, false),
+    'removeAboveValue' => array(1, 50, false),
+    'removeBelowPercentile' => array(1, 50, false),
+    'removeBelowValue' => array(1, 50, false),
+    'scale' => array(1, 75, false),
+    'secondYAxis' => array(0, 50, false),
+    'smartSummarize' => array(array('"', '"?'), 50, false),
+    'sortByMaxima' => array(0, 50, false),
+    'sortByMinima' => array(0, 50, false),
+    'stacked' => array(0, 50, false),
+    'stdev' => array(array(1, '?'), 50, false),
+    'substr' => array(array(1, '?'), 50, true),
+    'sumSeries' => array('*', 50, false),
+    'sumSeriesWithWildcards' => array('*', 50, false),
+    'summarize' => array(array('"', '"?', '?'), 50, false),
+    'timeShift' => array('"', 50, false),
   );
 
   /**
    * @var array
    */
   static protected $generators = array(
-    'constantLine' => array('"', 1),
-    'randomWalkFunction' => array('"', 1),
-    'sinFunction' => array(array('"', '?'), 1),
-    'threshold' => array(array(1, '"', '"'), 1),
-    'timeFunction' => array('"', 1),
+    'constantLine' => array('"', 1, false),
+    'randomWalkFunction' => array('"', 1, false),
+    'sinFunction' => array(array('"', '?'), 1, false),
+    'threshold' => array(array(1, '"', '"'), 1, true),
+    'timeFunction' => array('"', 1, false),
   );
 
 
@@ -182,13 +182,25 @@ class Graphite_Graph_Target {
 
     // start from the provided series
     $target = $conf['series'];
+    $haveAlias = false;
 
     // build up target string
     foreach ($funcs as $name => $args) {
-      list($spec, $priority) = self::$validFunctions[$name];
+      list($spec, $priority, $isAlias) = self::$validFunctions[$name];
+
       if (is_scalar($args)) {
         $args = array($args);
       }
+
+      if ($isAlias && $haveAlias) {
+        // only one alias should be applied in each target
+        continue;
+
+      } else if ($isAlias && !$args[0]) {
+        // explicitly disabled alias
+        continue;
+      }
+
 
       if (0 === $spec) {
         // no args to function
@@ -221,7 +233,7 @@ class Graphite_Graph_Target {
 
             case '*':
               // var args
-              $tArgs = array_merge($targs, $args);
+              $tArgs = array_merge($tArgs, $args);
               break;
 
             default:
@@ -232,7 +244,10 @@ class Graphite_Graph_Target {
         } //end foreach $spec
 
         $target = "{$name}(" . implode(',', $tArgs) . ")";
-      }
+      } //end if/else
+
+      // keep track of alias application
+      $haveAlias = $haveAlias || $isAlias;
     } //end foreach $funcs
 
     return $target;
