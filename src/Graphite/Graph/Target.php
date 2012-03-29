@@ -10,35 +10,6 @@
 /**
  * DSL for building Graphite graph target components.
  *
- * Example:
- * <code>
- * <?php
- * $g = new Graphite_GraphBuilder(array('width' => 600, 'height' => 300));
- * $g->title('Memory')
- *   ->vtitle('Mbytes')
- *   ->bgcolor('white')
- *   ->fgcolor('black')
- *   ->from('-2days')
- *   ->area('stacked')
- *   ->prefix('metrics.collectd')
- *   ->prefix('com.example.host-1')
- *   ->prefix('snmp')
- *   ->metric('memory-free', array(
- *     'cactistyle' => true,
- *     'color' => '00c000',
- *     'alias' => 'Free',
- *     'scale' => '0.00000095367',
- *   ))
- *   ->metric('memory-used', array(
- *     'cactistyle' => true,
- *     'color' => 'c00000',
- *     'alias' => 'Used',
- *     'scale' => '0.00000095367',
- *   ));
- * ?>
- * <img src="http://graphite.example.com/render?<?php echo $g->qs(); ?>">
- * </code>
- *
  * @package Graphite
  * @subpackage Graph
  * @author Bryan Davis <bd808@bd808.com>

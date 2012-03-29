@@ -15,30 +15,30 @@
  * Example:
  * <code>
  * <?php
- * $g = new Graphite_GraphBuilder(array('width' => 600, 'height' => 300));
- * $g->title('Memory')
- *   ->vtitle('Mbytes')
- *   ->bgcolor('white')
- *   ->fgcolor('black')
- *   ->from('-2days')
- *   ->area('stacked')
- *   ->prefix('metrics.collectd')
- *   ->prefix('com.example.host-1')
- *   ->prefix('snmp')
- *   ->metric('memory-free', array(
- *     'cactistyle' => true,
- *     'color' => '00c000',
- *     'alias' => 'Free',
- *     'scale' => '0.00000095367',
- *   ))
- *   ->metric('memory-used', array(
- *     'cactistyle' => true,
- *     'color' => 'c00000',
- *     'alias' => 'Used',
- *     'scale' => '0.00000095367',
- *   ));
+ * $g = Graphite_GraphBuilder::builder(array('width' => 600, 'height' => 300))
+ *     ->title('Memory')
+ *     ->vtitle('Mbytes')
+ *     ->bgcolor('white')
+ *     ->fgcolor('black')
+ *     ->from('-2days')
+ *     ->area('stacked')
+ *     ->prefix('metrics.collectd')
+ *     ->prefix('com.example.host-1')
+ *     ->prefix('snmp')
+ *     ->metric('memory-free', array(
+ *       'cactistyle' => true,
+ *       'color' => '00c000',
+ *       'alias' => 'Free',
+ *       'scale' => '0.00000095367',
+ *     ))
+ *     ->metric('memory-used', array(
+ *       'cactistyle' => true,
+ *       'color' => 'c00000',
+ *       'alias' => 'Used',
+ *       'scale' => '0.00000095367',
+ *     ));
  * ?>
- * <img src="http://graphite.example.com/render?<?php echo $g->build(); ?>">
+ * <img src="http://graphite.example.com/render?<?php echo $g; ?>">
  * </code>
  *
  * @package Graphite
@@ -370,53 +370,6 @@ class Graphite_GraphBuilder {
 
 
   /**
-   * Generate a graphite graph description query string.
-   * @param string $format Format to export data in (null for graph)
-   * @return string Query string to append to graphite url to render this
-   *    graph
-   * @throws Graphite_ConfigurationException If required data is missing
-   */
-  public function build ($format=null) {
-    $parms = array();
-
-    foreach ($this->settings as $name => $value) {
-      $parms[] = self::qsEncode($name) . '=' . self::qsEncode($value);
-    }
-
-    foreach ($this->targets as $target) {
-      $parms[] = 'target=' .
-        self::qsEncode(Graphite_Graph_Target::generate($target));
-    } //end foreach
-
-    if (null !== $format) {
-      $parms[] = 'format=' . self::qsEncode($format);
-    }
-
-    return implode('&', $parms);
-  } //end qs
-
-  /**
-   * Alias for build().
-   *
-   * @deprecated
-   * @see build()
-   */
-  public function qs ($format=null) {
-    return $this->build($format);
-  } //end qs
-
-  /**
-   * Alias for build().
-   *
-   * @deprecated
-   * @see build()
-   */
-  public function url ($format=null) {
-    return $this->build($format);
-  } //end url
-
-
-  /**
    * Load a graph description file.
    *
    * @param string $file Path to file
@@ -480,6 +433,64 @@ class Graphite_GraphBuilder {
 
 
   /**
+   * Generate a graphite graph description query string.
+   * @param string $format Format to export data in (null for graph)
+   * @return string Query string to append to graphite url to render this
+   *    graph
+   * @throws Graphite_ConfigurationException If required data is missing
+   */
+  public function build ($format=null) {
+    $parms = array();
+
+    foreach ($this->settings as $name => $value) {
+      $parms[] = self::qsEncode($name) . '=' . self::qsEncode($value);
+    }
+
+    foreach ($this->targets as $target) {
+      $parms[] = 'target=' .
+        self::qsEncode(Graphite_Graph_Target::generate($target));
+    } //end foreach
+
+    if (null !== $format) {
+      $parms[] = 'format=' . self::qsEncode($format);
+    }
+
+    return implode('&', $parms);
+  } //end qs
+
+  /**
+   * Alias for build().
+   *
+   * @deprecated
+   * @see build()
+   */
+  public function qs ($format=null) {
+    return $this->build($format);
+  } //end qs
+
+  /**
+   * Alias for build().
+   *
+   * @deprecated
+   * @see build()
+   */
+  public function url ($format=null) {
+    return $this->build($format);
+  } //end url
+
+
+  /**
+   * Convert to string.
+   *
+   * @return string Query string to append to graphite url to render this
+   *    graph
+   */
+  public function __toString () {
+    return $this->build();
+  }
+
+
+  /**
    * Builder factory.
    *
    * @param array $settings Default settings for graph
@@ -520,8 +531,8 @@ class Graphite_GraphBuilder {
    *   component.
    *
    * Php's builtin urlencode function is a general purpose encoder. This means
-   * that it takes the most conservative approach to encoding. This means
-   * percent-encoding all octets that are not in the "unreserved" set
+   * that it takes the most conservative approach to encoding. It
+   * percent-encodes all octets that are not in the "unreserved" set
    * (ALPHA / DIGIT / "-" / "." / "_" / "~"). Actually it goes further than
    * this and encodes the tilde as well for no apparent reason other than
    * potential binary compatibility with the output of early non-conforming
@@ -540,6 +551,10 @@ class Graphite_GraphBuilder {
    * then decode _most_ query allowed characters. We will leave "&", "=", ";"
    * and "+" percent-encoded to preserve delimiters used in the
    * application/x-www-form-urlencoded encoding.
+   *
+   * What's the point? I could claim that it reduces the size of the encoded
+   * string, but my real reason is that it makes the Graphite query strings
+   * more readable for debugging.
    *
    * @param string $str String to encode for embedding in the query component
    *    of a URI.

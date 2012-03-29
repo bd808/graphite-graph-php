@@ -1,6 +1,6 @@
 <refentry id="{@id}">
   <refnamediv>
-    <refname>Graphite_GraphBuilder</refname>
+    <refname>Graphite_GraphBuilder Manual</refname>
     <refpurpose>
       A DSL and ini-based templating language to assist
       in constructing query strings for use with Graphite.
@@ -19,32 +19,86 @@
     <para>
       The process of describing complex graphs is however cumbersome at best.
       Graphite_GraphBuilder attempts to reduce the complexity of embedding
-      Graphite graphs in PHP based applications.
-    </para>
-  </refsect1>
-  <refsect1 id="{@id download}">
-    <title>Download</title>
-    <para>
-      You can download this project in either
-      {@link https://github.com/bd808/graphite-graph-php/zipball/master zip} or
-      {@link https://github.com/bd808/graphite-graph-php/tarball/master tar}
-      formats.
-    </para>
-    <para>
-      You can also clone the project with {@link http://git-scm.com Git} by
-      running:
-      <screen><![CDATA[
-$ git clone git://github.com/bd808/graphite-graph-php
-        ]]></screen>
-    </para>
-    <para>
-      Get the source code on GitHub : {@link https://github.com/bd808/graphite-graph-php bd808/graphite-graph-php}
+      Graphite graphs in PHP based applications by providing a fluent API for
+      describing graphs and a facility for loading full or partial graph
+      descriptions from ini files.
     </para>
   </refsect1>
   <refsect1 id="{@id examples}">
     <title>Examples</title>
+    <refsect2 id="{@id dsl_example}">
+      <title>DSL Usage</title>
+      <para>
+        {@example dsl_example.php}
+      </para>
+    </refsect2>
+    <refsect2 id="{@id ini_example}">
+      <title>Ini Usage</title>
+      <para>
+        See {@link Graphite_IniParser} documentation for more details on the
+        Mustache-like template expansion available within the ini files.
+      </para>
+      <para>
+        {@example interface.ini}
+      </para>
+      <para>
+        {@example ini_example.php}
+      </para>
+    </refsect2>
+  </refsect1>
+  <refsect1 id="{@id download}">
+    <title>Download</title>
+    <refsect2 id="{@id composer}">
+      <title>Install with Composer</title>
+      <para>
+        Graphite_GraphBuilder can be installed via {@link
+        http://getcomposer.org/ Composer} as "{@link
+        http://packagist.org/packages/graphite-graph/graphite-graph
+        graphite-graph/graphite-graph}". The "dev-master" branch tracks stable
+        development.
+      </para>
+      <para>
+        <programlisting role="javascript">
+          <![CDATA[
+{
+  "require": {
+    "graphite-graph/graphite-graph": "dev-master"
+  }
+}
+          ]]>
+        </programlisting>
+      </para>
+    </refsect2>
+    <refsect2 id="{@id get_source}">
+      <title>Get the Source</title>
+      <para>
+        You can download this source in {@link
+        https://github.com/bd808/graphite-graph-php/zipball/master zip} and
+        {@link https://github.com/bd808/graphite-graph-php/tarball/master tar}
+        formats.
+      </para>
+      <para>
+        You can also clone the project with {@link http://git-scm.com Git} by
+        running:
+        <screen><![CDATA[
+          $ git clone git://github.com/bd808/graphite-graph-php
+          ]]></screen>
+      </para>
+    </refsect2>
+    <refsect2 id="{@id fork}">
+      <title>Contributing</title>
+      <para>
+        Fork this project on GitHub : {@link https://github.com/bd808/graphite-graph-php bd808/graphite-graph-php}
+      </para>
+    </refsect2>
+  </refsect1>
+  <refsect1 id="{@id credits}">
+    <title>Credits</title>
     <para>
-      {@example dsl_example.php}
+      Written by {@link http://bd808.com/ Bryan Davis} with support from {@link http://keynetics.com/ Keynetics}.
+    </para>
+    <para>
+      Inspired by {@link https://github.com/ripienaar/graphite-graph-dsl/}
     </para>
   </refsect1>
 </refentry>

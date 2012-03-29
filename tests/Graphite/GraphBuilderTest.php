@@ -64,14 +64,14 @@ class Graphite_GraphBuilderTest extends PHPUnit_Framework_TestCase {
 
 
   /**
-   * Given: a resaonablu complex ini file
+   * Given: a reasonably complex ini file
    * Expect: a well formed query string
    */
   public function testIni () {
-    $g = new Graphite_GraphBuilder();
-    $g->prefix('com.example.foo')
-      ->ini(dirname(__FILE__) . '/testIni.ini');
-    $this->assertEquals('title=CPU+IRQ+Usage&vtitle=percent&from=-2days&width=100&height=100&areaMode=stacked&target=alias(color(scale(derivative(com.example.foo.munin.cpu.irq),0.001),\'red\'),\'IRQ\')&target=alias(color(scale(derivative(com.example.foo.munin.cpu.softirq),0.001),\'yellow\'),\'Batched+IRQ\')&target=alias(color(drawAsInfinite(puppet.time.total),\'blue\'),\'Puppet+Run\')', $g->qs);
+    $g = Graphite_GraphBuilder::builder()
+        ->prefix('com.example.foo')
+        ->ini(dirname(__FILE__) . '/testIni.ini');
+    $this->assertEquals('title=CPU+IRQ+Usage&vtitle=percent&from=-2days&width=100&height=100&areaMode=stacked&target=alias(color(scale(derivative(com.example.foo.munin.cpu.irq),0.001),\'red\'),\'IRQ\')&target=alias(color(scale(derivative(com.example.foo.munin.cpu.softirq),0.001),\'yellow\'),\'Batched+IRQ\')&target=alias(color(drawAsInfinite(puppet.time.total),\'blue\'),\'Puppet+Run\')', (string) $g);
   } //end testIni
 
 
