@@ -23,28 +23,28 @@ class Graphite_Graph_CallSpec {
    *
    * @var string
    */
-  public $name;
+  protected $name;
 
   /**
    * Description of function arguments.
    *
    * @var array
    */
-  public $signature;
+  protected $signature;
 
   /**
    * Sort order.
    *
    * @var int
    */
-  public $sortOrder;
+  protected $sortOrder;
 
   /**
    * Does this function provide an alias for the series?
    *
    * @var bool
    */
-  public $isAlias;
+  protected $isAlias;
 
 
   /**
@@ -65,77 +65,71 @@ class Graphite_Graph_CallSpec {
     $this->isAlias = $alias;
   } //end __construct
 
-  public function takesArgs () {
-    return (0 !== $this->getArg(0));
+
+  /**
+   * Does this function provide an alias for the series?
+   *
+   * @return bol True if this function aliases the series, false otherwise.
+   */
+  public function isAlias () {
+    return $this->isAlias;
   }
 
-  public function formatArgs ($args) {
-    $tArgs = array();
+
+  /**
+   * Does this function require arguments other than a series?
+   *
+   * @return bool True if the function requires arguments, false otherwise.
+   */
+  protected function takesArgs () {
+    return (0 !== $this->signature[0]);
+  }
+
+
+  /**
+   * Format the call for use as a target.
+   *
+   * @param string $series Series to apply function to
+   * @param array $args Arguments to function
+   * @return string Formatted function call
+   */
+  public function asString ($series, $args) {
+    $callArgs = array($series);
     if ($this->takesArgs()) {
       foreach ($this->signature as $idx => $type) {
         switch ($type) {
           case '"':
               // quote arg
-              $tArgs[] = "'{$args[$idx]}'";
+              $callArgs[] = "'{$args[$idx]}'";
               break;
 
           case '<':
               // arg comes before series
-              array_unshift($tArgs, $args[$idx]);
+              array_unshift($callArgs, $args[$idx]);
               break;
 
           case '?':
               // optional arg
               if (isset($args[$idx]) && !is_bool($args[$idx])) {
-                $tArgs[] = $args[$idx];
+                $callArgs[] = $args[$idx];
               }
               break;
 
           case '*':
               // var args
-              $tArgs = array_merge($tArgs, $args);
+              $callArgs = array_merge($callArgs, $args);
               break;
 
           default:
               // verbatum arg
-              $tArgs[] = $args[$idx];
+              $callArgs[] = $args[$idx];
               break;
         } //end switch
       } //end foreach
     } //end if
 
-    return $tArgs;
-  } //end formatArgs
-
-  public function getArg ($idx) {
-    return (isset($this->signature[$idx]))? $this->signature[$idx]: null;
-  }
-
-  public function arg0 () {
-    return $this->getArg(0);
-  }
-  public function arg1 () {
-    return $this->getArg(1);
-  }
-  public function arg2 () {
-    return $this->getArg(0);
-  }
-
-  /**
-   * Handle attempts to read from non-existant members.
-   *
-   * @param string $name Member name
-   * @return mixed Setting value or null if not found
-   */
-  public function __get ($name) {
-    echo __METHOD__ . "([{$name}])\n";
-    if (method_exists($this, $name)) {
-      echo "aliasing...\n";
-      var_dump($this->$name());
-      return $this->$name();
-    }
-    return null;
-  } //end __get
+    return "{$this->name}(" . implode(',', $callArgs) . ")";
+  } //end asString
 
 
   /**

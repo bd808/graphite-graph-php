@@ -10,78 +10,60 @@
 /**
  * DSL for building Graphite graph target components.
  *
+ * Example:
+ * <code>
+ * <?php
+ * $g = new Graphite_GraphBuilder(array('width' => 600, 'height' => 300));
+ * $g->title('Memory')
+ *   ->vtitle('Mbytes')
+ *   ->bgcolor('white')
+ *   ->fgcolor('black')
+ *   ->from('-2days')
+ *   ->area('stacked')
+ *   ->prefix('metrics.collectd')
+ *   ->prefix('com.example.host-1')
+ *   ->prefix('snmp')
+ *   ->metric('memory-free', array(
+ *     'cactistyle' => true,
+ *     'color' => '00c000',
+ *     'alias' => 'Free',
+ *     'scale' => '0.00000095367',
+ *   ))
+ *   ->metric('memory-used', array(
+ *     'cactistyle' => true,
+ *     'color' => 'c00000',
+ *     'alias' => 'Used',
+ *     'scale' => '0.00000095367',
+ *   ));
+ * ?>
+ * <img src="http://graphite.example.com/render?<?php echo $g->qs(); ?>">
+ * </code>
+ *
  * @package Graphite
  * @subpackage Graph
  * @author Bryan Davis <bd808@bd808.com>
  * @copyright 2012 Bryan Davis and contributors. All Rights Reserved.
  * @license http://www.opensource.org/licenses/BSD-2-Clause Simplified BSD License
+ * @link http://readthedocs.org/docs/graphite/en/latest/functions.html
  */
 class Graphite_Graph_Target {
 
   /**
-   * Handle attempts to read from non-existant members.
-   *
-   * Looks for $name in settings and returns value if found.
-   * If the setting isn't valid an E_USER_NOTICE warning will be raised.
-   *
-   * @param string $name Setting name
-   * @return mixed Setting value or null if not found
+   * @var array
    */
-  public function __get ($name) {
-    if ('qs' == $name || 'url' == $name) {
-      return $this->qs();
-    }
-
-    $cname = Graphite_Graph_Params::canonicalName($name);
-    if (array_key_exists($cname, $this->settings)) {
-      $val = $this->settings[$cname];
-
-      if ('hide' == mb_substr($cname, 0, 4) &&
-          'hide' != mb_substr(mb_strtolower($name), 0, 4)) {
-        // invert inverted alias
-        $val = !$val;
-      }
-
-      return $val;
-    }
-
-    if (false === $cname) {
-      // invalid request
-      $trace = debug_backtrace();
-      trigger_error("Undefined property via __get(): {$name} in " .
-          "{$trace[0]['file']} on line {$trace[0]['line']}", E_USER_NOTICE);
-    }
-    return null;
-  } //end __get
-
+  protected $functions;
 
   /**
-   * Handle attempts to write to non-existant members.
+   * Constructor.
    *
-   * Sets setting $name=$val if $name is a valid setting.
-   * If the setting isn't valid an E_USER_NOTICE warning will be raised.
-   *
-   * @param string $name Member name
-   * @param mixed $val Value to set
-   * @return void
+   * @param string $series Base series to construct target from.
    */
-  public function __set ($name, $val) {
-    $cname = Graphite_Graph_Params::canonicalName($name);
-    if (false !== $cname) {
-      if ('hide' == mb_substr($cname, 0, 4) &&
-          'hide' != mb_substr(mb_strtolower($name), 0, 4)) {
-        // invert logical toggle
-        $val = !((bool) $val);
-      }
-
-      $this->settings[$cname] = $val;
-    } else {
-      // invalid request
-      $trace = debug_backtrace();
-      trigger_error("Undefined property via __set(): {$name} in " .
-          "{$trace[0]['file']} on line {$trace[0]['line']}", E_USER_NOTICE);
+  public function __construct ($series=null) {
+    $this->functions = array();
+    if (null !== $series) {
+      $this->functions['series'] = $series;
     }
-  } //end __set
+  } //end __construct
 
 
   /**
@@ -95,25 +77,56 @@ class Graphite_Graph_Target {
    * @return mixed Property value or self
    */
   public function __call ($name, $args) {
-    if (count($args) > 0) {
-      // set property and return self for chaining
-      $this->__set($name, $args[0]);
-      return $this;
-
-    } else {
-      // return property
-      return $this->__get($name);
+    $func = Graphite_Graph_Functions::canonicalName($name);
+    if (false !== $func) {
+      $this->functions[$func] = $args;
     }
+    return $this;
   } //end __call
+
+
+  /**
+   * Get the description of this target as an array suitable for use with a
+   * call to {@link Graphite_GraphBuilder::metric()}.
+   *
+   * @return array Target configuration
+   */
+  public function asMetric () {
+    return $this->functions;
+  }
+
+
+  /**
+   * Build a traget parameter.
+   *
+   * @return string Target parameter for use in query string
+   */
+  public function build () {
+    return self::generate($this);
+  }
+
+
+  /**
+   * Builder factory.
+   *
+   * @param string $series Base series to construct target from.
+   */
+  static public function builder ($series=null) {
+    return new Graphite_Graph_Target($series);
+  }
 
   /**
    * Generate the target parameter for a given configuration.
-   * @param array $conf Configuration
-   * @return string Target parameter
+   * @param mixed $conf Configuration as array or Graphite_Graph_Target object
+   * @return string Target parameter for use in query string
    * @throws Graphite_ConfigurationException If neither series nor target is set
    *    in $conf
    */
   static public function generate ($conf) {
+    if ($conf instanceof Graphite_Graph_Target) {
+      $conf = $conf->functions;
+    }
+
     if (isset($conf['target'])) {
       // explict target has been provided by the user
       return $conf['target'];
@@ -147,21 +160,20 @@ class Graphite_Graph_Target {
         $args = array($args);
       }
 
-      if ($spec->isAlias && $haveAlias) {
+      if ($spec->isAlias() && $haveAlias) {
         // only one alias should be applied in each target
         continue;
 
-      } else if ($spec->isAlias && !$args[0]) {
+      } else if ($spec->isAlias() && !$args[0]) {
         // explicitly disabled alias
         continue;
       }
 
-      $callArgs = $spec->formatArgs($args);
-      array_unshift($callArgs, $target);
-      $target = "{$name}(" . implode(',', $callArgs) . ")";
+      // format call as a string
+      $target = $spec->asString($target, $args);
 
       // keep track of alias application
-      $haveAlias = $haveAlias || $spec->isAlias;
+      $haveAlias = $haveAlias || $spec->isAlias();
     } //end foreach $funcs
 
     return $target;

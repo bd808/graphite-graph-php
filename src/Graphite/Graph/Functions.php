@@ -10,11 +10,15 @@
 /**
  * Utility for target functions.
  *
+ * Functions are used to transform, combine and perform calculations on series
+ * data.
+ *
  * @package Graphite
  * @subpackage Graph
  * @author Bryan Davis <bd808@bd808.com>
  * @copyright 2012 Bryan Davis and contributors. All Rights Reserved.
  * @license http://www.opensource.org/licenses/BSD-2-Clause Simplified BSD License
+ * @link http://readthedocs.org/docs/graphite/en/latest/functions.html
  */
 class Graphite_Graph_Functions {
 
@@ -55,6 +59,7 @@ class Graphite_Graph_Functions {
     'drawAsInfinite' => array(0, 50, false),
     'events' => array(0, 1, false),
     'exclude' => array('"', 50, false),
+    'group' => array('*', 50, false),
     'groupByNode' => array(array(1, '"'), 50, true),
     'highestAverage' => array(1, 50, false),
     'highestCurrent' => array(1, 50, false),
@@ -132,7 +137,6 @@ class Graphite_Graph_Functions {
     'time' => 'timeFunction',
     'sin' => 'sinFunction',
     'randomWalk' => 'randomWalkFunction',
-    'group' => 'groupByNode',
   );
 
 

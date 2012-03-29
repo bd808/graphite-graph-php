@@ -38,13 +38,16 @@
  *     'scale' => '0.00000095367',
  *   ));
  * ?>
- * <img src="http://graphite.example.com/render?<?php echo $g->qs(); ?>">
+ * <img src="http://graphite.example.com/render?<?php echo $g->build(); ?>">
  * </code>
  *
  * @package Graphite
  * @author Bryan Davis <bd808@bd808.com>
  * @copyright 2012 Bryan Davis and contributors. All Rights Reserved.
  * @license http://www.opensource.org/licenses/BSD-2-Clause Simplified BSD License
+ * @link http://graphite.wikidot.com/
+ * @link http://readthedocs.org/docs/graphite/en/latest/url-api.html
+ * @link http://bd808.com/graphite-graph-php/
  */
 class Graphite_GraphBuilder {
 
@@ -373,7 +376,7 @@ class Graphite_GraphBuilder {
    *    graph
    * @throws Graphite_ConfigurationException If required data is missing
    */
-  public function qs ($format=null) {
+  public function build ($format=null) {
     $parms = array();
 
     foreach ($this->settings as $name => $value) {
@@ -393,13 +396,23 @@ class Graphite_GraphBuilder {
   } //end qs
 
   /**
-   * Alias for qs().
+   * Alias for build().
    *
    * @deprecated
-   * @see qs()
+   * @see build()
+   */
+  public function qs ($format=null) {
+    return $this->build($format);
+  } //end qs
+
+  /**
+   * Alias for build().
+   *
+   * @deprecated
+   * @see build()
    */
   public function url ($format=null) {
-    return $this->qs($format);
+    return $this->build($format);
   } //end url
 
 
@@ -464,6 +477,16 @@ class Graphite_GraphBuilder {
 
     return $this;
   } //end ini
+
+
+  /**
+   * Builder factory.
+   *
+   * @param array $settings Default settings for graph
+   */
+  static public function builder ($settings=null) {
+    return new Graphite_GraphBuilder($settings);
+  }
 
 
   /**
