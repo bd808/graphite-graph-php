@@ -17,13 +17,13 @@ $g = Graphite_GraphBuilder::builder()
     ->prefix('collectd')
     ->prefix('com.example.host')
     ->prefix('snmp')
-    ->metric('memory-free', array(
+    ->series('memory-free', array(
         'cactistyle' => true,
         'color' => '00c000',
         'alias' => 'Free',
         'scale' => '0.00000095367',
       ))
-    ->metric('memory-used', array(
+    ->series('memory-used', array(
         'cactistyle' => true,
         'color' => 'c00000',
         'alias' => 'Used',

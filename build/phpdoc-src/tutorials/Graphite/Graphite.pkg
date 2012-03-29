@@ -29,7 +29,7 @@
     <refsect2 id="{@id dsl_example}">
       <title>DSL Usage</title>
       <para>
-        {@example dsl_example.php}
+        {@example series_example.php}
       </para>
     </refsect2>
     <refsect2 id="{@id ini_example}">
@@ -40,9 +40,6 @@
       </para>
       <para>
         {@example interface.ini}
-      </para>
-      <para>
-        {@example ini_example.php}
       </para>
     </refsect2>
   </refsect1>

@@ -17,7 +17,7 @@
  * @license http://www.opensource.org/licenses/BSD-2-Clause Simplified BSD License
  * @link http://readthedocs.org/docs/graphite/en/latest/functions.html
  */
-class Graphite_Graph_Target {
+class Graphite_Graph_Series {
 
   /**
    * @var array
@@ -25,15 +25,22 @@ class Graphite_Graph_Target {
   protected $functions;
 
   /**
+   * @var Graphite_GraphBuilder
+   */
+  protected $graph;
+
+
+  /**
    * Constructor.
    *
    * @param string $series Base series to construct target from.
    */
-  public function __construct ($series=null) {
+  public function __construct ($series=null, $graph=null) {
     $this->functions = array();
     if (null !== $series) {
       $this->functions['series'] = $series;
     }
+    $this->graph = $graph;
   } //end __construct
 
 
@@ -60,7 +67,7 @@ class Graphite_Graph_Target {
    * Get the description of this target as an array suitable for use with a
    * call to {@link Graphite_GraphBuilder::metric()}.
    *
-   * @return array Target configuration
+   * @return array Series configuration
    */
   public function asMetric () {
     return $this->functions;
@@ -68,12 +75,17 @@ class Graphite_Graph_Target {
 
 
   /**
-   * Build a traget parameter.
+   * Build a target parameter.
    *
-   * @return string Target parameter for use in query string
+   * @return mixed Series parameter for use in query string or parent graph
+   * @todo Document difference
    */
   public function build () {
-    return self::generate($this);
+    if (null === $this->graph) {
+      return self::generate($this);
+    } else {
+      return $this->graph->metric('', $this->asMetric());
+    }
   }
 
 
@@ -83,18 +95,18 @@ class Graphite_Graph_Target {
    * @param string $series Base series to construct target from.
    */
   static public function builder ($series=null) {
-    return new Graphite_Graph_Target($series);
+    return new Graphite_Graph_Series($series);
   }
 
   /**
    * Generate the target parameter for a given configuration.
-   * @param mixed $conf Configuration as array or Graphite_Graph_Target object
-   * @return string Target parameter for use in query string
+   * @param mixed $conf Configuration as array or Graphite_Graph_Series object
+   * @return string Series parameter for use in query string
    * @throws Graphite_ConfigurationException If neither series nor target is set
    *    in $conf
    */
   static public function generate ($conf) {
-    if ($conf instanceof Graphite_Graph_Target) {
+    if ($conf instanceof Graphite_Graph_Series) {
       $conf = $conf->functions;
     }
 
@@ -148,7 +160,7 @@ class Graphite_Graph_Target {
     } //end foreach $funcs
 
     return $target;
-  } //end generateTarget
+  } //end generateSeries
 
 
-} //end Graphite_Graph_Target
+} //end Graphite_Graph_Series

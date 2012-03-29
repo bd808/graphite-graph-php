@@ -8,7 +8,7 @@
  * @package Graphite
  * @subpackage Graph
  */
-class Graphite_TargetTest extends PHPUnit_Framework_TestCase {
+class Graphite_SeriesTest extends PHPUnit_Framework_TestCase {
 
   /**
    * Given: a moderately complex DSL usage
@@ -21,7 +21,9 @@ class Graphite_TargetTest extends PHPUnit_Framework_TestCase {
         "cactistyle" => true,
         "alias" => "App Hits"
         );
-    $this->assertEquals('cactiStyle(aliasByNode(something.prod.*.requests.count,3))', Graphite_Graph_Target::generate($spec));
+    $this->assertEquals(
+        'cactiStyle(aliasByNode(something.prod.*.requests.count,3))',
+        Graphite_Graph_Series::generate($spec));
   } //end testFirstAliasWins
 
-} //end Graphite_TargetTest
+} //end Graphite_SeriesTest

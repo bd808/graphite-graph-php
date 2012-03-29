@@ -19,6 +19,15 @@
 class Graphite_Graph_CallSpec {
 
   /**
+   * Sprintf format string for creating a lambda function to format a list of
+   * arguments.
+   *
+   * @var string
+   */
+  const FMT_FORMAT_ARG = 'return %s::format($a, "%s");';
+
+
+  /**
    * Canonical name of the function.
    *
    * @var string
@@ -54,6 +63,7 @@ class Graphite_Graph_CallSpec {
    * @param mixed $signature Argument spec
    * @param int $order Sort order
    * @param bool $alias Does this function provide an alias?
+   * @todo Document argument spec
    */
   public function __construct ($name, $signature, $order, $alias) {
     $this->name = $name;
@@ -96,33 +106,39 @@ class Graphite_Graph_CallSpec {
   public function asString ($series, $args) {
     $callArgs = array($series);
     if ($this->takesArgs()) {
-      foreach ($this->signature as $idx => $type) {
-        switch ($type) {
-          case '"':
-              // quote arg
-              $callArgs[] = "'{$args[$idx]}'";
-              break;
-
+      foreach ($this->signature as $idx => $sig) {
+        switch ($sig[0]) {
           case '<':
               // arg comes before series
-              array_unshift($callArgs, $args[$idx]);
+              array_unshift($callArgs, self::format($args[$idx], $sig[1]));
               break;
 
           case '?':
               // optional arg
+              // TODO: make sure we have an ini test for this
               if (isset($args[$idx]) && !is_bool($args[$idx])) {
-                $callArgs[] = $args[$idx];
+                $callArgs[] =  self::format($args[$idx], $sig[1]);
               }
               break;
 
           case '*':
               // var args
-              $callArgs = array_merge($callArgs, $args);
+              // TODO: check to see if there is only True to wrap the
+              // current series.
+
+              // format all of the remaining args and append to call
+              // this would be so much prettier in php 5.3
+              $formattedArgs =  array_map(create_function(
+                  '$a',
+                  sprintf(self::FMT_FORMAT_ARG, __CLASS__, $sig[1])
+                  ),
+                  $args);
+              $callArgs = array_merge($callArgs, $formattedArgs);
               break;
 
           default:
               // verbatum arg
-              $callArgs[] = $args[$idx];
+              $callArgs[] = self::format($args[$idx], $sig[1]);
               break;
         } //end switch
       } //end foreach
@@ -130,6 +146,40 @@ class Graphite_Graph_CallSpec {
 
     return "{$this->name}(" . implode(',', $callArgs) . ")";
   } //end asString
+
+
+  /**
+   * Format an argument as a specified type.
+   *
+   * @param mixed $arg Argument to format
+   * @param string $type Type: " = string, # = number, ^ = bool
+   * @return mixed Formatted argument
+   */
+  static public function format ($arg, $type) {
+    $formatted = $arg;
+    switch ($type) {
+      case '"':
+          // quoted string
+          $formatted = "'{$arg}'";
+          break;
+
+      case '#':
+          // number
+          if (stripos(strtoupper((string) $arg), 'E')) {
+            // graphite doesn't like floats in scientific notation
+            $arg = sprintf('%.8f', $arg);
+          }
+          $formatted = $arg;
+          break;
+
+      case '^':
+          // boolean
+          $formatted = ($arg)? 'True': 'False';
+          break;
+    } //end switch
+
+    return $formatted;
+  } //end format
 
 
   /**

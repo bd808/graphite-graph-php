@@ -13,33 +13,7 @@
  * strings.
  *
  * Example:
- * <code>
- * <?php
- * $g = Graphite_GraphBuilder::builder(array('width' => 600, 'height' => 300))
- *     ->title('Memory')
- *     ->vtitle('Mbytes')
- *     ->bgcolor('white')
- *     ->fgcolor('black')
- *     ->from('-2days')
- *     ->area('stacked')
- *     ->prefix('metrics.collectd')
- *     ->prefix('com.example.host-1')
- *     ->prefix('snmp')
- *     ->metric('memory-free', array(
- *       'cactistyle' => true,
- *       'color' => '00c000',
- *       'alias' => 'Free',
- *       'scale' => '0.00000095367',
- *     ))
- *     ->metric('memory-used', array(
- *       'cactistyle' => true,
- *       'color' => 'c00000',
- *       'alias' => 'Used',
- *       'scale' => '0.00000095367',
- *     ));
- * ?>
- * <img src="http://graphite.example.com/render?<?php echo $g; ?>">
- * </code>
+ * {@example dsl_example.php}
  *
  * @package Graphite
  * @author Bryan Davis <bd808@bd808.com>
@@ -58,7 +32,7 @@ class Graphite_GraphBuilder {
   protected $settings;
 
   /**
-   * Metric prefix stack.
+   * Series prefix stack.
    * @var array
    */
   protected $prefixStack;
@@ -184,7 +158,7 @@ class Graphite_GraphBuilder {
 
 
   /**
-   * Set a prefix to add to subsequent metrics.
+   * Set a prefix to add to subsequent series.
    * @param string $prefix Prefix to add
    * @return Graphite_GraphBuilder Self, for message chaining
    */
@@ -231,11 +205,11 @@ class Graphite_GraphBuilder {
   /**
    * Add a data series to the graph.
    *
-   * @param string $name Name of data metric to graph
+   * @param string $name Name of data series to graph
    * @param array $opts Series options
    * @return Graphite_GraphBuilder Self, for message chaining
    */
-  public function metric ($name, $opts=array()) {
+  public function series ($name, $opts=array()) {
     $defaults = array(
       // default alias is prettied up version of name
       'alias'   => ucwords(strtr($name, '-_.', ' ')),
@@ -246,7 +220,32 @@ class Graphite_GraphBuilder {
     $this->targets[] = array_merge($defaults, $opts);
 
     return $this;
+  } //end series
+
+  /**
+   * Add a data series to the graph.
+   *
+   * @param string $name Name of data series to graph
+   * @param array $opts Series options
+   * @return Graphite_GraphBuilder Self, for message chaining
+   * @deprecated
+   * @see series()
+   */
+  public function metric ($name, $opts=array()) {
+    return $this->series($name, $opts);
   } //end metric
+
+
+  /**
+   * Add a data series to the graph using the {@link Graphite_Graph_Series}
+   * fluent builder DSL.
+   *
+   * @param string $name Name of data series to graph
+   * @return Graphite_Graph_Series Series builder
+   */
+  public function buildSeries ($name) {
+    return new Graphite_Graph_Series("{$this->currentPrefix()}{$name}", $this);
+  }
 
 
   /**
@@ -267,12 +266,12 @@ class Graphite_GraphBuilder {
     $opts['series'] = "threshold({$opts['value']})";
     unset($opts['value']);
 
-    return $this->metric('line_' . count($this->targets), $opts);
+    return $this->series('line_' . count($this->targets), $opts);
   } //end line
 
 
   /**
-   * Add forecast, confidence bands, aberrations and metrics using the
+   * Add forecast, confidence bands, aberrations and base series using the
    * Holt-Winters Confidence Band prediction model.
    *
    * @param array $opts Line options
@@ -284,7 +283,6 @@ class Graphite_GraphBuilder {
       throw new Graphite_ConfigurationException(
         "'series' is required for a Holt-Winters Confidence forecast");
     }
-    $opts['series'] = $opts['series'];
 
     if (!isset($opts['alias'])) {
       $opts['alias'] = ucfirst($name);
@@ -296,7 +294,7 @@ class Graphite_GraphBuilder {
       $args['alias'] = "{$args['alias']} Forecast";
       $args['color'] = (isset($args['forecast_color']))?
         $args['forecast_color']: 'blue';
-      $this->metric("{$name}_forecast", $args);
+      $this->series("{$name}_forecast", $args);
     }
 
     if (!isset($opts['bands_line']) || $opts['bands_line']) {
@@ -306,7 +304,7 @@ class Graphite_GraphBuilder {
       $args['color'] = (isset($args['bands_color']))?
         $args['bands_color']: 'grey';
       $args['dashed'] = true;
-      $this->metric("{$name}_bands", $args);
+      $this->series("{$name}_bands", $args);
     }
 
     if (!isset($opts['aberration_line']) || $opts['aberration_line']) {
@@ -319,7 +317,7 @@ class Graphite_GraphBuilder {
       if (isset($args['aberration_second_y']) && $args['aberration_second_y']) {
         $args['second_y_axis'] = true;
       }
-      $this->metric("{$name}_aberration", $args);
+      $this->series("{$name}_aberration", $args);
     }
 
     if (isset($opts['critical'])) {
@@ -363,7 +361,7 @@ class Graphite_GraphBuilder {
     }
 
     if (!isset($opts['actual_line']) || $opts['actual_line']) {
-      $this->metric($name, $opts);
+      $this->series($name, $opts);
     }
     return $this;
   } //end forecast
@@ -379,18 +377,18 @@ class Graphite_GraphBuilder {
   public function ini ($file, $vars=null) {
     $global = array();
     $prefixes = array();
-    $metrics = array();
+    $series = array();
 
     $ini = Graphite_IniParser::parse($file, $vars);
 
     foreach ($ini as $key => $value) {
       if (is_array($value)) {
-        // sub-arrays either describe prefixes or metrics
+        // sub-arrays either describe prefixes or series
         if (isset($value[':is_prefix'])) {
           $prefixes[$key] = $value;
 
         } else {
-          $metrics[$key] = $value;
+          $series[$key] = $value;
         }
 
       } else {
@@ -410,18 +408,18 @@ class Graphite_GraphBuilder {
       $this->$setting($args);
     }
 
-    // add metrics
-    foreach ($metrics as $name => $conf) {
+    // add series
+    foreach ($series as $name => $conf) {
       // TODO: add support for preconfigured "types" like line, forecast, etc
 
       if (isset($conf[':prefix'])) {
         $this->prefix($prefixes[$conf[':prefix']]);
       }
 
-      // metric name is either given explicitly or inferred from section label
-      $metricName = (isset($conf['metric']))? $conf['metric']: $name;
+      // series name is either given explicitly or inferred from section label
+      $seriesName = (isset($conf['metric']))? $conf['metric']: $name;
 
-      $this->metric($metricName, $conf);
+      $this->series($seriesName, $conf);
 
       if (isset($conf[':prefix'])) {
         $this->endPrefix();
@@ -448,7 +446,7 @@ class Graphite_GraphBuilder {
 
     foreach ($this->targets as $target) {
       $parms[] = 'target=' .
-        self::qsEncode(Graphite_Graph_Target::generate($target));
+        self::qsEncode(Graphite_Graph_Series::generate($target));
     } //end foreach
 
     if (null !== $format) {
