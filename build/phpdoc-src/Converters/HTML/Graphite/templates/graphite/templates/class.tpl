@@ -167,10 +167,9 @@
           <td>
             <code>
               {$vars[vars].var_name}
-              {if $vars[vars].var_default} = <span class="var-default">{$vars[vars].var_default|replace:"\n":"<br />"}</span>{/if}
             </code>
-            {if $vars[vars].sdesc}<br /><div style="margin-left: 20px">{$vars[vars].sdesc}</div>{/if}
-            {if $vars[vars].desc}<br /><div style="margin-left: 20px">{$vars[vars].desc}</div>{/if}
+            {if $vars[vars].sdesc}<div style="margin-left: 20px">{$vars[vars].sdesc}</div>{/if}
+            {if $vars[vars].desc}<div style="margin-left: 20px">{$vars[vars].desc}</div>{/if}
           </td>
         </tr>
       {/if}

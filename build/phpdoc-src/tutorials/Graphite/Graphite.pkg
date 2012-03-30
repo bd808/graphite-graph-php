@@ -6,6 +6,7 @@
       in constructing query strings for use with Graphite.
     </refpurpose>
   </refnamediv>
+  {@toc}
   <refsect1 id="{@id intro}">
     <title>About</title>
     <para>

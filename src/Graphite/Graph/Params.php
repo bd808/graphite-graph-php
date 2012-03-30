@@ -24,80 +24,77 @@ class Graphite_Graph_Params {
    * @var array
    * @see http://readthedocs.org/docs/graphite/en/latest/url-api.html
    */
-  static protected $validParams = array(
+  static protected $params = array(
     // request level
-    'cacheTimeout',
-    'from',
-    'graphType',
-    'jsonp',
-    'local',
-    'noCache',
-    'until',
+    'cacheTimeout'       => '#',
+    'from'               => '-',
+    'graphType'          => '-',
+    'jsonp'              => '-',
+    'local'              => '-',
+    'noCache'            => '!',
+    'until'              => '-',
 
     // all graph types
-    'bgcolor',
-    'colorList',
-    'fgcolor',
-    'fontBold',
-    'fontItalic',
-    'fontName',
-    'fontSize',
-    'height',
-    'margin',
-    'outputFormat',
-    'template',
-    'width',
-    'yAxisSide',
+    'bgcolor'            => '-',
+    'colorList'          => '-',
+    'fgcolor'            => '-',
+    'fontBold'           => '^',
+    'fontItalic'         => '^',
+    'fontName'           => '-',
+    'fontSize'           => '#',
+    'height'             => '#',
+    'margin'             => '#',
+    'outputFormat'       => '-',
+    'template'           => '-',
+    'width'              => '#',
+    'yAxisSide'          => '-',
 
     // line graph
-    'areaAlpha',
-    'areaMode',
-    'drawNullAsZero',
-    'graphOnly',
-    'hideAxes',
-    'hideGrid',
-    'hideLegend',
-    'hideLegend',
-    'hideYAxis',
-    'leftColor',
-    'leftDashed',
-    'leftWidth',
-    'lineMode',
-    'lineWidth',
-    'logBase',
-    'majorGridLineColor',
-    'max',
-    'min',
-    'minorGridLineColor',
-    'minorY',
-    'minXStep',
-    'rightColor',
-    'rightDashed',
-    'rightWidth',
-    'thickness',
-    'title',
-    'tz',
-    'vtitle',
-    'xFormat',
-    'yLimit',
-    'yLimitLeft',
-    'yLimitRight',
-    'yMax',
-    'yMaxLeft',
-    'yMaxRight',
-    'yMin',
-    'yMinLeft',
-    'yMinRight',
-    'yStep',
-    'yStepLeft',
-    'yStepRight',
-    'yUnitSystem',
+    'areaAlpha'          => '#',
+    'areaMode'           => '-',
+    'drawNullAsZero'     => '!',
+    'graphOnly'          => '^',
+    'hideAxes'           => '^',
+    'hideGrid'           => '^',
+    'hideLegend'         => '^',
+    'hideYAxis'          => '^',
+    'leftColor'          => '-',
+    'leftDashed'         => '!',
+    'leftWidth'          => '#',
+    'lineMode'           => '-',
+    'lineWidth'          => '#',
+    'logBase'            => '#',
+    'majorGridLineColor' => '-',
+    'minorGridLineColor' => '-',
+    'minorY'             => '#',
+    'minXStep'           => '#',
+    'rightColor'         => '-',
+    'rightDashed'        => '!',
+    'rightWidth'         => '#',
+    'thickness'          => '#',
+    'title'              => '-',
+    'tz'                 => '-',
+    'vtitle'             => '-',
+    'xFormat'            => '-',
+    'yLimit'             => '#',
+    'yLimitLeft'         => '#',
+    'yLimitRight'        => '#',
+    'yMax'               => '#',
+    'yMaxLeft'           => '#',
+    'yMaxRight'          => '#',
+    'yMin'               => '#',
+    'yMinLeft'           => '#',
+    'yMinRight'          => '#',
+    'yStep'              => '#',
+    'yStepLeft'          => '#',
+    'yStepRight'         => '#',
+    'yUnitSystem'        => '-',
 
     // pie graph
-    'pieLabels',
-    'pieMode',
-    'valueLabels',
-    'valueLabelsMin',
+    'pieLabels'          => '-',
+    'pieMode'            => '-',
+    'valueLabels'        => '-',
+    'valueLabelsMin'     => '#',
   );
 
 
@@ -105,12 +102,14 @@ class Graphite_Graph_Params {
    * Mapping from property names to Graphite parameter names.
    * @var array
    */
-  static protected $paramAliases = array(
-    'area'    => 'areaMode',
-    'axes'    => 'hideAxes',
-    'grid'    => 'hideGrid',
-    'legend'  => 'hideLegend',
-    'pie'     => 'pieMode',
+  static protected $aliases = array(
+    'area'   => 'areaMode',
+    'axes'   => 'hideAxes',
+    'grid'   => 'hideGrid',
+    'legend' => 'hideLegend',
+    'pie'    => 'pieMode',
+    'max'    => 'yMax',
+    'min'    => 'yMin',
   );
 
 
@@ -128,10 +127,10 @@ class Graphite_Graph_Params {
     if (null == $lookupMap) {
       // lazily construct the lookup map
       $tmp = array();
-      foreach (self::$validParams as $param) {
+      foreach (self::$params as $param => $type) {
         $tmp[mb_strtolower($param)] = $param;
       }
-      foreach (self::$paramAliases as $alias => $param) {
+      foreach (self::$aliases as $alias => $param) {
         $tmp[mb_strtolower($alias)] = $param;
       }
       $lookupMap = $tmp;
@@ -145,6 +144,20 @@ class Graphite_Graph_Params {
       return false;
     }
   } //end canonicalName
+
+
+  /**
+   * Format a parameter value.
+   *
+   * @param string $name Parameter name
+   * @param string $value Value to format
+   * @return mixed Formatted value
+   * @see Graphite_Graph_CallSpec::format
+   */
+  static public function format ($name, $value) {
+    $type = self::$params[$name];
+    return Graphite_Graph_CallSpec::format($value, $type);
+  } //end format
 
 
   /**

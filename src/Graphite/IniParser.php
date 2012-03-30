@@ -40,12 +40,12 @@
  *   meaning in the value.
  *
  * Example:
- * <code>
+ * <pre>
  * ; example ini file
  * [section]
  * key1 = "{{TOKEN1}}"
  * key2 = "{{TOKEN2}}"
- * </code>
+ * </pre>
  *
  * <code>
  * <?php

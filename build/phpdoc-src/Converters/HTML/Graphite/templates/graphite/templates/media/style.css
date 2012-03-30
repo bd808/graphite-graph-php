@@ -444,8 +444,10 @@ h3.title {
 }
 
 .toc {
-  margin-left:2em;
-  padding-left:0em;
+  padding-left:0;
+}
+.toc li {
+  list-style:none;
 }
 
 a {

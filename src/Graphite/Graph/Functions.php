@@ -23,106 +23,99 @@
 class Graphite_Graph_Functions {
 
   /**
-   * Metric manipulation functions.
+   * Metric manipulation function sepecifications.
+   *
+   * Each specification is shorthand for constructing a
+   * Graphite_Graph_CallSpec stored as an array. This is a tuple of:
+   * (call signature, sort order, alias flag)
    *
    * @var array
+   * @see Graphite_Graph_CallSpec::__construct
    */
-  static protected $validFunctions = array(
-      // args, priority, isAlias
-      // args   == 0: no args
-      //        == 1..N: verbatum args
-      //        == string: format spec
-      //          ~ '-': single arg
-      //          ~ '?': optional arg
-      //          ~ '*': var args (one or more)
-      //          ~ '<': arg comes before series
-      //          ~ '"': quote arg
-      //          ~ '#': numeric arg
-      //          ~ '^': boolean arg
-      //        == array(): positional args as above
-      'alias'                      => array('-"', 99, 1),
-      'aliasByNode'                => array('*#', 50, 1),
-      'aliasSub'                   => array(array('-"', '-"'), 50, 1),
-      'alpha'                      => array('-#', 50, 0),
-      'areaBetween'                => array(0, 50, 0),
-      'asPercent'                  => array('?#', 50, 0),
-      'averageAbove'               => array('-#', 50, 0),
-      'averageBelow'               => array('-#', 50, 0),
-      'averageSeries'              => array(0, 50, 0),
-      'averageSeriesWithWildcards' => array('*#', 50, 0),
-      'cactiStyle'                 => array(0, 100, 0),
-      'color'                      => array('-"', 98, 0),
-      'cumulative'                 => array(0, 50, 0),
-      'currentAbove'               => array('-#', 50, 0),
-      'currentBelow'               => array('-#', 50, 0),
-      'dashed'                     => array('?#', 50, 0),
-      'derivative'                 => array(0, 50, 0),
-      'diffSeries'                 => array('*-', 50, 0),
-      'divideSeries'               => array('--', 50, 0),
-      'drawAsInfinite'             => array(0, 50, 0),
-      'events'                     => array('*"', 1, 0),
-      'exclude'                    => array('-"', 50, 0),
-      'group'                      => array('*-', 50, 0),
-      'groupByNode'                => array(array('-#', '-"'), 50, 1),
-      'highestAverage'             => array('-#', 50, 0),
-      'highestCurrent'             => array('-#', 50, 0),
-      'highestMax'                 => array('-#', 50, 0),
-      'hitcount'                   => array('-"', 50, 0),
-      'holtWintersAberration'      => array('?#', 50, 0),
-      'holtWintersConfidenceArea'  => array('?#', 50, 0),
-      'holtWintersConfidenceBands' => array('?#', 50, 0),
-      'holtWintersForecast'        => array(0, 50, 0),
-      'integral'                   => array(0, 50, 0),
-      'keepLastValue'              => array(0, 50, 0),
-      'legendValue'                => array('-"', 50, 0),
-      'limit'                      => array('-#', 50, 0),
-      'lineWidth'                  => array('-#', 90, 0),
-      'logarithm'                  => array('?#', 50, 0),
-      'lowestAverage'              => array('-#', 50, 0),
-      'lowestCurrent'              => array('-#', 50, 0),
-      'maximumAbove'               => array('-#', 50, 0),
-      'maximumBelow'               => array('-#', 50, 0),
-      'maxSeries'                  => array('*-', 50, 0),
-      'minimumAbove'               => array('-#', 50, 0),
-      'minSeries'                  => array('*-', 50, 0),
-      'mostDeviant'                => array('<#', 50, 0),
-      'movingAverage'              => array('-#', 50, 0),
-      'movingMedian'               => array('-#', 50, 0),
-      'multiplySeries'             => array('*-', 50, 0),
-      'nonNegativeDerivative'      => array('?#', 50, 0),
-      'nPercentile'                => array('-#', 50, 0),
-      'offset'                     => array('-#', 50, 0),
-      'percentileOfSeries'         => array(array('-#', '?-'), 50, 0),
-      'rangeOfSeries'              => array('*-', 50, 0),
-      'removeAbovePercentile'      => array('-#', 50, 0),
-      'removeAboveValue'           => array('-#', 50, 0),
-      'removeBelowPercentile'      => array('-#', 50, 0),
-      'removeBelowValue'           => array('-#', 50, 0),
-      'scale'                      => array('-#', 75, 0),
-      'scaleToSeconds'             => array('-#', 75, 0),
-      'secondYAxis'                => array(0, 50, 0),
-      'smartSummarize'             => array(array('-"', '?"'), 50, 0),
-      'sortByMaxima'               => array(0, 50, 0),
-      'sortByMinima'               => array(0, 50, 0),
-      'stacked'                    => array(0, 50, 0),
-      'stdev'                      => array(array('-#', '?#'), 50, 0),
-      'substr'                     => array(array('-#', '?#'), 50, 1),
-      'summarize'                  => array(array('-"', '?"', '?-'), 50, 0),
-      'sumSeries'                  => array('*-', 50, 0),
-      'sumSeriesWithWildcards'     => array('*#', 50, 0),
-      'timeShift'                  => array('-"', 50, 0),
-      'transformNull'              => array('?#', 50, 0),
+  static protected $functionSpecs = array(
+      'alias'                      => array('"', 99, 1),
+      'aliasByNode'                => array('#*', 50, 1),
+      'aliasSub'                   => array(array('"', '"'), 50, 1),
+      'alpha'                      => array('#', 50, 0),
+      'areaBetween'                => array(null, 50, 0),
+      'asPercent'                  => array('#?', 50, 0),
+      'averageAbove'               => array('#', 50, 0),
+      'averageBelow'               => array('#', 50, 0),
+      'averageSeries'              => array(null, 50, 0),
+      'averageSeriesWithWildcards' => array('#*', 50, 0),
+      'cactiStyle'                 => array(null, 100, 0),
+      'color'                      => array('"', 98, 0),
+      'cumulative'                 => array(null, 50, 0),
+      'currentAbove'               => array('#', 50, 0),
+      'currentBelow'               => array('#', 50, 0),
+      'dashed'                     => array('#?', 50, 0),
+      'derivative'                 => array(null, 50, 0),
+      'diffSeries'                 => array('-*', 50, 0),
+      'divideSeries'               => array('-', 50, 0),
+      'drawAsInfinite'             => array(null, 50, 0),
+      'events'                     => array('"*', 1, 0),
+      'exclude'                    => array('"', 50, 0),
+      'group'                      => array('-*', 50, 0),
+      'groupByNode'                => array(array('#', '"'), 50, 1),
+      'highestAverage'             => array('#', 50, 0),
+      'highestCurrent'             => array('#', 50, 0),
+      'highestMax'                 => array('#', 50, 0),
+      'hitcount'                   => array('"', 50, 0),
+      'holtWintersAberration'      => array('#?', 50, 0),
+      'holtWintersConfidenceArea'  => array('#?', 50, 0),
+      'holtWintersConfidenceBands' => array('#?', 50, 0),
+      'holtWintersForecast'        => array(null, 50, 0),
+      'integral'                   => array(null, 50, 0),
+      'keepLastValue'              => array(null, 50, 0),
+      'legendValue'                => array('"', 50, 0),
+      'limit'                      => array('#', 50, 0),
+      'lineWidth'                  => array('#', 90, 0),
+      'logarithm'                  => array('#?', 50, 0),
+      'lowestAverage'              => array('#', 50, 0),
+      'lowestCurrent'              => array('#', 50, 0),
+      'maximumAbove'               => array('#', 50, 0),
+      'maximumBelow'               => array('#', 50, 0),
+      'maxSeries'                  => array('-*', 50, 0),
+      'minimumAbove'               => array('#', 50, 0),
+      'minSeries'                  => array('-*', 50, 0),
+      'mostDeviant'                => array('#<', 50, 0),
+      'movingAverage'              => array('#', 50, 0),
+      'movingMedian'               => array('#', 50, 0),
+      'multiplySeries'             => array('-*', 50, 0),
+      'nonNegativeDerivative'      => array('#?', 50, 0),
+      'nPercentile'                => array('#', 50, 0),
+      'offset'                     => array('#', 50, 0),
+      'percentileOfSeries'         => array(array('#', '-?'), 50, 0),
+      'rangeOfSeries'              => array('-*', 50, 0),
+      'removeAbovePercentile'      => array('#', 50, 0),
+      'removeAboveValue'           => array('#', 50, 0),
+      'removeBelowPercentile'      => array('#', 50, 0),
+      'removeBelowValue'           => array('#', 50, 0),
+      'scale'                      => array('#', 75, 0),
+      'scaleToSeconds'             => array('#', 75, 0),
+      'secondYAxis'                => array(null, 50, 0),
+      'smartSummarize'             => array(array('"', '"?'), 50, 0),
+      'sortByMaxima'               => array(null, 50, 0),
+      'sortByMinima'               => array(null, 50, 0),
+      'stacked'                    => array(null, 50, 0),
+      'stdev'                      => array(array('#', '#?'), 50, 0),
+      'substr'                     => array(array('#', '#?'), 50, 1),
+      'summarize'                  => array(array('"', '"?', '-?'), 50, 0),
+      'sumSeries'                  => array('-*', 50, 0),
+      'sumSeriesWithWildcards'     => array('#*', 50, 0),
+      'timeShift'                  => array('"', 50, 0),
+      'transformNull'              => array('#?', 50, 0),
     );
 
   /**
    * @var array
    */
   static protected $generators = array(
-      'constantLine'       => array('-#', 1, false),
-      'randomWalkFunction' => array('-"', 1, false),
-      'sinFunction'        => array(array('-"', '?-'), 1, false),
-      'threshold'          => array(array(1, '-"', '-"'), 1, true),
-      'timeFunction'       => array('-"', 1, false),
+      'constantLine'       => array('#', 1, false),
+      'randomWalkFunction' => array('"', 1, false),
+      'sinFunction'        => array(array('"', '-?'), 1, false),
+      'threshold'          => array(array(1, '"', '"'), 1, true),
+      'timeFunction'       => array('"', 1, false),
     );
 
 
@@ -162,7 +155,7 @@ class Graphite_Graph_Functions {
     if (null == $lookupMap) {
       // lazily construct the lookup map
       $tmp = array();
-      foreach (self::$validFunctions as $func => $conf) {
+      foreach (self::$functionSpecs as $func => $conf) {
         $tmp[mb_strtolower($func)] = $func;
       }
       foreach (self::$functionAliases as $alias => $func) {
@@ -193,7 +186,7 @@ class Graphite_Graph_Functions {
     if (false === $name) {
       return null;
     }
-    $spec = self::$validFunctions[$name];
+    $spec = self::$functionSpecs[$name];
     return new Graphite_Graph_CallSpec($name, $spec[0], $spec[1], $spec[2]);
   }
 
@@ -208,8 +201,8 @@ class Graphite_Graph_Functions {
    *    greater than the second.
    */
   static public function cmp ($a, $b) {
-    $aCfg = self::$validFunctions[$a];
-    $bCfg = self::$validFunctions[$b];
+    $aCfg = self::$functionSpecs[$a];
+    $bCfg = self::$functionSpecs[$b];
     return $aCfg[1] - $bCfg[1];
   }
 

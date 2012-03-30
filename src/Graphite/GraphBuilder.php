@@ -441,7 +441,10 @@ class Graphite_GraphBuilder {
     $parms = array();
 
     foreach ($this->settings as $name => $value) {
-      $parms[] = self::qsEncode($name) . '=' . self::qsEncode($value);
+      $value = Graphite_Graph_Params::format($name, $value);
+      if (null !== $value) {
+        $parms[] = self::qsEncode($name) . '=' . self::qsEncode($value);
+      }
     }
 
     foreach ($this->targets as $target) {
@@ -454,7 +457,7 @@ class Graphite_GraphBuilder {
     }
 
     return implode('&', $parms);
-  } //end qs
+  } //end build
 
   /**
    * Alias for build().

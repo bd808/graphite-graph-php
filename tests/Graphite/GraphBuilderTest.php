@@ -70,7 +70,7 @@ class Graphite_GraphBuilderTest extends PHPUnit_Framework_TestCase {
   public function testIni () {
     $g = Graphite_GraphBuilder::builder()
         ->prefix('com.example.foo')
-        ->ini(dirname(__FILE__) . '/testIni.ini');
+        ->ini($this->iniPath('testIni.ini'));
     $this->assertEquals('title=CPU+IRQ+Usage&vtitle=percent&from=-2days&width=100&height=100&areaMode=stacked&target=alias(color(scale(derivative(com.example.foo.munin.cpu.irq),0.001),\'red\'),\'IRQ\')&target=alias(color(scale(derivative(com.example.foo.munin.cpu.softirq),0.001),\'yellow\'),\'Batched+IRQ\')&target=alias(color(drawAsInfinite(puppet.time.total),\'blue\'),\'Puppet+Run\')', (string) $g);
   } //end testIni
 
@@ -138,10 +138,32 @@ class Graphite_GraphBuilderTest extends PHPUnit_Framework_TestCase {
    */
   public function testAliasOverride () {
     $g = new Graphite_GraphBuilder();
-    $g->ini(dirname(__FILE__) . '/testAliasOverride.ini');
+    $g->ini($this->iniPath('testAliasOverride.ini'));
     $this->assertEquals('target=cactiStyle(aliasByNode(something.prod.*.requests.count,3))&target=*', $g->qs);
   }
 
+  /**
+   * Given: ini driven config that sets and unsets a boolean parameter
+   * Expect: param to be true and then false
+   */
+  public function testBoolParamUnset () {
+    $g = Graphite_GraphBuilder::builder()
+        ->ini($this->iniPath('testBoolUnset1.ini'));
+    $this->assertEquals('drawNullAsZero=True', (string) $g);
+
+    $g->ini($this->iniPath('testBoolUnset2.ini'));
+    $this->assertEquals('', (string) $g);
+  } //end testBoolParamUnset
+
+
+  /**
+   * Get the path to an ini file.
+   * @param string $file File name
+   * @return string Path to file
+   */
+  protected function iniPath ($file) {
+    return dirname(__FILE__) . DIRECTORY_SEPARATOR . $file;
+  }
 
   /**
    * Assert that the given query string only contains RFC-3986 valid
