@@ -12,7 +12,7 @@ class Graphite_GraphBuilderTest extends PHPUnit_Framework_TestCase {
    * Given: a moderately complex DSL usage
    * Expect: a well formed query string
    */
-  public function testDsl () {
+  public function test_dsl_funcs () {
     $g = new Graphite_GraphBuilder();
 
     $got = $g->title('CPU IRQ Usage')
@@ -23,20 +23,20 @@ class Graphite_GraphBuilderTest extends PHPUnit_Framework_TestCase {
         ->area('stacked')
         ->prefix('com.example.foo')
         ->prefix('munin.cpu')
-        ->metric('irq', array(
+        ->series('irq', array(
             'derivative' => true,
             'scale' => 0.001,
             'color' => 'red',
             'alias' => 'IRQ',
           ))
-        ->metric('softirq', array(
-            'derivative' => true,
-            'scale' => 0.001,
-            'color' => 'yellow',
-            'alias' => 'Batched IRQ',
-          ))
+        ->buildSeries('softirq')
+          ->derivative(true)
+          ->scale(0.001)
+          ->color('yellow')
+          ->alias('Batched IRQ')
+          ->build()
         ->endPrefix()
-        ->qs();
+        ->build();
 
     $this->assertValidQueryStringChars($got);
 
@@ -44,7 +44,7 @@ class Graphite_GraphBuilderTest extends PHPUnit_Framework_TestCase {
   } //end testDsl
 
 
-  public function testAltDsl () {
+  public function test_dsl_members () {
     $g = new Graphite_GraphBuilder();
     $g->title = 'CPU IRQ Usage';
     $g->vtitle = 'percent';
@@ -59,19 +59,19 @@ class Graphite_GraphBuilderTest extends PHPUnit_Framework_TestCase {
         'color' => 'red',
         'alias' => 'IRQ',
       ));
-    $this->assertEquals('title=CPU+IRQ+Usage&vtitle=percent&from=-2days&width=100&height=100&areaMode=stacked&target=alias(color(scale(derivative(irq),0.001),\'red\'),\'IRQ\')', $g->qs);
+    $this->assertEquals('title=CPU+IRQ+Usage&vtitle=percent&from=-2days&width=100&height=100&areaMode=stacked&target=alias(color(scale(derivative(irq),0.001),\'red\'),\'IRQ\')', $g->build());
   } //end testAltDsl
 
 
   /**
-   * Given: a resaonablu complex ini file
+   * Given: a reasonably complex ini file
    * Expect: a well formed query string
    */
-  public function testIni () {
-    $g = new Graphite_GraphBuilder();
-    $g->prefix('com.example.foo')
-      ->ini(dirname(__FILE__) . '/testIni.ini');
-    $this->assertEquals('title=CPU+IRQ+Usage&vtitle=percent&from=-2days&width=100&height=100&areaMode=stacked&target=alias(color(scale(derivative(com.example.foo.munin.cpu.irq),0.001),\'red\'),\'IRQ\')&target=alias(color(scale(derivative(com.example.foo.munin.cpu.softirq),0.001),\'yellow\'),\'Batched+IRQ\')&target=alias(color(drawAsInfinite(puppet.time.total),\'blue\'),\'Puppet+Run\')', $g->qs);
+  public function test_ini_load () {
+    $g = Graphite_GraphBuilder::builder()
+        ->prefix('com.example.foo')
+        ->ini($this->iniPath('test_ini_load.ini'));
+    $this->assertEquals('title=CPU+IRQ+Usage&vtitle=percent&from=-2days&width=100&height=100&areaMode=stacked&target=alias(color(scale(derivative(com.example.foo.munin.cpu.irq),0.001),\'red\'),\'IRQ\')&target=alias(color(scale(derivative(com.example.foo.munin.cpu.softirq),0.001),\'yellow\'),\'Batched+IRQ\')&target=alias(color(drawAsInfinite(puppet.time.total),\'blue\'),\'Puppet+Run\')', (string) $g->build());
   } //end testIni
 
 
@@ -79,11 +79,11 @@ class Graphite_GraphBuilderTest extends PHPUnit_Framework_TestCase {
    * Given: a minimal DSL usage
    * Expect: a well formed query string
    */
-  public function testDefaults () {
+  public function test_defaults () {
     $g = new Graphite_GraphBuilder();
     $g->metric('sample', array('data' => 'sample'));
-    $this->assertValidQueryStringChars($g->qs);
-    $this->assertEquals('target=alias(sample,\'Sample\')', $g->qs);
+    $this->assertValidQueryStringChars($g->build());
+    $this->assertEquals('target=alias(sample,\'Sample\')', $g->build());
   } //end testDefaults
 
 
@@ -91,7 +91,7 @@ class Graphite_GraphBuilderTest extends PHPUnit_Framework_TestCase {
    * Given: the target element is set
    * Expect: the query string contains the supplied target
    */
-  public function testExplicitTarget () {
+  public function test_explicit_target () {
     $g = new Graphite_GraphBuilder();
     $got = $g->metric('irq', array(
             'derivative' => true,
@@ -100,48 +100,70 @@ class Graphite_GraphBuilderTest extends PHPUnit_Framework_TestCase {
             'alias' => 'IRQ',
             'target' => 'explict_target(my.target)',
           ))
-        ->qs();
+        ->build();
     $this->assertValidQueryStringChars($got);
     $this->assertContains('target=explict_target(my.target)', $got);
   } //end testExplicitTarget
 
 
   /**
-   * Given: a format on the qs call
+   * Given: a format on the build call
    * Expect: a well formed query string with a format
    */
-  public function testFormat () {
+  public function test_output_format () {
     $g = new Graphite_GraphBuilder();
     $g->metric('sample', array('data' => 'sample'));
-    $this->assertContains('format=json', $g->qs('json'));
-    $this->assertContains('format=xml', $g->qs('xml'));
-    $this->assertContains('format=csv', $g->qs('csv'));
+    $this->assertContains('format=json', $g->build('json'));
+    $this->assertContains('format=xml', $g->build('xml'));
+    $this->assertContains('format=csv', $g->build('csv'));
   } //end testFormat
 
   /**
    * Given: a basic forecast call
    * Expect: a well formed query string
    */
-  public function testForecast () {
+  public function test_forecast () {
     $g = new Graphite_GraphBuilder();
     $g->forecast('sample', array(
         'series' => 'sample',
         'critical' => array(100),
         'warning' => array(75),
       ));
-    $this->assertEquals('target=alias(color(holtWintersForecast(sample),\'blue\'),\'Sample+Forecast\')&target=alias(color(dashed(holtWintersConfidenceBands(sample)),\'grey\'),\'Sample+Confidence\')&target=alias(color(holtWintersConfidenceAbberation(keepLastValue(sample)),\'orange\'),\'Sample+Aberration\')&target=alias(color(dashed(threshold(100)),\'red\'),\'Sample+Critical\')&target=alias(color(dashed(threshold(75)),\'orange\'),\'Sample+Warning\')&target=alias(color(sample,\'yellow\'),\'Sample\')', $g->qs);
+    $this->assertEquals('target=alias(color(holtWintersForecast(sample),\'blue\'),\'Sample+Forecast\')&target=alias(color(dashed(holtWintersConfidenceBands(sample)),\'grey\'),\'Sample+Confidence\')&target=alias(color(holtWintersConfidenceAbberation(keepLastValue(sample)),\'orange\'),\'Sample+Aberration\')&target=alias(color(dashed(threshold(100)),\'red\'),\'Sample+Critical\')&target=alias(color(dashed(threshold(75)),\'orange\'),\'Sample+Warning\')&target=alias(color(sample,\'yellow\'),\'Sample\')', $g->build());
   } //end testForecast
 
   /**
    * Given: ini with an aliasing function
    * Expect: default alias is omitted
    */
-  public function testAliasOverride () {
+  public function test_alias_override () {
     $g = new Graphite_GraphBuilder();
-    $g->ini(dirname(__FILE__) . '/testAliasOverride.ini');
-    $this->assertEquals('target=cactiStyle(aliasByNode(something.prod.*.requests.count,3))&target=*', $g->qs);
+    $g->ini($this->iniPath('test_alias_override.ini'));
+    $this->assertEquals('target=cactiStyle(aliasByNode(something.prod.*.requests.count,3))&target=*', $g->build());
   }
 
+  /**
+   * Given: ini driven config that sets and unsets a boolean parameter
+   * Expect: param to be true and then false
+   */
+  public function test_bool_param_unset () {
+    $g = Graphite_GraphBuilder::builder()
+        ->ini($this->iniPath('test_bool_param_unset1.ini'));
+    $this->assertEquals('drawNullAsZero=True', (string) $g);
+
+    $g->ini($this->iniPath('test_bool_param_unset2.ini'));
+    $this->assertEquals('', (string) $g);
+  } //end testBoolParamUnset
+
+
+  /**
+   * Get the path to an ini file.
+   * @param string $file File name
+   * @return string Path to file
+   */
+  protected function iniPath ($file) {
+    return dirname(__FILE__) . DIRECTORY_SEPARATOR . $file;
+  }
 
   /**
    * Assert that the given query string only contains RFC-3986 valid
