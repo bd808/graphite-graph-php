@@ -26,7 +26,6 @@ class Graphite_Graph_CallSpec {
    */
   const FMT_FORMAT_ARG = 'return %s::format($a, "%s");';
 
-
   /**
    * Canonical name of the function.
    *
@@ -46,7 +45,7 @@ class Graphite_Graph_CallSpec {
    *
    * @var int
    */
-  protected $sortOrder;
+  protected $order;
 
   /**
    * Does this function provide an alias for the series?
@@ -86,7 +85,7 @@ class Graphite_Graph_CallSpec {
    * @param int $order Sort order
    * @param bool $alias Does this function provide an alias?
    */
-  public function __construct ($name, $signature, $order, $alias) {
+  public function __construct ($name, $signature, $order=50, $alias=false) {
     $this->name = $name;
     $this->signature = $signature;
     if (is_scalar($this->signature)) {
@@ -121,52 +120,88 @@ class Graphite_Graph_CallSpec {
   /**
    * Format the call for use as a target.
    *
+   * Arguments to the function can be provided as an array or using a varadic
+   * argument style.
+   * <code>
+   * // args provided as array
+   * $out = $callSpec->asString('*', array(1, 2, 3));
+   *
+   * // varadic args
+   * $out = $callSpec->asString('*', 1, 2, 3);
+   * </code>
+   *
    * @param string $series Series to apply function to
    * @param array $args Arguments to function
    * @return string Formatted function call
    */
-  public function asString ($series, $args) {
+  public function asString ($series, $args /*, ...*/) {
+    // The default first arg to any function is the current series
     $callArgs = array($series);
+
+    // check for varadic call
+    if (func_num_args() > 1 && !is_array($args)) {
+      $args = func_get_args();
+      // shift the base series off
+      array_shift($args);
+    }
+
+    // TODO: if function takes multiple args and $args is a scalar,
+    // explode on , and trim each part
+
     if ($this->takesArgs()) {
-      foreach ($this->signature as $idx => $sig) {
-        $type = $sig[0];
-        $mod = (strlen($sig) > 1)? $sig[1]: '-';
+      foreach ($this->signature as $argDesc) {
+        $type = $argDesc[0];
+        $mod = (strlen($argDesc) > 1)? $argDesc[1]: '-';
+
         switch ($mod) {
           case '<':
               // arg comes before series
-              array_unshift($callArgs, self::format($args[$idx], $type));
+              $arg = array_shift($args);
+              array_unshift($callArgs, self::format($arg, $type));
               break;
 
           case '?':
               // optional arg
-              // TODO: make sure we have an ini test for this
-              if (isset($args[$idx]) && !is_bool($args[$idx])) {
-                $callArgs[] =  self::format($args[$idx], $type);
+              $arg = array_shift($args);
+              if (null !== $arg && '' !== $arg && !is_bool($arg)) {
+                $callArgs[] =  self::format($arg, $type);
               }
               break;
 
           case '*':
               // var args
-              // TODO: check to see if there is only True to wrap the
-              // current series.
+              if (1 == count($args) && (
+                  '1' === $args[0] || true === $args[0])) {
+                // empty varargs from ini
+                // no-op, we alread added series
 
-              // format all of the remaining args and append to call
-              // this would be so much prettier in php 5.3
-              $formattedArgs =  array_map(create_function(
-                  '$a',
-                  sprintf(self::FMT_FORMAT_ARG, __CLASS__, $type)
+              } else {
+                // format all of the remaining args and append to call
+                // this would be so much prettier in php 5.3
+                $formattedArgs =  array_map(create_function(
+                    '$a',
+                    sprintf(self::FMT_FORMAT_ARG, __CLASS__, $type)
                   ),
                   $args);
-              $callArgs = array_merge($callArgs, $formattedArgs);
+                $callArgs = array_merge($callArgs, $formattedArgs);
+
+                // empty out args
+                $args = array();
+              }
               break;
 
           default:
               // verbatum arg
-              $callArgs[] = self::format($args[$idx], $type);
+              $arg = array_shift($args);
+              $callArgs[] = self::format($arg, $type);
               break;
         } //end switch
       } //end foreach
     } //end if
+
+    // throw out any nulls in $callArgs
+    $callArgs = array_filter($callArgs,
+        create_function('$a', 'return null !== $a;'));
 
     return "{$this->name}(" . implode(',', $callArgs) . ")";
   } //end asString
@@ -191,15 +226,21 @@ class Graphite_Graph_CallSpec {
     switch ($type) {
       case '"':
           // quoted string
-          $formatted = "'{$arg}'";
+          $formatted = (is_bool($arg))? null: "'{$arg}'";
           break;
 
       case '#':
           // number
-          if (stripos(strtoupper((string) $arg), 'E')) {
-            // graphite doesn't like floats in scientific notation
-            $arg = sprintf('%.8f', $arg);
+          if (is_numeric($arg)) {
+            if (stripos(strtoupper((string) $arg), 'E')) {
+              // graphite doesn't like floats in scientific notation
+              $arg = sprintf('%.8f', $arg);
+            }
+
+          } else {
+            $arg = null;
           }
+
           $formatted = $arg;
           break;
 
@@ -228,7 +269,7 @@ class Graphite_Graph_CallSpec {
    *    greater than the second.
    */
   static public function cmp ($a, $b) {
-    return $a->sortOrder - $b->sortOrder;
+    return $a->order - $b->order;
   }
 
 } //end Graphite_Graph_CallSpec
