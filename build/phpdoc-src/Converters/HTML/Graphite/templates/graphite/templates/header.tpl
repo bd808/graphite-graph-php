@@ -57,13 +57,13 @@
           </div>
           {if !$noleftindex}{assign var="noleftindex" value=false}{/if}
           {if !$noleftindex}
-            {if $compiledinterfaceindex}
-              <h2>Interfaces:</h2>
-              {eval var=$compiledinterfaceindex}
-            {/if}
             {if $compiledclassindex}
               <h2>Classes:</h2>
               {eval var=$compiledclassindex}
+            {/if}
+            {if $compiledinterfaceindex}
+              <h2>Interfaces:</h2>
+              {eval var=$compiledinterfaceindex}
             {/if}
           {/if}
           {if $hastodos}
