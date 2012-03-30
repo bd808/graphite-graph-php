@@ -100,7 +100,7 @@ class Graphite_Graph_CallSpec {
   /**
    * Does this function provide an alias for the series?
    *
-   * @return bol True if this function aliases the series, false otherwise.
+   * @return bool True if this function aliases the series, false otherwise.
    */
   public function isAlias () {
     return $this->isAlias;

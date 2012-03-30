@@ -81,7 +81,6 @@
           <a name="const-{$consts[consts].const_name}" id="{$const[consts].const_name}"></a>
           <code>
             <a href="#const-{$consts[consts].const_name}" title="details" class="const-name-summary">{$consts[consts].const_name}</a>
-             = {$consts[consts].const_value|replace:"\n":"<br />"}
           </code>
         </td>
         <td>
