@@ -2,13 +2,13 @@
 <html>
   <head>
     <meta http-equiv='Content-Type' content='text/html; charset=utf-8'/>
-    <title>Graphite_GraphBuilder</title>
+    <title>Graphite_GraphBuilder Manual</title>
     <link rel="stylesheet" type="text/css" href="../media/style.css" />
   </head>
   <body>
     <div id="container">
       <header id="header">
-        <h1>Graphite_GraphBuilder Manual :: Graphite_GraphBuilder</h1>
+        <h1>Graphite_GraphBuilder Manual</h1>
         <a href="https://github.com/bd808/graphite-graph-php"><img style="position:absolute;top:0;right:0;border:0;" src="https://a248.e.akamai.net/assets.github.com/img/7afbc8b248c68eb468279e8c17986ad46549fb71/687474703a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f6461726b626c75655f3132313632312e706e67" alt="Fork me on GitHub"></a>
       </header>
       <div id="main">
@@ -17,7 +17,7 @@
             <div class="package">
                               <strong>Package-level:</strong>
                                   <ul>
-	<li type="square"><a href="../Graphite/tutorial_Graphite.pkg.html">Graphite_GraphBuilder</a>
+	<li type="square"><a href="../Graphite/tutorial_Graphite.pkg.html">Graphite_GraphBuilder Manual</a>
 </ul>
 
                                                                       </div>
@@ -29,23 +29,14 @@
                 </li>
                           </ul>
           </div>
-                                              <h2>Interfaces:</h2>
-              <!--
--->
-                                      <h2>Classes:</h2>
+                                              <h2>Classes:</h2>
                 <div class="package"><ul>
-				<li><a href="../Graphite/Graphite_ConfigurationException.html">Graphite_ConfigurationException</a></li>			<li><a href="../Graphite/Graphite_GraphBuilder.html">Graphite_GraphBuilder</a></li>			<li><a href="../Graphite/Graphite_IniParser.html">Graphite_IniParser</a></li>		  </ul>
+	<li>Graph<ul>			<li><a href="../Graphite/Graph/Graphite_Graph_CallSpec.html">Graphite_Graph_CallSpec</a></li>			<li><a href="../Graphite/Graph/Graphite_Graph_Functions.html">Graphite_Graph_Functions</a></li>			<li><a href="../Graphite/Graph/Graphite_Graph_Params.html">Graphite_Graph_Params</a></li>			<li><a href="../Graphite/Graph/Graphite_Graph_Series.html">Graphite_Graph_Series</a></li>		</ul></li>  </ul>
   </div>
   <div class="package"><ul>
-	<li>Graph<ul>			<li><a href="../Graphite/Graph/Graphite_Graph_Params.html">Graphite_Graph_Params</a></li>			<li><a href="../Graphite/Graph/Graphite_Graph_Target.html">Graphite_Graph_Target</a></li>		</ul></li>  </ul>
+				<li><a href="../Graphite/Graphite_ConfigurationException.html">Graphite_ConfigurationException</a></li>			<li><a href="../Graphite/Graphite_GraphBuilder.html">Graphite_GraphBuilder</a></li>			<li><a href="../Graphite/Graphite_IniParser.html">Graphite_IniParser</a></li>		  </ul>
   </div>
-<!--
-  <ul>
-		    		<li><a href="../Graphite/Graphite_ConfigurationException.html">Graphite_ConfigurationException</a></li>    	    		<li><a href="../Graphite/Graphite_GraphBuilder.html">Graphite_GraphBuilder</a></li>    	    		<li><a href="../Graphite/Graphite_IniParser.html">Graphite_IniParser</a></li>    	  </ul>
-  <ul>
-	<li>Graph	    <ul>		<li><a href="../Graphite/Graph/Graphite_Graph_Params.html">Graphite_Graph_Params</a></li>    </ul></li>	    <ul>		<li><a href="../Graphite/Graph/Graphite_Graph_Target.html">Graphite_Graph_Target</a></li>    </ul></li>	  </ul>
--->
-                                        </div>
+                                                    </div>
         <div id="content">
           <div class="nav">
             
@@ -54,9 +45,42 @@
                           [ <a href="../classtrees_Graphite.html">Graphite classes</a> ]
               [ <a href="../elementindex_Graphite.html">Graphite elements</a> ]
                         [ <a href="../elementindex.html">All elements</a> ]
-          </div><div><a name=""></a><div class="ref-title-box"><h1 class="ref-title">Graphite_GraphBuilder</h1>
+          </div><div><a name=""></a><div class="ref-title-box"><h1 class="ref-title">Graphite_GraphBuilder Manual</h1>
     <h2 class="ref-purpose">A DSL and ini-based templating language to assist
       in constructing query strings for use with Graphite.</h2></div>
+  <div class="toc">
+  <ul>
+  
+            
+                  
+      <li><a href="../Graphite/tutorial_Graphite.pkg.html#intro">About</a>
+                                
+                  
+      <li><a href="../Graphite/tutorial_Graphite.pkg.html#examples">Examples</a>
+                                    
+      <ul>            
+      <li><a href="../Graphite/tutorial_Graphite.pkg.html#examples.dsl_example">DSL Usage</a>
+                                
+                  
+      <li><a href="../Graphite/tutorial_Graphite.pkg.html#examples.ini_example">Ini Usage</a>
+                            
+      </ul>            
+      <li><a href="../Graphite/tutorial_Graphite.pkg.html#download">Download</a>
+                                    
+      <ul>            
+      <li><a href="../Graphite/tutorial_Graphite.pkg.html#download.composer">Install with Composer</a>
+                                
+                  
+      <li><a href="../Graphite/tutorial_Graphite.pkg.html#download.get_source">Get the Source</a>
+                                
+                  
+      <li><a href="../Graphite/tutorial_Graphite.pkg.html#download.fork">Contributing</a>
+                            
+      </ul>            
+      <li><a href="../Graphite/tutorial_Graphite.pkg.html#credits">Credits</a>
+                      </ul>
+</div>
+
   <span><a name="intro"></a><h2 class="title">About</h2><p><a href="http://graphite.wikidot.com/">Graphite</a> provides several
       interfaces for creating graphs and dashboards, but one of its powerful
       features is an
@@ -65,66 +89,165 @@
       embedding of graphs in custom dashboards and other applications.</p>
     <p>The process of describing complex graphs is however cumbersome at best.
       Graphite_GraphBuilder attempts to reduce the complexity of embedding
-      Graphite graphs in PHP based applications.</p></span>
-  <span><a name="download"></a><h2 class="title">Download</h2><p>You can download this project in either
-      <a href="https://github.com/bd808/graphite-graph-php/zipball/master">zip</a> or
-      <a href="https://github.com/bd808/graphite-graph-php/tarball/master">tar</a>
-      formats.</p>
-    <p>You can also clone the project with <a href="http://git-scm.com">Git</a> by
-      running:
-      <pre>
-$ git clone git://github.com/bd808/graphite-graph-php
-        </pre></p>
-    <p>Get the source code on GitHub : <a href="https://github.com/bd808/graphite-graph-php">bd808/graphite-graph-php</a></p></span>
-  <span><a name="examples"></a><h2 class="title">Examples</h2><p><ol><li><div class="src-line"><span class="src-php">&lt;?php</span></div></li>
+      Graphite graphs in PHP based applications by providing a fluent API for
+      describing graphs and a facility for loading full or partial graph
+      descriptions from ini files.</p></span>
+  <span><a name="examples"></a><h2 class="title">Examples</h2><a name="examples.dsl_example"></a><h3 class="title">DSL Usage</h3><p><ol><li><div class="src-line"><span class="src-php">&lt;?php</span></div></li>
 <li><div class="src-line"><span class="src-doc">/**</span></div></li>
 <li><div class="src-line"><span class="src-doc">&nbsp;*&nbsp;Example&nbsp;usage&nbsp;of&nbsp;the&nbsp;DSL&nbsp;API&nbsp;to&nbsp;construct&nbsp;a&nbsp;graph&nbsp;of&nbsp;memory&nbsp;usage.</span></div></li>
+<li><div class="src-line"><span class="src-doc">&nbsp;*</span></div></li>
+<li><div class="src-line"><span class="src-doc">&nbsp;*&nbsp;Graph&nbsp;last&nbsp;2&nbsp;days&nbsp;of&nbsp;snmp&nbsp;collected&nbsp;memory&nbsp;utilization&nbsp;on&nbsp;host</span></div></li>
+<li><div class="src-line"><span class="src-doc">&nbsp;*&nbsp;host.example.com.</span></div></li>
+<li><div class="src-line"><span class="src-doc">&nbsp;*</span></div></li>
+<li><div class="src-line"><span class="src-doc">&nbsp;*&nbsp;Show&nbsp;both&nbsp;free&nbsp;and&nbsp;used&nbsp;memory&nbsp;as&nbsp;stacked&nbsp;series&nbsp;after&nbsp;scaling&nbsp;values&nbsp;from</span></div></li>
+<li><div class="src-line"><span class="src-doc">&nbsp;*&nbsp;bytes&nbsp;to&nbsp;megabytes&nbsp;(or&nbsp;more&nbsp;properly&nbsp;mebibytes).</span></div></li>
+<li><div class="src-line"><span class="src-doc">&nbsp;*</span></div></li>
+<li><div class="src-line"><span class="src-doc">&nbsp;*&nbsp;This&nbsp;example&nbsp;shows&nbsp;two&nbsp;different&nbsp;ways&nbsp;that&nbsp;the&nbsp;Graphite_Graph_Series&nbsp;DSL&nbsp;can</span></div></li>
+<li><div class="src-line"><span class="src-doc">&nbsp;*&nbsp;be&nbsp;used&nbsp;to&nbsp;construct&nbsp;a&nbsp;target&nbsp;series&nbsp;for&nbsp;graphing.</span></div></li>
 <li><div class="src-line"><span class="src-doc">&nbsp;*/</span></div></li>
 <li><div class="src-line">&nbsp;</div></li>
 <li><div class="src-line"><span class="src-inc">require_once&nbsp;</span><span class="src-id">dirname</span><span class="src-sym">(</span>__FILE__<span class="src-sym">)&nbsp;</span>.&nbsp;<span class="src-str">'/../src/autoload.php'</span><span class="src-sym">;</span></div></li>
 <li><div class="src-line">&nbsp;</div></li>
-<li><div class="src-line"><span class="src-var">$g&nbsp;</span>=&nbsp;<span class="src-key">new&nbsp;</span><span class="src-id"><a href="../Graphite/Graphite_GraphBuilder.html">Graphite_GraphBuilder</a></span><span class="src-sym">(</span><span class="src-sym">)</span><span class="src-sym">;</span></div></li>
-<li><div class="src-line">&nbsp;</div></li>
-<li><div class="src-line"><span class="src-var">$g</span><span class="src-sym">-&gt;</span><span class="src-id">title</span><span class="src-sym">(</span><span class="src-str">'Memory'</span><span class="src-sym">)</span></div></li>
-<li><div class="src-line">&nbsp;&nbsp;<span class="src-sym">-&gt;</span><span class="src-id">vtitle</span><span class="src-sym">(</span><span class="src-str">'Mbytes'</span><span class="src-sym">)</span></div></li>
-<li><div class="src-line">&nbsp;&nbsp;<span class="src-sym">-&gt;</span><span class="src-id">width</span><span class="src-sym">(</span><span class="src-num">800</span><span class="src-sym">)</span></div></li>
-<li><div class="src-line">&nbsp;&nbsp;<span class="src-sym">-&gt;</span><span class="src-id">height</span><span class="src-sym">(</span><span class="src-num">600</span><span class="src-sym">)</span></div></li>
-<li><div class="src-line">&nbsp;&nbsp;<span class="src-sym">-&gt;</span><span class="src-id">bgcolor</span><span class="src-sym">(</span><span class="src-str">'white'</span><span class="src-sym">)</span></div></li>
-<li><div class="src-line">&nbsp;&nbsp;<span class="src-sym">-&gt;</span><span class="src-id">fgcolor</span><span class="src-sym">(</span><span class="src-str">'black'</span><span class="src-sym">)</span></div></li>
-<li><div class="src-line">&nbsp;&nbsp;<span class="src-sym">-&gt;</span><span class="src-id">from</span><span class="src-sym">(</span><span class="src-str">'-2days'</span><span class="src-sym">)</span></div></li>
-<li><div class="src-line">&nbsp;&nbsp;<span class="src-sym">-&gt;</span><span class="src-id">area</span><span class="src-sym">(</span><span class="src-str">'stacked'</span><span class="src-sym">)</span></div></li>
-<li><div class="src-line">&nbsp;&nbsp;<span class="src-sym">-&gt;</span><span class="src-id">prefix</span><span class="src-sym">(</span><span class="src-str">'collectd'</span><span class="src-sym">)</span></div></li>
-<li><div class="src-line">&nbsp;&nbsp;<span class="src-sym">-&gt;</span><span class="src-id">prefix</span><span class="src-sym">(</span><span class="src-str">'com.example.host'</span><span class="src-sym">)</span></div></li>
-<li><div class="src-line">&nbsp;&nbsp;<span class="src-sym">-&gt;</span><span class="src-id">prefix</span><span class="src-sym">(</span><span class="src-str">'snmp'</span><span class="src-sym">)</span></div></li>
-<li><div class="src-line">&nbsp;&nbsp;<span class="src-sym">-&gt;</span><span class="src-id">metric</span><span class="src-sym">(</span><span class="src-str">'memory-free'</span><span class="src-sym">,&nbsp;</span><span class="src-key">array</span><span class="src-sym">(</span></div></li>
-<li><div class="src-line">&nbsp;&nbsp;&nbsp;&nbsp;<span class="src-str">'cactistyle'&nbsp;</span>=&gt;&nbsp;<span class="src-id">true</span><span class="src-sym">,</span></div></li>
-<li><div class="src-line">&nbsp;&nbsp;&nbsp;&nbsp;<span class="src-str">'color'&nbsp;</span>=&gt;&nbsp;<span class="src-str">'00c000'</span><span class="src-sym">,</span></div></li>
-<li><div class="src-line">&nbsp;&nbsp;&nbsp;&nbsp;<span class="src-str">'alias'&nbsp;</span>=&gt;&nbsp;<span class="src-str">'Free'</span><span class="src-sym">,</span></div></li>
-<li><div class="src-line">&nbsp;&nbsp;&nbsp;&nbsp;<span class="src-str">'scale'&nbsp;</span>=&gt;&nbsp;<span class="src-str">'0.00000095367'</span><span class="src-sym">,</span></div></li>
-<li><div class="src-line">&nbsp;&nbsp;<span class="src-sym">))</span></div></li>
-<li><div class="src-line">&nbsp;&nbsp;<span class="src-sym">-&gt;</span><span class="src-id">metric</span><span class="src-sym">(</span><span class="src-str">'memory-used'</span><span class="src-sym">,&nbsp;</span><span class="src-key">array</span><span class="src-sym">(</span></div></li>
-<li><div class="src-line">&nbsp;&nbsp;&nbsp;&nbsp;<span class="src-str">'cactistyle'&nbsp;</span>=&gt;&nbsp;<span class="src-id">true</span><span class="src-sym">,</span></div></li>
-<li><div class="src-line">&nbsp;&nbsp;&nbsp;&nbsp;<span class="src-str">'color'&nbsp;</span>=&gt;&nbsp;<span class="src-str">'c00000'</span><span class="src-sym">,</span></div></li>
-<li><div class="src-line">&nbsp;&nbsp;&nbsp;&nbsp;<span class="src-str">'alias'&nbsp;</span>=&gt;&nbsp;<span class="src-str">'Used'</span><span class="src-sym">,</span></div></li>
-<li><div class="src-line">&nbsp;&nbsp;&nbsp;&nbsp;<span class="src-str">'scale'&nbsp;</span>=&gt;&nbsp;<span class="src-str">'0.00000095367'</span><span class="src-sym">,</span></div></li>
-<li><div class="src-line">&nbsp;&nbsp;<span class="src-sym">))</span></div></li>
-<li><div class="src-line">&nbsp;&nbsp;<span class="src-sym">;</span></div></li>
+<li><div class="src-line"><span class="src-var">$g&nbsp;</span>=&nbsp;<span class="src-id"><a href="../Graphite/Graphite_GraphBuilder.html">Graphite_GraphBuilder</a></span><span class="src-sym">::</span><a href="../Graphite/Graphite_GraphBuilder.html#methodbuilder">builder</a><span class="src-sym">(</span><span class="src-sym">)</span></div></li>
+<li><div class="src-line">&nbsp;&nbsp;&nbsp;&nbsp;<span class="src-sym">-&gt;</span><span class="src-id">title</span><span class="src-sym">(</span><span class="src-str">'Memory'</span><span class="src-sym">)</span></div></li>
+<li><div class="src-line">&nbsp;&nbsp;&nbsp;&nbsp;<span class="src-sym">-&gt;</span><span class="src-id">vtitle</span><span class="src-sym">(</span><span class="src-str">'MiB'</span><span class="src-sym">)</span></div></li>
+<li><div class="src-line">&nbsp;&nbsp;&nbsp;&nbsp;<span class="src-sym">-&gt;</span><span class="src-id">width</span><span class="src-sym">(</span><span class="src-num">800</span><span class="src-sym">)</span></div></li>
+<li><div class="src-line">&nbsp;&nbsp;&nbsp;&nbsp;<span class="src-sym">-&gt;</span><span class="src-id">height</span><span class="src-sym">(</span><span class="src-num">600</span><span class="src-sym">)</span></div></li>
+<li><div class="src-line">&nbsp;&nbsp;&nbsp;&nbsp;<span class="src-sym">-&gt;</span><span class="src-id">bgcolor</span><span class="src-sym">(</span><span class="src-str">'white'</span><span class="src-sym">)</span></div></li>
+<li><div class="src-line">&nbsp;&nbsp;&nbsp;&nbsp;<span class="src-sym">-&gt;</span><span class="src-id">fgcolor</span><span class="src-sym">(</span><span class="src-str">'black'</span><span class="src-sym">)</span></div></li>
+<li><div class="src-line">&nbsp;&nbsp;&nbsp;&nbsp;<span class="src-sym">-&gt;</span><span class="src-id">from</span><span class="src-sym">(</span><span class="src-str">'-2days'</span><span class="src-sym">)</span></div></li>
+<li><div class="src-line">&nbsp;&nbsp;&nbsp;&nbsp;<span class="src-sym">-&gt;</span><span class="src-id">area</span><span class="src-sym">(</span><span class="src-str">'stacked'</span><span class="src-sym">)</span></div></li>
+<li><div class="src-line">&nbsp;&nbsp;&nbsp;&nbsp;<span class="src-sym">-&gt;</span><span class="src-id">prefix</span><span class="src-sym">(</span><span class="src-str">'collectd'</span><span class="src-sym">)</span></div></li>
+<li><div class="src-line">&nbsp;&nbsp;&nbsp;&nbsp;<span class="src-sym">-&gt;</span><span class="src-id">prefix</span><span class="src-sym">(</span><span class="src-str">'com.example.host'</span><span class="src-sym">)</span></div></li>
+<li><div class="src-line">&nbsp;&nbsp;&nbsp;&nbsp;<span class="src-sym">-&gt;</span><span class="src-id">prefix</span><span class="src-sym">(</span><span class="src-str">'snmp'</span><span class="src-sym">)</span></div></li>
+<li><div class="src-line">&nbsp;&nbsp;&nbsp;&nbsp;<span class="src-sym">-&gt;</span><span class="src-id">buildSeries</span><span class="src-sym">(</span><span class="src-str">'memory-free'</span><span class="src-sym">)</span></div></li>
+<li><div class="src-line">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="src-sym">-&gt;</span><span class="src-id">cactistyle</span><span class="src-sym">(</span><span class="src-sym">)</span></div></li>
+<li><div class="src-line">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="src-sym">-&gt;</span><span class="src-id">color</span><span class="src-sym">(</span><span class="src-str">'green'</span><span class="src-sym">)</span></div></li>
+<li><div class="src-line">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="src-sym">-&gt;</span><span class="src-id">alias</span><span class="src-sym">(</span><span class="src-str">'Free'</span><span class="src-sym">)</span></div></li>
+<li><div class="src-line">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="src-sym">-&gt;</span><span class="src-id">scale</span><span class="src-sym">(</span><span class="src-num">1&nbsp;</span>/&nbsp;<span class="src-sym">(</span><span class="src-num">1024&nbsp;</span>*&nbsp;<span class="src-num">1024</span><span class="src-sym">))&nbsp;</span><span class="src-comm">//&nbsp;B&nbsp;to&nbsp;MiB</span></div></li>
+<li><div class="src-line">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="src-sym">-&gt;</span><a href="../Graphite/Graph/Graphite_Graph_Series.html#methodbuild">build</a><span class="src-sym">(</span><span class="src-sym">)</span></div></li>
+<li><div class="src-line">&nbsp;&nbsp;&nbsp;&nbsp;<span class="src-sym">-&gt;</span><span class="src-id">buildSeries</span><span class="src-sym">(</span><span class="src-str">'memory-used'</span><span class="src-sym">)</span></div></li>
+<li><div class="src-line">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="src-sym">-&gt;</span><span class="src-id">scale</span><span class="src-sym">(</span><span class="src-num">1&nbsp;</span>/&nbsp;<span class="src-sym">(</span><span class="src-num">1024&nbsp;</span>*&nbsp;<span class="src-num">1024</span><span class="src-sym">))</span></div></li>
+<li><div class="src-line">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="src-sym">-&gt;</span><span class="src-id">color</span><span class="src-sym">(</span><span class="src-str">'blue'</span><span class="src-sym">)</span></div></li>
+<li><div class="src-line">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="src-sym">-&gt;</span><span class="src-id">alias</span><span class="src-sym">(</span><span class="src-str">'Used'</span><span class="src-sym">)</span></div></li>
+<li><div class="src-line">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="src-sym">-&gt;</span><span class="src-id">cactiStyle</span><span class="src-sym">(</span><span class="src-sym">)</span></div></li>
+<li><div class="src-line">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="src-sym">-&gt;</span><a href="../Graphite/Graph/Graphite_Graph_Series.html#methodbuild">build</a><span class="src-sym">(</span><span class="src-sym">)</span></div></li>
+<li><div class="src-line">&nbsp;&nbsp;&nbsp;&nbsp;<span class="src-sym">;</span></div></li>
 <li><div class="src-line"><span class="src-php">?&gt;</span></div></li>
 <li><div class="src-line">&lt;!DOCTYPE&nbsp;html&gt;</div></li>
 <li><div class="src-line">&lt;html&gt;</div></li>
 <li><div class="src-line">&nbsp;&nbsp;&lt;head&gt;</div></li>
-<li><div class="src-line">&nbsp;&nbsp;&nbsp;&nbsp;&lt;title&gt;&lt;/title&gt;</div></li>
-<li><div class="src-line">&nbsp;&nbsp;&lt;head&gt;</div></li>
+<li><div class="src-line">&nbsp;&nbsp;&nbsp;&nbsp;&lt;title&gt;Memory&nbsp;on&nbsp;host.example.com&lt;/title&gt;</div></li>
+<li><div class="src-line">&nbsp;&nbsp;&lt;/head&gt;</div></li>
 <li><div class="src-line">&nbsp;&nbsp;&lt;body&gt;</div></li>
-<li><div class="src-line">&nbsp;&nbsp;&nbsp;&nbsp;&lt;img&nbsp;src=&quot;http://graphite.example.com/render?<span class="src-php">&lt;?php&nbsp;</span>echo&nbsp;<span class="src-var">$g</span><span class="src-sym">-&gt;</span><span class="src-id">qs</span><span class="src-sym">(</span><span class="src-sym">)</span><span class="src-sym">;&nbsp;</span><span class="src-php">?&gt;</span>&quot;&gt;</div></li>
+<li><div class="src-line">&nbsp;&nbsp;&nbsp;&nbsp;&lt;img&nbsp;src=&quot;http://graphite.example.com/render?<span class="src-php">&lt;?php&nbsp;</span>echo&nbsp;<span class="src-var">$g</span><span class="src-sym">;&nbsp;</span><span class="src-php">?&gt;</span>&quot;&gt;</div></li>
 <li><div class="src-line">&nbsp;&nbsp;&lt;/body&gt;</div></li>
 <li><div class="src-line">&lt;/html&gt;</div></li>
-</ol></p></span></div>
+</ol></p><hr />
+    <a name="examples.ini_example"></a><h3 class="title">Ini Usage</h3><p>See <a href="../Graphite/Graphite_IniParser.html">Graphite_IniParser</a> documentation for more details on the
+        Mustache-like template expansion available within the ini files.</p>
+      <p><ol><li><div class="src-line"><span class="src-sym">;&nbsp;</span><span class="src-id">Example&nbsp;ini&nbsp;configuration&nbsp;</span><a href="http://www.php.net/file">file</a>&nbsp;<span class="src-id">supporting&nbsp;variable&nbsp;expansion</span>.</div></li>
+<li><div class="src-line"><span class="src-sym">;</span></div></li>
+<li><div class="src-line"><span class="src-sym">;&nbsp;</span><span class="src-id">Variables&nbsp;are&nbsp;declared&nbsp;by&nbsp;surrounding&nbsp;any&nbsp;string&nbsp;with&nbsp;double&nbsp;braces</span>:&nbsp;<span class="src-sym">{{</span><span class="src-key">VAR</span><span class="src-sym">}}</span></div></li>
+<li><div class="src-line"><span class="src-sym">;</span></div></li>
+<li><div class="src-line"><span class="src-sym">;&nbsp;</span><span class="src-key">If&nbsp;</span><span class="src-id">no&nbsp;value&nbsp;is&nbsp;provided&nbsp;</span><span class="src-key">for&nbsp;</span><span class="src-id">a&nbsp;given&nbsp;variable&nbsp;at&nbsp;load&nbsp;</span><a href="http://www.php.net/time">time</a>&nbsp;<span class="src-id">then&nbsp;the&nbsp;variable</span></div></li>
+<li><div class="src-line"><span class="src-sym">;&nbsp;</span><span class="src-id">name&nbsp;itself&nbsp;will&nbsp;be&nbsp;output</span>.&nbsp;<span class="src-id">This&nbsp;feature&nbsp;can&nbsp;be&nbsp;used&nbsp;to&nbsp;provide&nbsp;</span><span class="src-key">default</span></div></li>
+<li><div class="src-line"><span class="src-sym">;&nbsp;</span><span class="src-id">values</span>.</div></li>
+<li><div class="src-line"><span class="src-sym">;</span></div></li>
+<li><div class="src-line"><span class="src-sym">;&nbsp;</span>Use&nbsp;<span class="src-id">like</span>:</div></li>
+<li><div class="src-line"><span class="src-sym">;&nbsp;</span><span class="src-var">$g&nbsp;</span>=&nbsp;<span class="src-id"><a href="../Graphite/Graphite_GraphBuilder.html">Graphite_GraphBuilder</a></span><span class="src-sym">::</span><a href="../Graphite/Graphite_GraphBuilder.html#methodbuild">build</a><span class="src-sym">(</span><span class="src-sym">)</span></div></li>
+<li><div class="src-line"><span class="src-sym">;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="src-sym">-&gt;</span><span class="src-id">prefix</span><span class="src-sym">(</span><span class="src-str">'com.example.host'</span><span class="src-sym">)</span></div></li>
+<li><div class="src-line"><span class="src-sym">;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="src-sym">-&gt;</span><span class="src-id">ini</span><span class="src-sym">(</span><span class="src-str">'interface.ini'</span><span class="src-sym">,&nbsp;</span><span class="src-key">array</span><span class="src-sym">(</span><span class="src-str">'IF'&nbsp;</span>=&gt;&nbsp;<span class="src-str">'Tunnel0'</span><span class="src-sym">,&nbsp;</span><span class="src-str">'IF_DESC'&nbsp;</span>=&gt;&nbsp;<span class="src-str">'tu0'</span><span class="src-sym">))</span><span class="src-sym">;</span></div></li>
+<li><div class="src-line"><span class="src-sym">;&nbsp;</span>echo&nbsp;<span class="src-var">$g</span><span class="src-sym">;</span></div></li>
+<li><div class="src-line">&nbsp;</div></li>
+<li><div class="src-line"><span class="src-sym">;;&nbsp;</span><span class="src-id">Graph&nbsp;settings</span></div></li>
+<li><div class="src-line"><span class="src-sym">;&nbsp;</span><span class="src-id">any&nbsp;values&nbsp;outside&nbsp;of&nbsp;a&nbsp;section&nbsp;will&nbsp;be&nbsp;treated&nbsp;</span><span class="src-key">as&nbsp;</span><span class="src-id">settings&nbsp;</span><span class="src-key">for&nbsp;</span><span class="src-id">the&nbsp;<a href="../Graphite/Graph/Graphite_Graph_Series.html#var$graph">graph</a>&nbsp;</span><span class="src-key">as</span></div></li>
+<li><div class="src-line"><span class="src-sym">;&nbsp;</span><span class="src-id">a&nbsp;whole</span></div></li>
+<li><div class="src-line"><span class="src-id">title&nbsp;</span>=&nbsp;<span class="src-str">&quot;Network&nbsp;Traffic&nbsp;{{IF_DESC}}&quot;</span></div></li>
+<li><div class="src-line"><span class="src-id">vtitle&nbsp;</span>=&nbsp;<span class="src-str">&quot;Bits&nbsp;Per&nbsp;Sec&quot;</span></div></li>
+<li><div class="src-line"><span class="src-id">bgcolor&nbsp;</span>=&nbsp;<span class="src-str">&quot;{{white}}&quot;</span></div></li>
+<li><div class="src-line"><span class="src-id">fgcolor&nbsp;</span>=&nbsp;<span class="src-str">&quot;333333&quot;</span></div></li>
+<li><div class="src-line"><span class="src-id">line_mode&nbsp;</span>=&nbsp;<span class="src-str">&quot;staircase&quot;</span></div></li>
+<li><div class="src-line">&nbsp;</div></li>
+<li><div class="src-line"><span class="src-sym">[</span><span class="src-id">snmp</span><span class="src-sym">]</span></div></li>
+<li><div class="src-line"><span class="src-sym">;&nbsp;</span><span class="src-id">a&nbsp;</span><span class="src-str">&quot;prefix&quot;&nbsp;</span><span class="src-id">is&nbsp;a&nbsp;partial&nbsp;path&nbsp;to&nbsp;prepend&nbsp;to&nbsp;another&nbsp;metric</span></div></li>
+<li><div class="src-line">:<span class="src-id">is_prefix&nbsp;</span>=&nbsp;<span class="src-num">1</span></div></li>
+<li><div class="src-line"><span class="src-id">prefix&nbsp;</span>=&nbsp;<span class="src-str">&quot;collectd.snmp&quot;</span></div></li>
+<li><div class="src-line">&nbsp;</div></li>
+<li><div class="src-line"><span class="src-sym">[</span><span class="src-key">interface</span>-<span class="src-id">octets</span><span class="src-sym">]</span></div></li>
+<li><div class="src-line">:<span class="src-id">is_prefix&nbsp;</span>=&nbsp;<span class="src-num">1</span></div></li>
+<li><div class="src-line"><span class="src-sym">;&nbsp;</span><span class="src-id">prefixes&nbsp;can&nbsp;</span>use&nbsp;<span class="src-id">other&nbsp;prefixes&nbsp;</span><span class="src-key">if&nbsp;</span><span class="src-id">that&nbsp;makes&nbsp;keeping&nbsp;track&nbsp;easier</span></div></li>
+<li><div class="src-line">:<span class="src-id">prefix&nbsp;</span>=&nbsp;<span class="src-str">&quot;snmp&quot;</span></div></li>
+<li><div class="src-line"><span class="src-id">prefix&nbsp;</span>=&nbsp;<span class="src-str">&quot;if_octets-{{IF}}&quot;</span></div></li>
+<li><div class="src-line">&nbsp;</div></li>
+<li><div class="src-line"><span class="src-sym">[</span><span class="src-id">rx</span><span class="src-sym">]</span></div></li>
+<li><div class="src-line"><span class="src-sym">;&nbsp;</span><span class="src-id">prefix&nbsp;</span><span class="src-key">and&nbsp;</span><span class="src-id">section&nbsp;label&nbsp;define&nbsp;the&nbsp;metric&nbsp;to&nbsp;graph</span></div></li>
+<li><div class="src-line"><span class="src-sym">;&nbsp;</span><span class="src-str">&quot;collectd.snmp.if_octets-IF.rx&quot;&nbsp;</span><span class="src-id">in&nbsp;this&nbsp;</span><span class="src-key">case</span></div></li>
+<li><div class="src-line">:<span class="src-id">prefix&nbsp;</span>=&nbsp;<span class="src-str">&quot;interface-octets&quot;</span></div></li>
+<li><div class="src-line"><span class="src-sym">;&nbsp;</span><span class="src-str">&quot;counter&quot;&nbsp;</span><span class="src-id">is&nbsp;an&nbsp;alias&nbsp;</span><span class="src-key">for&nbsp;</span><span class="src-id">the&nbsp;</span><span class="src-str">&quot;nonNegativeDerivative&quot;&nbsp;</span><span class="src-key">function</span></div></li>
+<li><div class="src-line"><span class="src-id">counter&nbsp;</span>=&nbsp;<span class="src-id">true</span></div></li>
+<li><div class="src-line"><span class="src-id">color&nbsp;</span>=&nbsp;<span class="src-str">&quot;green&quot;</span></div></li>
+<li><div class="src-line"><span class="src-id">alias&nbsp;</span>=&nbsp;<span class="src-str">&quot;Inbound&quot;</span></div></li>
+<li><div class="src-line">&nbsp;</div></li>
+<li><div class="src-line"><span class="src-sym">[</span><span class="src-id">tx</span><span class="src-sym">]</span></div></li>
+<li><div class="src-line">:<span class="src-id">prefix&nbsp;</span>=&nbsp;<span class="src-str">&quot;interface-octets&quot;</span></div></li>
+<li><div class="src-line"><span class="src-id">counter&nbsp;</span>=&nbsp;<span class="src-id">true</span></div></li>
+<li><div class="src-line"><span class="src-id">scale&nbsp;</span>=&nbsp;-<span class="src-num">1</span></div></li>
+<li><div class="src-line"><span class="src-id">color&nbsp;</span>=&nbsp;<span class="src-str">&quot;blue&quot;</span></div></li>
+<li><div class="src-line"><span class="src-id">alias&nbsp;</span>=&nbsp;<span class="src-str">&quot;Outbound&quot;</span></div></li>
+<li><div class="src-line">&nbsp;</div></li>
+<li><div class="src-line"><span class="src-sym">[</span><span class="src-num">95</span><span class="src-id">th_in</span>-<span class="src-id">out</span><span class="src-sym">]</span></div></li>
+<li><div class="src-line">:<span class="src-id">prefix&nbsp;</span>=&nbsp;<span class="src-str">&quot;interface-octets&quot;</span></div></li>
+<li><div class="src-line"><span class="src-sym">;&nbsp;</span><span class="src-str">&quot;metric&quot;&nbsp;</span><span class="src-id">is&nbsp;the&nbsp;data&nbsp;point&nbsp;under&nbsp;prefix&nbsp;to&nbsp;plot</span></div></li>
+<li><div class="src-line"><span class="src-sym">;&nbsp;</span><span class="src-key">default&nbsp;</span><span class="src-id">is&nbsp;taken&nbsp;from&nbsp;the&nbsp;section&nbsp;label&nbsp;</span><span class="src-key">if&nbsp;</span><span class="src-id">not&nbsp;provided</span></div></li>
+<li><div class="src-line"><span class="src-id">metric&nbsp;</span>=&nbsp;<span class="src-str">&quot;*&quot;</span></div></li>
+<li><div class="src-line"><span class="src-sym">;&nbsp;</span><span class="src-str">&quot;series&quot;&nbsp;</span><span class="src-key">if&nbsp;</span><span class="src-id">provided&nbsp;must&nbsp;be&nbsp;a&nbsp;fully&nbsp;qualified&nbsp;graphite&nbsp;metric&nbsp;name</span></div></li>
+<li><div class="src-line"><span class="src-sym">;&nbsp;</span><span class="src-id">it&nbsp;will&nbsp;not&nbsp;be&nbsp;expended&nbsp;with&nbsp;the&nbsp;</span><span class="src-key">default&nbsp;</span><span class="src-key">or&nbsp;</span><span class="src-id">explicit&nbsp;prefixes</span></div></li>
+<li><div class="src-line"><span class="src-sym">;&nbsp;</span><span class="src-id">This&nbsp;can&nbsp;also&nbsp;be&nbsp;used&nbsp;</span><span class="src-key">for&nbsp;</span><span class="src-id">functions&nbsp;no&nbsp;yet&nbsp;supported&nbsp;by&nbsp;the&nbsp;API</span></div></li>
+<li><div class="src-line"><span class="src-sym">;&nbsp;</span><span class="src-id">series&nbsp;</span>=&nbsp;<span class="src-id">movingMedian</span><span class="src-sym">(</span><span class="src-id">foo</span>.<span class="src-id">bar</span>.<span class="src-id">baz</span><span class="src-sym">,&nbsp;</span><span class="src-num">5</span><span class="src-sym">)</span></div></li>
+<li><div class="src-line"><span class="src-id">counter&nbsp;</span>=&nbsp;<span class="src-id">true</span></div></li>
+<li><div class="src-line"><span class="src-id">sum&nbsp;</span>=&nbsp;<span class="src-id">true</span></div></li>
+<li><div class="src-line"><span class="src-id">npercentile&nbsp;</span>=&nbsp;<span class="src-num">95</span></div></li>
+<li><div class="src-line"><span class="src-id">color&nbsp;</span>=&nbsp;<span class="src-str">&quot;red&quot;</span></div></li>
+<li><div class="src-line"><span class="src-id">dashed&nbsp;</span>=&nbsp;<span class="src-num">10</span></div></li>
+<li><div class="src-line"><span class="src-id">alias&nbsp;</span>=&nbsp;<span class="src-str">&quot;95th&nbsp;Percentile&nbsp;in+out&quot;</span></div></li>
+</ol></p><hr /></span>
+  <span><a name="download"></a><h2 class="title">Download</h2><a name="download.composer"></a><h3 class="title">Install with Composer</h3><p>Graphite_GraphBuilder can be installed via {@link
+        http://getcomposer.org/ Composer} as &quot;{@link
+        http://packagist.org/packages/graphite-graph/graphite-graph
+        graphite-graph/graphite-graph}&quot;. The &quot;dev-master&quot; branch tracks stable
+        development.</p>
+      <p><div class="src-code"><pre>
+{
+  &quot;require&quot;: {
+    &quot;graphite-graph/graphite-graph&quot;: &quot;dev-master&quot;
+  }
+}
+          </pre></div></p><hr />
+    <a name="download.get_source"></a><h3 class="title">Get the Source</h3><p>You can download this source in {@link
+        https://github.com/bd808/graphite-graph-php/zipball/master zip} and
+        <a href="https://github.com/bd808/graphite-graph-php/tarball/master">tar</a>
+        formats.</p>
+      <p>You can also clone the project with <a href="http://git-scm.com">Git</a> by
+        running:
+        <pre>
+          $ git clone git://github.com/bd808/graphite-graph-php
+          </pre></p><hr />
+    <a name="download.fork"></a><h3 class="title">Contributing</h3><p>Fork this project on GitHub : <a href="https://github.com/bd808/graphite-graph-php">bd808/graphite-graph-php</a></p><hr /></span>
+  <span><a name="credits"></a><h2 class="title">Credits</h2><p>Written by <a href="http://bd808.com/">Bryan Davis</a> with support from <a href="http://keynetics.com/">Keynetics</a>.</p>
+    <p>Inspired by <a href="https://github.com/ripienaar/graphite-graph-dsl/">https://github.com/ripienaar/graphite-graph-dsl/</a></p></span></div>
       </div>
     </div>
-    <footer>
+    <footer id="footer">
+      <div class="copyright">
+      Copyright ® 2012 <a href="http://bd808.com">Bryan Davis</a> and
+      contributors. All Rights Reserved.
+      </div>
+      <div class="license">
+      Code published under the <a href="http://www.opensource.org/licenses/BSD-2-Clause">Simplified BSD License</a>. Documentation published under the <a href="http://creativecommons.org/licenses/by-sa/3.0/">Creative Commons Attribution-ShareAlike 3.0 Unported License</a>.
+      </div>
       <div class="credit">
-        Documentation generated on Wed, 28 Mar 2012 15:09:49 -0700 by <a href="http://www.phpdoc.org">phpDocumentor 1.4.3</a>
+        Documentation generated on Fri, 30 Mar 2012 16:03:38 -0700 by <a href="http://www.phpdoc.org">phpDocumentor 1.4.3</a>
       </div>
     </footer>
     <script type="text/javascript">

@@ -17,7 +17,7 @@
             <div class="package">
                               <strong>Package-level:</strong>
                                   <ul>
-	<li type="square"><a href="../Graphite/tutorial_Graphite.pkg.html">Graphite_GraphBuilder</a>
+	<li type="square"><a href="../Graphite/tutorial_Graphite.pkg.html">Graphite_GraphBuilder Manual</a>
 </ul>
 
                                                                       </div>
@@ -29,23 +29,14 @@
                 </li>
                           </ul>
           </div>
-                                              <h2>Interfaces:</h2>
-              <!--
--->
-                                      <h2>Classes:</h2>
+                                              <h2>Classes:</h2>
                 <div class="package"><ul>
-				<li><a href="../Graphite/Graphite_ConfigurationException.html">Graphite_ConfigurationException</a></li>			<li><a href="../Graphite/Graphite_GraphBuilder.html">Graphite_GraphBuilder</a></li>			<li><a href="../Graphite/Graphite_IniParser.html">Graphite_IniParser</a></li>		  </ul>
+	<li>Graph<ul>			<li><a href="../Graphite/Graph/Graphite_Graph_CallSpec.html">Graphite_Graph_CallSpec</a></li>			<li><a href="../Graphite/Graph/Graphite_Graph_Functions.html">Graphite_Graph_Functions</a></li>			<li><a href="../Graphite/Graph/Graphite_Graph_Params.html">Graphite_Graph_Params</a></li>			<li><a href="../Graphite/Graph/Graphite_Graph_Series.html">Graphite_Graph_Series</a></li>		</ul></li>  </ul>
   </div>
   <div class="package"><ul>
-	<li>Graph<ul>			<li><a href="../Graphite/Graph/Graphite_Graph_Params.html">Graphite_Graph_Params</a></li>			<li><a href="../Graphite/Graph/Graphite_Graph_Target.html">Graphite_Graph_Target</a></li>		</ul></li>  </ul>
+				<li><a href="../Graphite/Graphite_ConfigurationException.html">Graphite_ConfigurationException</a></li>			<li><a href="../Graphite/Graphite_GraphBuilder.html">Graphite_GraphBuilder</a></li>			<li><a href="../Graphite/Graphite_IniParser.html">Graphite_IniParser</a></li>		  </ul>
   </div>
-<!--
-  <ul>
-		    		<li><a href="../Graphite/Graphite_ConfigurationException.html">Graphite_ConfigurationException</a></li>    	    		<li><a href="../Graphite/Graphite_GraphBuilder.html">Graphite_GraphBuilder</a></li>    	    		<li><a href="../Graphite/Graphite_IniParser.html">Graphite_IniParser</a></li>    	  </ul>
-  <ul>
-	<li>Graph	    <ul>		<li><a href="../Graphite/Graph/Graphite_Graph_Params.html">Graphite_Graph_Params</a></li>    </ul></li>	    <ul>		<li><a href="../Graphite/Graph/Graphite_Graph_Target.html">Graphite_Graph_Target</a></li>    </ul></li>	  </ul>
--->
-                                        </div>
+                                                    </div>
         <div id="content">
           <div class="nav">
             
@@ -58,31 +49,48 @@
 <a name="sec-description"></a>
 <h2>Class Graphite_GraphBuilder</h2>
 
-<p>Graphite graph query string generator.</p><div><p>DSL and ini file driven API to assist in generating Graphite graph query  strings.</p><p>Example:  <ol><li><div class="src-line">&nbsp;<span class="src-php">&lt;?php</span></div></li>
-<li><div class="src-line">&nbsp;<span class="src-var">$g&nbsp;</span>=&nbsp;<span class="src-key">new&nbsp;</span><span class="src-id"><a href="../Graphite/Graphite_GraphBuilder.html">Graphite_GraphBuilder</a></span><span class="src-sym">(</span><span class="src-key">array</span><span class="src-sym">(</span><span class="src-str">'width'&nbsp;</span>=&gt;&nbsp;<span class="src-num">600</span><span class="src-sym">,&nbsp;</span><span class="src-str">'height'&nbsp;</span>=&gt;&nbsp;<span class="src-num">300</span><span class="src-sym">))</span><span class="src-sym">;</span></div></li>
-<li><div class="src-line">&nbsp;<span class="src-var">$g</span><span class="src-sym">-&gt;</span><span class="src-id">title</span><span class="src-sym">(</span><span class="src-str">'Memory'</span><span class="src-sym">)</span></div></li>
-<li><div class="src-line">&nbsp;&nbsp;&nbsp;<span class="src-sym">-&gt;</span><span class="src-id">vtitle</span><span class="src-sym">(</span><span class="src-str">'Mbytes'</span><span class="src-sym">)</span></div></li>
-<li><div class="src-line">&nbsp;&nbsp;&nbsp;<span class="src-sym">-&gt;</span><span class="src-id">bgcolor</span><span class="src-sym">(</span><span class="src-str">'white'</span><span class="src-sym">)</span></div></li>
-<li><div class="src-line">&nbsp;&nbsp;&nbsp;<span class="src-sym">-&gt;</span><span class="src-id">fgcolor</span><span class="src-sym">(</span><span class="src-str">'black'</span><span class="src-sym">)</span></div></li>
-<li><div class="src-line">&nbsp;&nbsp;&nbsp;<span class="src-sym">-&gt;</span><span class="src-id">from</span><span class="src-sym">(</span><span class="src-str">'-2days'</span><span class="src-sym">)</span></div></li>
-<li><div class="src-line">&nbsp;&nbsp;&nbsp;<span class="src-sym">-&gt;</span><span class="src-id">area</span><span class="src-sym">(</span><span class="src-str">'stacked'</span><span class="src-sym">)</span></div></li>
-<li><div class="src-line">&nbsp;&nbsp;&nbsp;<span class="src-sym">-&gt;</span><a href="../Graphite/Graphite_GraphBuilder.html#methodprefix">prefix</a><span class="src-sym">(</span><span class="src-str">'metrics.collectd'</span><span class="src-sym">)</span></div></li>
-<li><div class="src-line">&nbsp;&nbsp;&nbsp;<span class="src-sym">-&gt;</span><a href="../Graphite/Graphite_GraphBuilder.html#methodprefix">prefix</a><span class="src-sym">(</span><span class="src-str">'com.example.host-1'</span><span class="src-sym">)</span></div></li>
-<li><div class="src-line">&nbsp;&nbsp;&nbsp;<span class="src-sym">-&gt;</span><a href="../Graphite/Graphite_GraphBuilder.html#methodprefix">prefix</a><span class="src-sym">(</span><span class="src-str">'snmp'</span><span class="src-sym">)</span></div></li>
-<li><div class="src-line">&nbsp;&nbsp;&nbsp;<span class="src-sym">-&gt;</span><a href="../Graphite/Graphite_GraphBuilder.html#methodmetric">metric</a><span class="src-sym">(</span><span class="src-str">'memory-free'</span><span class="src-sym">,&nbsp;</span><span class="src-key">array</span><span class="src-sym">(</span></div></li>
-<li><div class="src-line">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="src-str">'cactistyle'&nbsp;</span>=&gt;&nbsp;<span class="src-id">true</span><span class="src-sym">,</span></div></li>
-<li><div class="src-line">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="src-str">'color'&nbsp;</span>=&gt;&nbsp;<span class="src-str">'00c000'</span><span class="src-sym">,</span></div></li>
-<li><div class="src-line">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="src-str">'alias'&nbsp;</span>=&gt;&nbsp;<span class="src-str">'Free'</span><span class="src-sym">,</span></div></li>
-<li><div class="src-line">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="src-str">'scale'&nbsp;</span>=&gt;&nbsp;<span class="src-str">'0.00000095367'</span><span class="src-sym">,</span></div></li>
-<li><div class="src-line">&nbsp;&nbsp;&nbsp;<span class="src-sym">))</span></div></li>
-<li><div class="src-line">&nbsp;&nbsp;&nbsp;<span class="src-sym">-&gt;</span><a href="../Graphite/Graphite_GraphBuilder.html#methodmetric">metric</a><span class="src-sym">(</span><span class="src-str">'memory-used'</span><span class="src-sym">,&nbsp;</span><span class="src-key">array</span><span class="src-sym">(</span></div></li>
-<li><div class="src-line">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="src-str">'cactistyle'&nbsp;</span>=&gt;&nbsp;<span class="src-id">true</span><span class="src-sym">,</span></div></li>
-<li><div class="src-line">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="src-str">'color'&nbsp;</span>=&gt;&nbsp;<span class="src-str">'c00000'</span><span class="src-sym">,</span></div></li>
-<li><div class="src-line">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="src-str">'alias'&nbsp;</span>=&gt;&nbsp;<span class="src-str">'Used'</span><span class="src-sym">,</span></div></li>
-<li><div class="src-line">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="src-str">'scale'&nbsp;</span>=&gt;&nbsp;<span class="src-str">'0.00000095367'</span><span class="src-sym">,</span></div></li>
-<li><div class="src-line">&nbsp;&nbsp;&nbsp;<span class="src-sym">))</span><span class="src-sym">;</span></div></li>
-<li><div class="src-line">&nbsp;<span class="src-php">?&gt;</span></div></li>
-<li><div class="src-line">&nbsp;&lt;img&nbsp;src=&quot;http://graphite.example.com/render?<span class="src-php">&lt;?php&nbsp;</span>echo&nbsp;<span class="src-var">$g</span><span class="src-sym">-&gt;</span><a href="../Graphite/Graphite_GraphBuilder.html#methodqs">qs</a><span class="src-sym">(</span><span class="src-sym">)</span><span class="src-sym">;&nbsp;</span><span class="src-php">?&gt;</span>&quot;&gt;</div></li>
+<p>Graphite graph query string generator.</p><div><p>DSL and ini file driven API to assist in generating Graphite graph query  strings.</p><p>Example:  <ol><li><div class="src-line"><span class="src-php">&lt;?php</span></div></li>
+<li><div class="src-line"><span class="src-doc">/**</span></div></li>
+<li><div class="src-line"><span class="src-doc">&nbsp;*&nbsp;Example&nbsp;usage&nbsp;of&nbsp;the&nbsp;DSL&nbsp;API&nbsp;to&nbsp;construct&nbsp;a&nbsp;graph&nbsp;of&nbsp;memory&nbsp;usage.</span></div></li>
+<li><div class="src-line"><span class="src-doc">&nbsp;*/</span></div></li>
+<li><div class="src-line">&nbsp;</div></li>
+<li><div class="src-line"><span class="src-inc">require_once&nbsp;</span><span class="src-id">dirname</span><span class="src-sym">(</span>__FILE__<span class="src-sym">)&nbsp;</span>.&nbsp;<span class="src-str">'/../src/autoload.php'</span><span class="src-sym">;</span></div></li>
+<li><div class="src-line">&nbsp;</div></li>
+<li><div class="src-line"><span class="src-var">$g&nbsp;</span>=&nbsp;<span class="src-id"><a href="../Graphite/Graphite_GraphBuilder.html">Graphite_GraphBuilder</a></span><span class="src-sym">::</span><a href="../Graphite/Graphite_GraphBuilder.html#methodbuilder">builder</a><span class="src-sym">(</span><span class="src-sym">)</span></div></li>
+<li><div class="src-line">&nbsp;&nbsp;&nbsp;&nbsp;<span class="src-sym">-&gt;</span><span class="src-id">title</span><span class="src-sym">(</span><span class="src-str">'Memory'</span><span class="src-sym">)</span></div></li>
+<li><div class="src-line">&nbsp;&nbsp;&nbsp;&nbsp;<span class="src-sym">-&gt;</span><span class="src-id">vtitle</span><span class="src-sym">(</span><span class="src-str">'Mbytes'</span><span class="src-sym">)</span></div></li>
+<li><div class="src-line">&nbsp;&nbsp;&nbsp;&nbsp;<span class="src-sym">-&gt;</span><span class="src-id">width</span><span class="src-sym">(</span><span class="src-num">800</span><span class="src-sym">)</span></div></li>
+<li><div class="src-line">&nbsp;&nbsp;&nbsp;&nbsp;<span class="src-sym">-&gt;</span><span class="src-id">height</span><span class="src-sym">(</span><span class="src-num">600</span><span class="src-sym">)</span></div></li>
+<li><div class="src-line">&nbsp;&nbsp;&nbsp;&nbsp;<span class="src-sym">-&gt;</span><span class="src-id">bgcolor</span><span class="src-sym">(</span><span class="src-str">'white'</span><span class="src-sym">)</span></div></li>
+<li><div class="src-line">&nbsp;&nbsp;&nbsp;&nbsp;<span class="src-sym">-&gt;</span><span class="src-id">fgcolor</span><span class="src-sym">(</span><span class="src-str">'black'</span><span class="src-sym">)</span></div></li>
+<li><div class="src-line">&nbsp;&nbsp;&nbsp;&nbsp;<span class="src-sym">-&gt;</span><span class="src-id">from</span><span class="src-sym">(</span><span class="src-str">'-2days'</span><span class="src-sym">)</span></div></li>
+<li><div class="src-line">&nbsp;&nbsp;&nbsp;&nbsp;<span class="src-sym">-&gt;</span><span class="src-id">area</span><span class="src-sym">(</span><span class="src-str">'stacked'</span><span class="src-sym">)</span></div></li>
+<li><div class="src-line">&nbsp;&nbsp;&nbsp;&nbsp;<span class="src-sym">-&gt;</span><a href="../Graphite/Graphite_GraphBuilder.html#methodprefix">prefix</a><span class="src-sym">(</span><span class="src-str">'collectd'</span><span class="src-sym">)</span></div></li>
+<li><div class="src-line">&nbsp;&nbsp;&nbsp;&nbsp;<span class="src-sym">-&gt;</span><a href="../Graphite/Graphite_GraphBuilder.html#methodprefix">prefix</a><span class="src-sym">(</span><span class="src-str">'com.example.host'</span><span class="src-sym">)</span></div></li>
+<li><div class="src-line">&nbsp;&nbsp;&nbsp;&nbsp;<span class="src-sym">-&gt;</span><a href="../Graphite/Graphite_GraphBuilder.html#methodprefix">prefix</a><span class="src-sym">(</span><span class="src-str">'snmp'</span><span class="src-sym">)</span></div></li>
+<li><div class="src-line">&nbsp;&nbsp;&nbsp;&nbsp;<span class="src-sym">-&gt;</span><a href="../Graphite/Graphite_GraphBuilder.html#methodseries">series</a><span class="src-sym">(</span><span class="src-str">'memory-free'</span><span class="src-sym">,&nbsp;</span><span class="src-key">array</span><span class="src-sym">(</span></div></li>
+<li><div class="src-line">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="src-str">'cactistyle'&nbsp;</span>=&gt;&nbsp;<span class="src-id">true</span><span class="src-sym">,</span></div></li>
+<li><div class="src-line">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="src-str">'color'&nbsp;</span>=&gt;&nbsp;<span class="src-str">'00c000'</span><span class="src-sym">,</span></div></li>
+<li><div class="src-line">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="src-str">'alias'&nbsp;</span>=&gt;&nbsp;<span class="src-str">'Free'</span><span class="src-sym">,</span></div></li>
+<li><div class="src-line">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="src-str">'scale'&nbsp;</span>=&gt;&nbsp;<span class="src-str">'0.00000095367'</span><span class="src-sym">,</span></div></li>
+<li><div class="src-line">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="src-sym">))</span></div></li>
+<li><div class="src-line">&nbsp;&nbsp;&nbsp;&nbsp;<span class="src-sym">-&gt;</span><a href="../Graphite/Graphite_GraphBuilder.html#methodseries">series</a><span class="src-sym">(</span><span class="src-str">'memory-used'</span><span class="src-sym">,&nbsp;</span><span class="src-key">array</span><span class="src-sym">(</span></div></li>
+<li><div class="src-line">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="src-str">'cactistyle'&nbsp;</span>=&gt;&nbsp;<span class="src-id">true</span><span class="src-sym">,</span></div></li>
+<li><div class="src-line">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="src-str">'color'&nbsp;</span>=&gt;&nbsp;<span class="src-str">'c00000'</span><span class="src-sym">,</span></div></li>
+<li><div class="src-line">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="src-str">'alias'&nbsp;</span>=&gt;&nbsp;<span class="src-str">'Used'</span><span class="src-sym">,</span></div></li>
+<li><div class="src-line">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="src-str">'scale'&nbsp;</span>=&gt;&nbsp;<span class="src-str">'0.00000095367'</span><span class="src-sym">,</span></div></li>
+<li><div class="src-line">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="src-sym">))</span></div></li>
+<li><div class="src-line">&nbsp;&nbsp;&nbsp;&nbsp;<span class="src-sym">;</span></div></li>
+<li><div class="src-line"><span class="src-php">?&gt;</span></div></li>
+<li><div class="src-line">&lt;!DOCTYPE&nbsp;html&gt;</div></li>
+<li><div class="src-line">&lt;html&gt;</div></li>
+<li><div class="src-line">&nbsp;&nbsp;&lt;head&gt;</div></li>
+<li><div class="src-line">&nbsp;&nbsp;&nbsp;&nbsp;&lt;title&gt;&lt;/title&gt;</div></li>
+<li><div class="src-line">&nbsp;&nbsp;&lt;head&gt;</div></li>
+<li><div class="src-line">&nbsp;&nbsp;&lt;body&gt;</div></li>
+<li><div class="src-line">&nbsp;&nbsp;&nbsp;&nbsp;&lt;img&nbsp;src=&quot;http://graphite.example.com/render?<span class="src-php">&lt;?php&nbsp;</span>echo&nbsp;<span class="src-var">$g</span><span class="src-sym">;&nbsp;</span><span class="src-php">?&gt;</span>&quot;&gt;</div></li>
+<li><div class="src-line">&nbsp;&nbsp;&lt;/body&gt;</div></li>
+<li><div class="src-line">&lt;/html&gt;</div></li>
 </ol></p></div>
 
 
@@ -91,7 +99,7 @@
   <strong>Author(s):</strong>
   <ul>
                   <li>Bryan Davis &lt;<a href="mailto:bd808@bd808.com">bd808@bd808.com</a>&gt;</li>
-                                </ul>
+                                                              </ul>
 
   <table>
     	      	  		<tr>
@@ -99,6 +107,24 @@
 		    <strong>Copyright:</strong>&nbsp;&nbsp;
 		  </td>
 		  <td>2012 Bryan Davis and contributors. All Rights Reserved.</td>
+		</tr>
+	      	  		<tr>
+		  <td>
+		    <strong>Link:</strong>&nbsp;&nbsp;
+		  </td>
+		  <td><a href="http://readthedocs.org/docs/graphite/en/latest/url-api.html">http://readthedocs.org/docs/graphite/en/latest/url-api.html</a></td>
+		</tr>
+	      	  		<tr>
+		  <td>
+		    <strong>Link:</strong>&nbsp;&nbsp;
+		  </td>
+		  <td><a href="http://bd808.com/graphite-graph-php/">http://bd808.com/graphite-graph-php/</a></td>
+		</tr>
+	      	  		<tr>
+		  <td>
+		    <strong>Link:</strong>&nbsp;&nbsp;
+		  </td>
+		  <td><a href="http://graphite.wikidot.com/">http://graphite.wikidot.com/</a></td>
 		</tr>
 	      	  		<tr>
 		  <td>
@@ -122,7 +148,7 @@
             <code>
               $prefixStack
                           </code>
-            <br /><div style="margin-left: 20px">Metric prefix stack.</div>                      </td>
+            <br /><div style="margin-left: 20px">Series prefix stack.</div>                      </td>
         </tr>
                         <tr>
           <td class="right">
@@ -148,7 +174,19 @@
   <a name="sec-method-summary"></a>
   <h2>Method Summary</h2>
   <table class="summary">
-                                                                                                            <tr>
+                                      <tr>
+          <td class="right">
+            <em>public</em>            static
+                        <em>void</em>          </td>
+          <td>
+            <code>
+              <a href="#builder"><b>builder</b></a>(
+                                                                  [                  $settings
+                   = null]                               )
+            </code>
+            <br /><div style="margin-left: 20px">Builder factory.</div>          </td>
+        </tr>
+                                                                                                                  <tr>
           <td class="right">
             <em>public</em>            static
                         <em>string</em>          </td>
@@ -173,7 +211,7 @@
             </code>
             <br /><div style="margin-left: 20px">Create a fully qualified prefix for the given configuration.</div>          </td>
         </tr>
-                                                                    <tr>
+                                                                                        <tr>
           <td class="right">
             <em>public</em>                        <em>Graphite_GraphBuilder</em>          </td>
           <td>
@@ -183,6 +221,28 @@
                    = null]                               )
             </code>
             <br /><div style="margin-left: 20px">Constructor.</div>          </td>
+        </tr>
+                        <tr>
+          <td class="right">
+            <em>public</em>                        <em>string</em>          </td>
+          <td>
+            <code>
+              <a href="#build"><b>build</b></a>(
+                                                                  [                  $format
+                   = null]                               )
+            </code>
+            <br /><div style="margin-left: 20px">Generate a graphite graph description query string.</div>          </td>
+        </tr>
+                                  <tr>
+          <td class="right">
+            <em>public</em>                        <em><a href="../Graphite/Graph/Graphite_Graph_Series.html">Graphite_Graph_Series</a></em>          </td>
+          <td>
+            <code>
+              <a href="#buildSeries"><b>buildSeries</b></a>(
+                                                                                    $name
+                                                 )
+            </code>
+            <br /><div style="margin-left: 20px">Add a data series to the graph using the <a href="../Graphite/Graph/Graphite_Graph_Series.html">Graphite_Graph_Series</a>  fluent builder DSL.</div>          </td>
         </tr>
                         <tr>
           <td class="right">
@@ -214,7 +274,7 @@
                                                     ,                                     $opts
                                                  )
             </code>
-            <br /><div style="margin-left: 20px">Add forecast, confidence bands, aberrations and metrics using the  Holt-Winters Confidence Band prediction model.</div>          </td>
+            <br /><div style="margin-left: 20px">Add forecast, confidence bands, aberrations and base series using the  Holt-Winters Confidence Band prediction model.</div>          </td>
         </tr>
                         <tr>
           <td class="right">
@@ -260,18 +320,18 @@
                                                                                     $prefix
                                                  )
             </code>
-            <br /><div style="margin-left: 20px">Set a prefix to add to subsequent metrics.</div>          </td>
+            <br /><div style="margin-left: 20px">Set a prefix to add to subsequent series.</div>          </td>
         </tr>
                         <tr>
           <td class="right">
-            <em>public</em>                        <em>string</em>          </td>
+            <em>public</em>                        <em>void</em>          </td>
           <td>
             <code>
               <a href="#qs"><b>qs</b></a>(
                                                                   [                  $format
                    = null]                               )
             </code>
-            <br /><div style="margin-left: 20px">Generate a graphite graph description query string.</div>          </td>
+            <br /><div style="margin-left: 20px">Alias for build().</div>          </td>
         </tr>
                                   <tr>
           <td class="right">
@@ -286,6 +346,18 @@
         </tr>
                                   <tr>
           <td class="right">
+            <em>public</em>                        <em><a href="../Graphite/Graphite_GraphBuilder.html">Graphite_GraphBuilder</a></em>          </td>
+          <td>
+            <code>
+              <a href="#series"><b>series</b></a>(
+                                                                                    $name
+                                                    ,                   [                  $opts
+                   = array()]                               )
+            </code>
+            <br /><div style="margin-left: 20px">Add a data series to the graph.</div>          </td>
+        </tr>
+                        <tr>
+          <td class="right">
             <em>public</em>                        <em>void</em>          </td>
           <td>
             <code>
@@ -293,7 +365,7 @@
                                                                   [                  $format
                    = null]                               )
             </code>
-            <br /><div style="margin-left: 20px">Alias for qs().</div>          </td>
+            <br /><div style="margin-left: 20px">Alias for build().</div>          </td>
         </tr>
                         <tr>
           <td class="right">
@@ -330,13 +402,60 @@
             </code>
             <br /><div style="margin-left: 20px">Handle attempts to write to non-existant members.</div>          </td>
         </tr>
+                        <tr>
+          <td class="right">
+            <em>public</em>                        <em>string</em>          </td>
+          <td>
+            <code>
+              <a href="#__toString"><b>__toString</b></a>(
+               )
+            </code>
+            <br /><div style="margin-left: 20px">Convert to string.</div>          </td>
+        </tr>
             </table>
 
 
   <a name="sec-methods"></a>
   <h2>Methods</h2>
   <a name='method_detail'></a>
-                        <a name="methodqsEncode" id="qsEncode"><!-- --></a>
+          <a name="methodbuilder" id="builder"><!-- --></a>
+
+    <h3>builder</h3>
+
+    <div class="method-signature">
+      static void
+      builder(
+                                  [array
+          $settings
+           = null]              )
+    </div>
+
+      <p>Builder factory.</p>      
+              <h4>Parameters:</h4>
+        <table class="detail">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Type</th>
+              <th class="desc">Description</th>
+            </tr>
+          </thead>
+          <tbody>
+                          <tr>
+                <td><code>$settings</code></td>
+                <td><em>array</em></td>
+                <td>
+                                      Default settings for graph
+                                  </td>
+              </tr>
+                      </tbody>
+        </table>
+      
+      
+      
+      
+      
+                          <a name="methodqsEncode" id="qsEncode"><!-- --></a>
 
     <h3>qsEncode</h3>
 
@@ -348,8 +467,8 @@
                         )
     </div>
 
-      <p>Query string specific uri encoding.</p><div><p>Per RFC-3986:    URI producing applications should percent-encode data octets that    correspond to characters in the reserved set unless these characters    are specifically allowed by the URI scheme to represent data in that    component.</p><p>Php's builtin urlencode function is a general purpose encoder. This means  that it takes the most conservative approach to encoding. This means  percent-encoding all octets that are not in the &quot;unreserved&quot; set  (ALPHA / DIGIT / &quot;-&quot; / &quot;.&quot; / &quot;_&quot; / &quot;~&quot;). Actually it goes further than  this and encodes the tilde as well for no apparent reason other than  potential binary compatibility with the output of early non-conforming  user-agents.</p><p>Within the &quot;query&quot; section of a URI there is a broader set of valid  characters allowed without percent-encoding: <ul><li>query         = *( pchar / &quot;/&quot; / &quot;?&quot; )</li><li>pchar         = unreserved / pct-encoded / sub-delims / &quot;:&quot; / &quot;@&quot;</li><li>unreserved    = ALPHA / DIGIT / &quot;-&quot; / &quot;.&quot; / &quot;_&quot; / &quot;~&quot;</li><li>pct-encoded   = &quot;%&quot; HEXDIG HEXDIG</li><li>sub-delims    = &quot;!&quot; / &quot;$&quot; / &quot;&amp;&quot; / &quot;'&quot; / &quot;(&quot; / &quot;)&quot; /
-                   &quot;*&quot; / &quot;+&quot; / &quot;,&quot; / &quot;;&quot; / &quot;=&quot;</li></ul>  This encoder will let php do the heavy lifting with urlencode() but will  then decode _most_ query allowed characters. We will leave &quot;&amp;&quot;, &quot;=&quot;, &quot;;&quot;  and &quot;+&quot; percent-encoded to preserve delimiters used in the  application/x-www-form-urlencoded encoding.</p></div>      
+      <p>Query string specific uri encoding.</p><div><p>Per RFC-3986:    URI producing applications should percent-encode data octets that    correspond to characters in the reserved set unless these characters    are specifically allowed by the URI scheme to represent data in that    component.</p><p>Php's builtin urlencode function is a general purpose encoder. This means  that it takes the most conservative approach to encoding. It  percent-encodes all octets that are not in the &quot;unreserved&quot; set  (ALPHA / DIGIT / &quot;-&quot; / &quot;.&quot; / &quot;_&quot; / &quot;~&quot;). Actually it goes further than  this and encodes the tilde as well for no apparent reason other than  potential binary compatibility with the output of early non-conforming  user-agents.</p><p>Within the &quot;query&quot; section of a URI there is a broader set of valid  characters allowed without percent-encoding: <ul><li>query         = *( pchar / &quot;/&quot; / &quot;?&quot; )</li><li>pchar         = unreserved / pct-encoded / sub-delims / &quot;:&quot; / &quot;@&quot;</li><li>unreserved    = ALPHA / DIGIT / &quot;-&quot; / &quot;.&quot; / &quot;_&quot; / &quot;~&quot;</li><li>pct-encoded   = &quot;%&quot; HEXDIG HEXDIG</li><li>sub-delims    = &quot;!&quot; / &quot;$&quot; / &quot;&amp;&quot; / &quot;'&quot; / &quot;(&quot; / &quot;)&quot; /
+                   &quot;*&quot; / &quot;+&quot; / &quot;,&quot; / &quot;;&quot; / &quot;=&quot;</li></ul>  This encoder will let php do the heavy lifting with urlencode() but will  then decode _most_ query allowed characters. We will leave &quot;&amp;&quot;, &quot;=&quot;, &quot;;&quot;  and &quot;+&quot; percent-encoded to preserve delimiters used in the  application/x-www-form-urlencoded encoding.</p><p>What's the point? I could claim that it reduces the size of the encoded  string, but my real reason is that it makes the Graphite query strings  more readable for debugging.</p></div>      
               <h4>Parameters:</h4>
         <table class="detail">
           <thead>
@@ -419,7 +538,7 @@
       
       
       
-          
+              
       <a name="method__construct" id="__construct"><!-- --></a>
 
     <h3>__construct</h3>
@@ -448,6 +567,99 @@
               <td><em>array</em></td>
               <td>
                                   Default settings for graph
+                              </td>
+            </tr>
+                  </tbody>
+      </table>
+    
+        
+
+    
+    
+    
+        <a name="methodbuild" id="build"><!-- --></a>
+
+    <h3>build</h3>
+
+    <div class="method-signature">
+      string
+      build(
+                                  [string
+          $format
+           = null]              )
+    </div>
+
+    <p>Generate a graphite graph description query string.</p>
+          <h4>Parameters:</h4>
+      <table class="detail">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Type</th>
+            <th class="desc">Description</th>
+          </tr>
+        </thead>
+        <tbody>
+                      <tr>
+              <td><code>$format</code></td>
+              <td><em>string</em></td>
+              <td>
+                                  Format to export data in (null for graph)
+                              </td>
+            </tr>
+                  </tbody>
+      </table>
+    
+          <h4>Exceptions:</h4>
+      <table class="detail">
+        <thead>
+          <tr>
+            <th>Type</th>
+            <th class="desc">Description</th>
+          </tr>
+        </thead>
+        <tbody>
+                      <tr>
+              <td><code><a href="../Graphite/Graphite_ConfigurationException.html">Graphite_ConfigurationException</a></code></td>
+              <td>
+                                  If required data is missing
+                              </td>
+            </tr>
+                  </tbody>
+      </table>
+        
+
+    
+    
+    
+          <a name="methodbuildSeries" id="buildSeries"><!-- --></a>
+
+    <h3>buildSeries</h3>
+
+    <div class="method-signature">
+      <a href="../Graphite/Graph/Graphite_Graph_Series.html">Graphite_Graph_Series</a>
+      buildSeries(
+                                  string
+          $name
+                        )
+    </div>
+
+    <p>Add a data series to the graph using the <a href="../Graphite/Graph/Graphite_Graph_Series.html">Graphite_Graph_Series</a>  fluent builder DSL.</p>
+          <h4>Parameters:</h4>
+      <table class="detail">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Type</th>
+            <th class="desc">Description</th>
+          </tr>
+        </thead>
+        <tbody>
+                      <tr>
+              <td><code>$name</code></td>
+              <td><em>string</em></td>
+              <td>
+                                  Name of data series to graph
                               </td>
             </tr>
                   </tbody>
@@ -506,7 +718,7 @@
                         )
     </div>
 
-    <p>Add forecast, confidence bands, aberrations and metrics using the  Holt-Winters Confidence Band prediction model.</p>
+    <p>Add forecast, confidence bands, aberrations and base series using the  Holt-Winters Confidence Band prediction model.</p>
           <h4>Parameters:</h4>
       <table class="detail">
         <thead>
@@ -686,7 +898,7 @@
               <td><code>$name</code></td>
               <td><em>string</em></td>
               <td>
-                                  Name of data metric to graph
+                                  Name of data series to graph
                               </td>
             </tr>
                       <tr>
@@ -716,7 +928,7 @@
                         )
     </div>
 
-    <p>Set a prefix to add to subsequent metrics.</p>
+    <p>Set a prefix to add to subsequent series.</p>
           <h4>Parameters:</h4>
       <table class="detail">
         <thead>
@@ -747,14 +959,14 @@
     <h3>qs</h3>
 
     <div class="method-signature">
-      string
+      void
       qs(
-                                  [string
+                                  [
           $format
            = null]              )
     </div>
 
-    <p>Generate a graphite graph description query string.</p>
+    <p>Alias for build().</p>
           <h4>Parameters:</h4>
       <table class="detail">
         <thead>
@@ -767,31 +979,13 @@
         <tbody>
                       <tr>
               <td><code>$format</code></td>
-              <td><em>string</em></td>
+              <td><em></em></td>
               <td>
-                                  Format to export data in (null for graph)
                               </td>
             </tr>
                   </tbody>
       </table>
     
-          <h4>Exceptions:</h4>
-      <table class="detail">
-        <thead>
-          <tr>
-            <th>Type</th>
-            <th class="desc">Description</th>
-          </tr>
-        </thead>
-        <tbody>
-                      <tr>
-              <td><code><a href="../Graphite/Graphite_ConfigurationException.html">Graphite_ConfigurationException</a></code></td>
-              <td>
-                                  If required data is missing
-                              </td>
-            </tr>
-                  </tbody>
-      </table>
         
 
     
@@ -835,7 +1029,54 @@
     
     
     
-          <a name="methodurl" id="url"><!-- --></a>
+          <a name="methodseries" id="series"><!-- --></a>
+
+    <h3>series</h3>
+
+    <div class="method-signature">
+      <a href="../Graphite/Graphite_GraphBuilder.html">Graphite_GraphBuilder</a>
+      series(
+                                  string
+          $name
+                            ,           [array
+          $opts
+           = array()]              )
+    </div>
+
+    <p>Add a data series to the graph.</p>
+          <h4>Parameters:</h4>
+      <table class="detail">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Type</th>
+            <th class="desc">Description</th>
+          </tr>
+        </thead>
+        <tbody>
+                      <tr>
+              <td><code>$name</code></td>
+              <td><em>string</em></td>
+              <td>
+                                  Name of data series to graph
+                              </td>
+            </tr>
+                      <tr>
+              <td><code>$opts</code></td>
+              <td><em>array</em></td>
+              <td>
+                                  Series options
+                              </td>
+            </tr>
+                  </tbody>
+      </table>
+    
+        
+
+    
+    
+    
+        <a name="methodurl" id="url"><!-- --></a>
 
     <h3>url</h3>
 
@@ -847,7 +1088,7 @@
            = null]              )
     </div>
 
-    <p>Alias for qs().</p>
+    <p>Alias for build().</p>
           <h4>Parameters:</h4>
       <table class="detail">
         <thead>
@@ -1004,17 +1245,41 @@
     
     
     
+        <a name="method__toString" id="__toString"><!-- --></a>
+
+    <h3>__toString</h3>
+
+    <div class="method-signature">
+      string
+      __toString(
+      )
+    </div>
+
+    <p>Convert to string.</p>
+    
+        
+
+    
+    
+    
   
 <p class="notes">
   Located in <a class="field" href="_src---Graphite---GraphBuilder.php.html">/src/Graphite/GraphBuilder.php</a> 
-  [<span class="field">line 49</span>]
+  [<span class="field">line 26</span>]
 </p>
 
       </div>
     </div>
-    <footer>
+    <footer id="footer">
+      <div class="copyright">
+      Copyright ® 2012 <a href="http://bd808.com">Bryan Davis</a> and
+      contributors. All Rights Reserved.
+      </div>
+      <div class="license">
+      Code published under the <a href="http://www.opensource.org/licenses/BSD-2-Clause">Simplified BSD License</a>. Documentation published under the <a href="http://creativecommons.org/licenses/by-sa/3.0/">Creative Commons Attribution-ShareAlike 3.0 Unported License</a>.
+      </div>
       <div class="credit">
-        Documentation generated on Wed, 28 Mar 2012 15:09:49 -0700 by <a href="http://www.phpdoc.org">phpDocumentor 1.4.3</a>
+        Documentation generated on Fri, 30 Mar 2012 16:03:39 -0700 by <a href="http://www.phpdoc.org">phpDocumentor 1.4.3</a>
       </div>
     </footer>
     <script type="text/javascript">

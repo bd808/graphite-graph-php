@@ -2,13 +2,13 @@
 <html>
   <head>
     <meta http-equiv='Content-Type' content='text/html; charset=utf-8'/>
-    <title>Docs For Class Graphite_Graph_Params</title>
+    <title>Docs For Class Graphite_Graph_Functions</title>
     <link rel="stylesheet" type="text/css" href="../../media/style.css" />
   </head>
   <body>
     <div id="container">
       <header id="header">
-        <h1>Graphite_GraphBuilder Manual :: Docs For Class Graphite_Graph_Params</h1>
+        <h1>Graphite_GraphBuilder Manual :: Docs For Class Graphite_Graph_Functions</h1>
         <a href="https://github.com/bd808/graphite-graph-php"><img style="position:absolute;top:0;right:0;border:0;" src="https://a248.e.akamai.net/assets.github.com/img/7afbc8b248c68eb468279e8c17986ad46549fb71/687474703a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f6461726b626c75655f3132313632312e706e67" alt="Fork me on GitHub"></a>
       </header>
       <div id="main">
@@ -47,9 +47,9 @@
                         [ <a href="../../elementindex.html">All elements</a> ]
           </div>
 <a name="sec-description"></a>
-<h2>Class Graphite_Graph_Params</h2>
+<h2>Class Graphite_Graph_Functions</h2>
 
-<p>Utility for graph level parameters.</p>
+<p>Utility for target functions.</p><div><p>Functions are used to transform, combine and perform calculations on series  data.</p></div>
 
 
 
@@ -57,7 +57,7 @@
   <strong>Author(s):</strong>
   <ul>
                   <li>Bryan Davis &lt;<a href="mailto:bd808@bd808.com">bd808@bd808.com</a>&gt;</li>
-                                </ul>
+                                          </ul>
 
   <table>
     	      	  		<tr>
@@ -65,6 +65,12 @@
 		    <strong>Copyright:</strong>&nbsp;&nbsp;
 		  </td>
 		  <td>2012 Bryan Davis and contributors. All Rights Reserved.</td>
+		</tr>
+	      	  		<tr>
+		  <td>
+		    <strong>Link:</strong>&nbsp;&nbsp;
+		  </td>
+		  <td><a href="http://readthedocs.org/docs/graphite/en/latest/functions.html">http://readthedocs.org/docs/graphite/en/latest/functions.html</a></td>
 		</tr>
 	      	  		<tr>
 		  <td>
@@ -84,12 +90,12 @@
                   <tr>
           <td class="right">
             <em>protected</em>            static
-            <em>array</em>          </td>
+            <em>mixed</em>          </td>
           <td>
             <code>
-              $aliases
+              $functionAliases
             </code>
-            <div style="margin-left: 20px">Mapping from property names to Graphite parameter names.</div>                      </td>
+            <div style="margin-left: 20px">Function name aliases.</div>                      </td>
         </tr>
                         <tr>
           <td class="right">
@@ -97,17 +103,39 @@
             <em>array</em>          </td>
           <td>
             <code>
-              $params
+              $functionSpecs
             </code>
-            <div style="margin-left: 20px">Valid graph URI parameters.</div>                      </td>
+            <div style="margin-left: 20px">Metric manipulation function sepecifications.</div>            <div style="margin-left: 20px"><p>Each specification is shorthand for constructing a  Graphite_Graph_CallSpec stored as an array. This is a tuple of:  (call signature, sort order, alias flag)</p></div>          </td>
         </tr>
-                                    </table>
+                        <tr>
+          <td class="right">
+            <em>protected</em>            static
+            <em>array</em>          </td>
+          <td>
+            <code>
+              $generators
+            </code>
+                                  </td>
+        </tr>
+                                              </table>
 
 
   <a name="sec-method-summary"></a>
   <h2>Method Summary</h2>
   <table class="summary">
                   <tr>
+          <td class="right">
+            <em>public</em>            static
+                        <em><a href="../../Graphite/Graph/Graphite_Graph_CallSpec.html">Graphite_Graph_CallSpec</a></em>          </td>
+          <td>
+            <code>
+              <a href="#callSpec"><b>callSpec</b></a>(
+                                                                                    $name
+                                                 )
+            </code>
+            <br /><div style="margin-left: 20px">Get the call specification for a function.</div>          </td>
+        </tr>
+                        <tr>
           <td class="right">
             <em>public</em>            static
                         <em>string</em>          </td>
@@ -117,28 +145,65 @@
                                                                                     $name
                                                  )
             </code>
-            <br /><div style="margin-left: 20px">Find the canonical name for a parameter.</div>          </td>
+            <br /><div style="margin-left: 20px">Find the canonical name for a target.</div>          </td>
         </tr>
                         <tr>
           <td class="right">
             <em>public</em>            static
-                        <em>mixed</em>          </td>
+                        <em>int</em>          </td>
           <td>
             <code>
-              <a href="#format"><b>format</b></a>(
-                                                                                    $name
-                                                    ,                                     $value
+              <a href="#cmp"><b>cmp</b></a>(
+                                                                                    $a
+                                                    ,                                     $b
                                                  )
             </code>
-            <br /><div style="margin-left: 20px">Format a parameter value.</div>          </td>
+            <br /><div style="margin-left: 20px">Compare two function names for sort ordering based on priority.</div>          </td>
         </tr>
-                                    </table>
+                                              </table>
 
 
   <a name="sec-methods"></a>
   <h2>Methods</h2>
   <a name='method_detail'></a>
-      <a name="methodcanonicalName" id="canonicalName"><!-- --></a>
+      <a name="methodcallSpec" id="callSpec"><!-- --></a>
+
+    <h3>callSpec</h3>
+
+    <div class="method-signature">
+      static <a href="../../Graphite/Graph/Graphite_Graph_CallSpec.html">Graphite_Graph_CallSpec</a>
+      callSpec(
+                                  string
+          $name
+                        )
+    </div>
+
+      <p>Get the call specification for a function.</p>      
+              <h4>Parameters:</h4>
+        <table class="detail">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Type</th>
+              <th class="desc">Description</th>
+            </tr>
+          </thead>
+          <tbody>
+                          <tr>
+                <td><code>$name</code></td>
+                <td><em>string</em></td>
+                <td>
+                                      Function name
+                                  </td>
+              </tr>
+                      </tbody>
+        </table>
+      
+      
+      
+      
+      
+        <a name="methodcanonicalName" id="canonicalName"><!-- --></a>
 
     <h3>canonicalName</h3>
 
@@ -150,7 +215,7 @@
                         )
     </div>
 
-      <p>Find the canonical name for a parameter.</p><div><p>The value may be an alias or it may differ in case from the true  parameter name.</p></div>      
+      <p>Find the canonical name for a target.</p><div><p>The value may be an alias or it may differ in case from the true  target name.</p></div>      
               <h4>Parameters:</h4>
         <table class="detail">
           <thead>
@@ -165,7 +230,7 @@
                 <td><code>$name</code></td>
                 <td><em>string</em></td>
                 <td>
-                                      Parameter to lookup
+                                      Target to lookup
                                   </td>
               </tr>
                       </tbody>
@@ -175,21 +240,21 @@
       
       
       
-        <a name="methodformat" id="format"><!-- --></a>
+        <a name="methodcmp" id="cmp"><!-- --></a>
 
-    <h3>format</h3>
+    <h3>cmp</h3>
 
     <div class="method-signature">
-      static mixed
-      format(
+      static int
+      cmp(
                                   string
-          $name
+          $a
                             ,           string
-          $value
+          $b
                         )
     </div>
 
-      <p>Format a parameter value.</p>      
+      <p>Compare two function names for sort ordering based on priority.</p>      
               <h4>Parameters:</h4>
         <table class="detail">
           <thead>
@@ -201,17 +266,17 @@
           </thead>
           <tbody>
                           <tr>
-                <td><code>$name</code></td>
+                <td><code>$a</code></td>
                 <td><em>string</em></td>
                 <td>
-                                      Parameter name
+                                      First function name
                                   </td>
               </tr>
                           <tr>
-                <td><code>$value</code></td>
+                <td><code>$b</code></td>
                 <td><em>string</em></td>
                 <td>
-                                      Value to format
+                                      Second function name
                                   </td>
               </tr>
                       </tbody>
@@ -222,10 +287,10 @@
       
       
   
-    
+      
 <p class="notes">
-  Located in <a class="field" href="_src---Graphite---Graph---Params.php.html">/src/Graphite/Graph/Params.php</a> 
-  [<span class="field">line 19</span>]
+  Located in <a class="field" href="_src---Graphite---Graph---Functions.php.html">/src/Graphite/Graph/Functions.php</a> 
+  [<span class="field">line 23</span>]
 </p>
 
       </div>
