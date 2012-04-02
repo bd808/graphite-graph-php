@@ -114,7 +114,7 @@ class Graphite_Graph_Functions {
       'constantLine'       => array('#', 1, false),
       'randomWalkFunction' => array('"', 1, false),
       'sinFunction'        => array(array('"', '-?'), 1, false),
-      'threshold'          => array(array(1, '"', '"'), 1, true),
+      'threshold'          => array(array('#', '"?', '"?'), 1, true),
       'timeFunction'       => array('"', 1, false),
     );
 
