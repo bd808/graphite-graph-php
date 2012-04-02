@@ -118,6 +118,77 @@ class Graphite_Graph_CallSpec {
 
 
   /**
+   * How many args are required for this function?
+   *
+   * @return int Required argument count
+   */
+  protected function requiredArgs () {
+    $req = 0;
+    if ($this->takesArgs()) {
+      foreach ($this->signature as $argDesc) {
+        if (!self::argIsOptional($argDesc)) {
+          $req += 1;
+        }
+      }
+    }
+    return $req;
+  } //end requiredArgs
+
+
+  /**
+   * How many args are possible for this function?
+   *
+   * @return int Possible argument count
+   */
+  protected function maxArgs () {
+    $args = 0;
+    if ($this->takesArgs()) {
+      foreach ($this->signature as $argDesc) {
+        if (self::argIsWildcard($argDesc)) {
+          $args = PHP_INT_MAX;
+          break;
+        }
+        $args += 1;
+      }
+    }
+    return $args;
+  } //end maxArgs
+
+
+  /**
+   * Does the given argument have modifiers?
+   *
+   * @param string $arg Argument description to check
+   * @return bool True if wildcard, false otherwise
+   */
+  static protected function argHasMods ($arg) {
+    return null !== $arg && strlen($arg) > 1;
+  }
+
+
+  /**
+   * Is the given argument a wildcard?
+   *
+   * @param string $arg Argument description to check
+   * @return bool True if wildcard, false otherwise
+   */
+  static protected function argIsWildcard ($arg) {
+    return self::argHasMods($arg) && '*' === $arg[1];
+  }
+
+
+  /**
+   * Is the given argument optional?
+   *
+   * @param string $arg Argument description to check
+   * @return bool True if optional, false otherwise
+   */
+  static protected function argIsOptional ($arg) {
+    return self::argHasMods($arg) && '?' === $arg[1];
+  }
+
+
+  /**
    * Format the call for use as a target.
    *
    * Arguments to the function can be provided as an array or using a varadic
@@ -145,8 +216,16 @@ class Graphite_Graph_CallSpec {
       array_shift($args);
     }
 
-    // TODO: if function takes multiple args and $args is a scalar,
-    // explode on , and trim each part
+    if ($this->maxArgs() > 1 && count($args) == 1 && is_string($args[0])) {
+      // single string argument given to a function that accepts multiple
+      // arguments. See if we can split it on commas and get more input.
+      // TODO: this could be smarter (escape comma, don't split quoted
+      // strings)
+      $parts = explode(',', $args[0], $this->maxArgs());
+      if (count($parts) > 1) {
+        $args = array_map('trim', $parts);
+      }
+    }
 
     if ($this->takesArgs()) {
       foreach ($this->signature as $argDesc) {
@@ -226,7 +305,16 @@ class Graphite_Graph_CallSpec {
     switch ($type) {
       case '"':
           // quoted string
-          $formatted = (is_bool($arg))? null: "'{$arg}'";
+          if (is_bool($arg)) {
+            // booleans turn into null args
+            $formatted = null;
+          } else {
+            // strip any enclosing single/double quotes
+            $arg = preg_replace('/^(\'|")?(.*)(?(1)\1|)$/', '$2', $arg);
+
+            // quote with single quotes
+            $formatted = "'{$arg}'";
+          }
           break;
 
       case '#':

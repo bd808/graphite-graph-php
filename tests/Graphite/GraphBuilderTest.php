@@ -153,7 +153,19 @@ class Graphite_GraphBuilderTest extends PHPUnit_Framework_TestCase {
 
     $g->ini($this->iniPath('test_bool_param_unset2.ini'));
     $this->assertEquals('', (string) $g);
-  } //end testBoolParamUnset
+  } //end test_bool_param_unset
+
+  public function test_ini_multiarg_array () {
+    $g = Graphite_GraphBuilder::builder()
+        ->ini($this->iniPath('test_multiarg_array.ini'));
+    $this->assertEquals('target=aliasByNode(my-metric,1,3,5)', (string) $g);
+  } //end test_ini_multiarg_array
+
+  public function test_ini_multiarg_split () {
+    $g = Graphite_GraphBuilder::builder()
+        ->ini($this->iniPath('test_multiarg_split.ini'));
+    $this->assertEquals("target=aliasByNode(my-metric,1,3,5)&target=aliasSub(ip.*TCP*,'%5E.*TCP(%5Cd%2B)','%5C1')", (string) $g);
+  } //end test_ini_multiarg_split
 
 
   /**
