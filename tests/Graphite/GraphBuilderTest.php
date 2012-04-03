@@ -155,18 +155,37 @@ class Graphite_GraphBuilderTest extends PHPUnit_Framework_TestCase {
     $this->assertEquals('', (string) $g);
   } //end test_bool_param_unset
 
+  /**
+   * Given: ini config with `[]` array syntax
+   * Expect: multiple arguments to be processed
+   */
   public function test_ini_multiarg_array () {
     $g = Graphite_GraphBuilder::builder()
         ->ini($this->iniPath('test_multiarg_array.ini'));
     $this->assertEquals('target=aliasByNode(my-metric,1,3,5)', (string) $g);
   } //end test_ini_multiarg_array
 
+  /**
+   * Given: ini config with comma-separated string and multi-arg function
+   * Expect: string to be split on commas and processed
+   */
   public function test_ini_multiarg_split () {
     $g = Graphite_GraphBuilder::builder()
         ->ini($this->iniPath('test_multiarg_split.ini'));
     $this->assertEquals("target=aliasByNode(my-metric,1,3,5)&target=aliasSub(ip.*TCP*,'%5E.*TCP(%5Cd%2B)','%5C1')", (string) $g);
   } //end test_ini_multiarg_split
 
+  /**
+   * Given: ini config using series inheritance
+   * Expect: series config values to be inherited
+   */
+  public function test_inherit () {
+    $g = Graphite_GraphBuilder::builder()
+        ->ini($this->iniPath('test_inherit_base.ini'))
+        ->ini($this->iniPath('test_inherit_extends.ini'));
+
+    $this->assertEquals("target=alias(color(scale(derivative(munin.cpu.irq),0.001),'red'),'IRQ')&target=alias(color(scale(derivative(munin.cpu.softirq),0.001),'yellow'),'Batched+IRQ')", (string) $g);
+  } //end test_inherit
 
   /**
    * Get the path to an ini file.

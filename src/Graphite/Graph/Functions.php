@@ -23,7 +23,7 @@
 class Graphite_Graph_Functions {
 
   /**
-   * Metric manipulation function sepecifications.
+   * Metric manipulation function specifications.
    *
    * Each specification is shorthand for constructing a
    * Graphite_Graph_CallSpec stored as an array. This is a tuple of:
@@ -32,7 +32,7 @@ class Graphite_Graph_Functions {
    * @var array
    * @see Graphite_Graph_CallSpec::__construct
    */
-  static protected $functionSpecs = array(
+  static protected $functions = array(
       'alias'                      => array('"', 99, 1),
       'aliasByNode'                => array('#*', 50, 1),
       'aliasSub'                   => array(array('"', '"'), 50, 1),
@@ -107,7 +107,14 @@ class Graphite_Graph_Functions {
       'transformNull'              => array('#?', 50, 0),
     );
 
+
   /**
+   * Data generation function.
+   *
+   * These are similar to the normal manipulation functions but differ in that
+   * they generate a base series rather than manipulating an existing series
+   * or combination of series.
+   *
    * @var array
    */
   static protected $generators = array(
@@ -124,7 +131,7 @@ class Graphite_Graph_Functions {
    *
    * @param array
    */
-  static protected $functionAliases = array(
+  static protected $aliases = array(
       'avg'        => 'averageSeries',
       'cacti'      => 'cactiStyle',
       'centile'    => 'nPercentile',
@@ -155,10 +162,10 @@ class Graphite_Graph_Functions {
     if (null == $lookupMap) {
       // lazily construct the lookup map
       $tmp = array();
-      foreach (self::$functionSpecs as $func => $conf) {
+      foreach (self::$functions as $func => $conf) {
         $tmp[mb_strtolower($func)] = $func;
       }
-      foreach (self::$functionAliases as $alias => $func) {
+      foreach (self::$aliases as $alias => $func) {
         $tmp[mb_strtolower($alias)] = $func;
       }
       $lookupMap = $tmp;
@@ -186,7 +193,7 @@ class Graphite_Graph_Functions {
     if (false === $name) {
       return null;
     }
-    $spec = self::$functionSpecs[$name];
+    $spec = self::$functions[$name];
     return new Graphite_Graph_CallSpec($name, $spec[0], $spec[1], $spec[2]);
   }
 
@@ -201,8 +208,8 @@ class Graphite_Graph_Functions {
    *    greater than the second.
    */
   static public function cmp ($a, $b) {
-    $aCfg = self::$functionSpecs[$a];
-    $bCfg = self::$functionSpecs[$b];
+    $aCfg = self::$functions[$a];
+    $bCfg = self::$functions[$b];
     return $aCfg[1] - $bCfg[1];
   }
 
