@@ -44,6 +44,24 @@ class Graphite_GraphBuilder {
   protected $targets;
 
   /**
+   * Configuration metadata.
+   *
+   * Metadata is arbitrary configuration data that may be used in creating a
+   * graph but is not directly graph settings or rendered targets. Examples
+   * include ini-file prefix configurations and abstract series.
+   *
+   * The top level array is keyed on category. Each category is expected to be
+   * an array of name => data pairs. The format of the data is category
+   * specific.
+   *
+   * @var array
+   * @see storeMeta()
+   * @see getMeta()
+   */
+  protected $meta = array();
+
+
+  /**
    * Constructor.
    *
    * @param array $settings Default settings for graph
@@ -158,6 +176,41 @@ class Graphite_GraphBuilder {
 
 
   /**
+   * Add new metadata.
+   *
+   * @param string $type Metadata type
+   * @param string $name Configuration name
+   * @param mixed $data Metadata
+   * @return void
+   */
+  public function storeMeta ($type, $name, $data) {
+    if (!isset($this->meta[$type])) {
+      $this->meta[$type] = array();
+    }
+    $this->meta[$type][$name] = $data;
+  }
+
+
+  /**
+   * Get metadata by type and name.
+   *
+   * @param string $type Metadata type
+   * @param string $name Configuration name
+   * @param mixed $default Data to return if no matching metadata is found
+   * @return mixed Metadata
+   */
+  public function getMeta ($type, $name, $default=array()) {
+    $val = $default;
+    if (isset($this->meta[$type])) {
+      if (array_key_exists($name, $this->meta[$type])) {
+        $val = $this->meta[$type][$name];
+      }
+    }
+    return $val;
+  }
+
+
+  /**
    * Set a prefix to add to subsequent series.
    * @param string $prefix Prefix to add
    * @return Graphite_GraphBuilder Self, for message chaining
@@ -203,6 +256,41 @@ class Graphite_GraphBuilder {
 
 
   /**
+   * Lookup a prefix in this graph's metadata.
+   *
+   * @param string $name Prefix name
+   * @return string Fully-qualified prefix
+   */
+  public function lookupPrefix ($name) {
+    return $this->resolvePrefix($this->getMeta('prefix', $name,
+        array('prefix' => '')));
+  }
+
+
+  /**
+   * Resolve a prefix.
+   *
+   * @param mixed $meta Scalar prefix value or array of prefix configuration
+   * @return string Fully-qualified prefix
+   */
+  protected function resolvePrefix ($meta) {
+    if (is_array($meta)) {
+      $prefix = $meta['prefix'];
+      if (isset($meta[':prefix'])) {
+        // find our parent prefix
+        $mom = $this->resolvePrefix(
+            $this->getMeta('prefix', $meta[':prefix']),
+            array('prefix' => ''));
+        $prefix = "{$mom}.{$prefix}";
+      }
+      $meta = $prefix;
+    }
+
+    return $meta;
+  } //end resolvePrefix
+
+
+  /**
    * Add a data series to the graph.
    *
    * @param string $name Name of data series to graph
@@ -210,6 +298,7 @@ class Graphite_GraphBuilder {
    * @return Graphite_GraphBuilder Self, for message chaining
    */
   public function series ($name, $opts=array()) {
+    $this->storeMeta('series', $name, $opts);
     $defaults = array(
       // default alias is prettied up version of name
       'alias'   => ucwords(strtr($name, '-_.', ' ')),
@@ -375,57 +464,8 @@ class Graphite_GraphBuilder {
    * @return Graphite_GraphBuilder Self, for message chaining
    */
   public function ini ($file, $vars=null) {
-    $global = array();
-    $prefixes = array();
-    $series = array();
-
     $ini = Graphite_IniParser::parse($file, $vars);
-
-    foreach ($ini as $key => $value) {
-      if (is_array($value)) {
-        // sub-arrays either describe prefixes or series
-        if (isset($value[':is_prefix'])) {
-          $prefixes[$key] = $value;
-
-        } else {
-          $series[$key] = $value;
-        }
-
-      } else {
-        // must be a general setting
-        $global[$key] = $value;
-      }
-    }
-    unset($ini);
-
-    // resolve all prefixes we found
-    foreach ($prefixes as $name => $conf) {
-      $prefixes[$name] = self::resolvePrefix($conf, $prefixes);
-    }
-
-    // apply global settings
-    foreach ($global as $setting => $args) {
-      $this->$setting($args);
-    }
-
-    // add series
-    foreach ($series as $name => $conf) {
-      // TODO: add support for preconfigured "types" like line, forecast, etc
-
-      if (isset($conf[':prefix'])) {
-        $this->prefix($prefixes[$conf[':prefix']]);
-      }
-
-      // series name is either given explicitly or inferred from section label
-      $seriesName = (isset($conf['metric']))? $conf['metric']: $name;
-
-      $this->series($seriesName, $conf);
-
-      if (isset($conf[':prefix'])) {
-        $this->endPrefix();
-      }
-    } //end foreach
-
+    Graphite_Graph_IniHelper::process($this, $ini);
     return $this;
   } //end ini
 
@@ -499,27 +539,6 @@ class Graphite_GraphBuilder {
   static public function builder ($settings=null) {
     return new Graphite_GraphBuilder($settings);
   }
-
-
-  /**
-   * Create a fully qualified prefix for the given configuration.
-   *
-   * @param mixed $conf Literal prefix or array of config data
-   * @return string Literal prefix
-   */
-  static public function resolvePrefix ($conf, $prefixes) {
-    if (is_array($conf)) {
-      $prefix = $conf['prefix'];
-      if (isset($conf[':prefix'])) {
-        // find our parent prefix
-        $mom = self::resolvePrefix($prefixes[$conf[':prefix']], $prefixes);
-        $prefix = "{$mom}.{$prefix}";
-      }
-      $conf = $prefix;
-    }
-
-    return $conf;
-  } //end resolvePrefix
 
 
   /**
