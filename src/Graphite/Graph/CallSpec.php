@@ -479,7 +479,7 @@ class Graphite_Graph_CallSpec {
    * @param int $start Offset of initial $char to match
    * @return int Offset of next unescaped $char or false if not found
    */
-  function findNextOccurrance ($str, $char, $start) {
+  static public function findNextOccurrance ($str, $char, $start) {
     $n = strpos($str, $char, $start + 1);
     if (false === $n) {
       return $n;
