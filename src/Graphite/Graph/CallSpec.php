@@ -24,7 +24,7 @@ class Graphite_Graph_CallSpec {
    *
    * @var string
    */
-  const FMT_FORMAT_ARG = 'return %s::format($a, "%s");';
+  const FMT_FORMAT_ARG = 'return %s::format($a, \'%s\');';
 
   /**
    * Canonical name of the function.
@@ -56,6 +56,14 @@ class Graphite_Graph_CallSpec {
 
 
   /**
+   * Does this function wrap a series?
+   *
+   * @var bool
+   */
+  protected $usesSeries;
+
+
+  /**
    * Constructor.
    *
    * - <var>$signature</var> is a single value or array of <i>argument
@@ -84,8 +92,10 @@ class Graphite_Graph_CallSpec {
    * @param mixed $signature Argument spec
    * @param int $order Sort order
    * @param bool $alias Does this function provide an alias?
+   * @param bool $generator Is this function a generator?
    */
-  public function __construct ($name, $signature, $order=50, $alias=false) {
+  public function __construct (
+      $name, $signature, $order=50, $alias=false, $generator=false) {
     $this->name = $name;
     $this->signature = $signature;
     if (is_scalar($this->signature)) {
@@ -94,6 +104,7 @@ class Graphite_Graph_CallSpec {
     }
     $this->order = $order;
     $this->isAlias = $alias;
+    $this->usesSeries = !((bool) $generator);
   } //end __construct
 
 
@@ -112,7 +123,7 @@ class Graphite_Graph_CallSpec {
    *
    * @return bool True if the function requires arguments, false otherwise.
    */
-  protected function takesArgs () {
+  public function takesArgs () {
     return (null !== $this->signature[0]);
   }
 
@@ -122,7 +133,7 @@ class Graphite_Graph_CallSpec {
    *
    * @return int Required argument count
    */
-  protected function requiredArgs () {
+  public function requiredArgs () {
     $req = 0;
     if ($this->takesArgs()) {
       foreach ($this->signature as $argDesc) {
@@ -140,7 +151,7 @@ class Graphite_Graph_CallSpec {
    *
    * @return int Possible argument count
    */
-  protected function maxArgs () {
+  public function maxArgs () {
     $args = 0;
     if ($this->takesArgs()) {
       foreach ($this->signature as $argDesc) {
@@ -156,12 +167,23 @@ class Graphite_Graph_CallSpec {
 
 
   /**
+   * Get the Nth argument spec.
+   *
+   * @param int $idx Argument index
+   * @return string Argument specification
+   */
+  public function getArg ($idx) {
+    return $this->signature[$idx];
+  } //end getArg
+
+
+  /**
    * Does the given argument have modifiers?
    *
    * @param string $arg Argument description to check
    * @return bool True if wildcard, false otherwise
    */
-  static protected function argHasMods ($arg) {
+  static public function argHasMods ($arg) {
     return null !== $arg && strlen($arg) > 1;
   }
 
@@ -172,7 +194,7 @@ class Graphite_Graph_CallSpec {
    * @param string $arg Argument description to check
    * @return bool True if wildcard, false otherwise
    */
-  static protected function argIsWildcard ($arg) {
+  static public function argIsWildcard ($arg) {
     return self::argHasMods($arg) && '*' === $arg[1];
   }
 
@@ -183,8 +205,18 @@ class Graphite_Graph_CallSpec {
    * @param string $arg Argument description to check
    * @return bool True if optional, false otherwise
    */
-  static protected function argIsOptional ($arg) {
+  static public function argIsOptional ($arg) {
     return self::argHasMods($arg) && '?' === $arg[1];
+  }
+
+  /**
+   * Is the given argument optional?
+   *
+   * @param string $arg Argument description to check
+   * @return bool True if optional, false otherwise
+   */
+  static public function argIsString ($arg) {
+    return null !== $arg && strlen($arg) > 0 && '"' === $arg[0];
   }
 
 
@@ -201,13 +233,18 @@ class Graphite_Graph_CallSpec {
    * $out = $callSpec->asString('*', 1, 2, 3);
    * </code>
    *
+   * If this call is a generator the $series argument will be ignored.
+   *
    * @param string $series Series to apply function to
    * @param array $args Arguments to function
    * @return string Formatted function call
    */
   public function asString ($series, $args /*, ...*/) {
-    // The default first arg to any function is the current series
-    $callArgs = array($series);
+    $callArgs = array();
+    if ($this->usesSeries) {
+      // The default first arg to any function is the current series
+      $callArgs[] = $series;
+    }
 
     // check for varadic call
     if (func_num_args() > 1 && !is_array($args)) {
