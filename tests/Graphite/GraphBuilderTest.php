@@ -188,6 +188,16 @@ class Graphite_GraphBuilderTest extends PHPUnit_Framework_TestCase {
   } //end test_inherit
 
   /**
+   * Given: ini config using generators
+   * Expect: targets using generators a a primary data source
+   */
+  public function test_generator () {
+    $g = Graphite_GraphBuilder::builder()
+        ->ini($this->iniPath('test_generator.ini'));
+    $this->assertEquals("target=alias(constantLine(123.456),'Constantline')&target=timeFunction('The.time.series')&target=randomWalkFunction('Random')&target=sinFunction('this.is.the.sin',2)&target=threshold(15,'omgwtfbbq','red')&target=alias(events('*'),'Events')", (string) $g);
+  }
+
+  /**
    * Get the path to an ini file.
    * @param string $file File name
    * @return string Path to file

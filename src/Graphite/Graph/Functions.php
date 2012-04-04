@@ -53,7 +53,6 @@ class Graphite_Graph_Functions {
       'diffSeries'                 => array('-*', 50, 0),
       'divideSeries'               => array('-', 50, 0),
       'drawAsInfinite'             => array(null, 50, 0),
-      'events'                     => array('"*', 1, 0),
       'exclude'                    => array('"', 50, 0),
       'group'                      => array('-*', 50, 0),
       'groupByNode'                => array(array('#', '"'), 50, 1),
@@ -109,53 +108,32 @@ class Graphite_Graph_Functions {
 
 
   /**
-   * Data generation function.
-   *
-   * These are similar to the normal manipulation functions but differ in that
-   * they generate a base series rather than manipulating an existing series
-   * or combination of series.
-   *
-   * @var array
-   */
-  static protected $generators = array(
-      'constantLine'       => array('#', 1, false),
-      'randomWalkFunction' => array('"', 1, false),
-      'sinFunction'        => array(array('"', '-?'), 1, false),
-      'threshold'          => array(array('#', '"?', '"?'), 1, true),
-      'timeFunction'       => array('"', 1, false),
-    );
-
-
-  /**
    * Function name aliases.
    *
    * @param array
    */
   static protected $aliases = array(
-      'avg'        => 'averageSeries',
-      'cacti'      => 'cactiStyle',
-      'centile'    => 'nPercentile',
-      'counter'    => 'nonNegativeDerivative',
-      'impulse'    => 'drawAsInfinite',
-      'line'       => 'drawAsInfinite',
-      'max'        => 'maxSeries',
-      'min'        => 'minSeries',
-      'null'       => 'transformNull',
-      'randomWalk' => 'randomWalkFunction',
-      'sin'        => 'sinFunction',
-      'sum'        => 'sumSeries',
-      'time'       => 'timeFunction',
+      'avg'     => 'averageSeries',
+      'cacti'   => 'cactiStyle',
+      'centile' => 'nPercentile',
+      'counter' => 'nonNegativeDerivative',
+      'impulse' => 'drawAsInfinite',
+      'inf'     => 'drawAsInfinite',
+      'max'     => 'maxSeries',
+      'min'     => 'minSeries',
+      'null'    => 'transformNull',
+      'sum'     => 'sumSeries',
     );
 
 
   /**
-   * Find the canonical name for a target.
+   * Find the canonical name for a function.
    *
    * The value may be an alias or it may differ in case from the true
-   * target name.
+   * function name.
    *
-   * @param string $name Target to lookup
-   * @return string Proper name of target or false if not found
+   * @param string $name Function to lookup
+   * @return string Proper name of function or false if not found
    */
   static public function canonicalName ($name) {
     static $lookupMap;
