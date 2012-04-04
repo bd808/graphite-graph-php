@@ -118,4 +118,40 @@ class Graphite_Graph_CallSpecTest extends PHPUnit_Framework_TestCase {
     $this->assertEquals($sorted, $clone, 'shuffle -> sorted');
   }
 
+  /**
+   * Given: a collection of argument strings
+   * Expect: proper parsing
+   */
+  public function test_parse_arg_strings () {
+    $this->assertEquals(
+        array('1','2','3'),
+        Graphite_Graph_CallSpec::parseArgString("1,2,3"));
+
+    $this->assertEquals(
+        array('1,2,3'),
+        Graphite_Graph_CallSpec::parseArgString("1\\,2\\,3"));
+
+    $this->assertEquals(
+        array('1,2,3'),
+        Graphite_Graph_CallSpec::parseArgString('"1,2,3"'));
+
+    $this->assertEquals(
+        array('1,2,3'),
+        Graphite_Graph_CallSpec::parseArgString("'1,2,3'"));
+
+    $this->assertEquals(
+        array('1','the number "2"','3'),
+        Graphite_Graph_CallSpec::parseArgString("1,the number \\\"2\\\",3"));
+
+    $this->assertEquals(
+        array('^.*TCP(\d+)', ' \1'),
+        Graphite_Graph_CallSpec::parseArgString("'^.*TCP(\d+)', '\\1'"));
+
+    $this->assertEquals(
+        array('1','2','3,4,5','6,7','"8',"'9",'10,11','\\n'),
+        Graphite_Graph_CallSpec::parseArgString(
+            '1,2,"3,4,5",\'6,7\',\\"8,\\\'9,10\\,11,"\n"'));
+
+  } //end test_parse_arg_strings
+
 } //end Graphite_Graph_CallSpecTest

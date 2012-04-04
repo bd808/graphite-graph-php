@@ -256,11 +256,11 @@ class Graphite_Graph_CallSpec {
     if ($this->maxArgs() > 1 && count($args) == 1 && is_string($args[0])) {
       // single string argument given to a function that accepts multiple
       // arguments. See if we can split it on commas and get more input.
-      // TODO: this could be smarter (escape comma, don't split quoted
-      // strings)
-      $parts = explode(',', $args[0], $this->maxArgs());
-      if (count($parts) > 1) {
-        $args = array_map('trim', $parts);
+      if (false !== strpos($args[0], ',')) {
+        $parts = self::parseArgString($args[0]);
+        if (count($parts) > 1) {
+          $args = array_map('trim', $parts);
+        }
       }
     }
 
@@ -396,5 +396,100 @@ class Graphite_Graph_CallSpec {
   static public function cmp ($a, $b) {
     return $a->order - $b->order;
   }
+
+
+  /**
+   * Parse a string into an array of discrete arguments.
+   *
+   * String is split on commas but recognizes single and double quoted
+   * strings.
+   *
+   * @param string $str Argument string to parse
+   * @return array Split arguments
+   */
+  static public function parseArgString ($str) {
+    // escapable chars that we will pay special attention to
+    static $escapable = array('"', ',', "'");
+
+    $args = array();
+    $token = '';
+    for ($ptr = 0, $end = strlen($str); $ptr < $end; $ptr++) {
+      $next = $str[$ptr];
+      switch ($next) {
+        case '\\':
+            // found an escape marker
+            // decide if it should be emitted or used to escape special
+            // meaning of next char in the stream.
+            $peek = $str[$ptr + 1];
+            if (in_array($peek, $escapable, true)) {
+              // add escaped char to our token and advance the stream pointer
+              $token .= $peek;
+              $ptr++;
+
+            } else {
+              $token .= $next;
+            }
+            break;
+
+        case '\'':
+        case '"':
+            // look for next matching quote
+            $match = self::findNextOccurrance($str, $next, $ptr);
+            if (false === $match) {
+              // no match found so add the char to the token
+              $token .= $next;
+
+            } else {
+              // grab content between quotes
+              $chunk = substr($str, $ptr + 1, $match - $ptr - 1);
+
+              // remove any escaped quotes and add to token
+              $token .= str_replace("\\{$next}", $next, $chunk);
+
+              // advance ptr past closing quote
+              $ptr = $match;
+            }
+            break;
+
+        case ',':
+            // comma closes current token.
+            $args[] = $token;
+            $token = '';
+            break;
+
+        default:
+            $token .= $next;
+            break;
+      } //end switch
+    } //end for
+
+    // add final token to args
+    $args[] = $token;
+
+    return $args;
+  } //end parseArgString
+
+
+  /**
+   * Find the next occurance of a character in a source string that isn't
+   * preceeded by an escape marker.
+   *
+   * @param string $str Source string
+   * @param string $char Character to scan for
+   * @param int $start Offset of initial $char to match
+   * @return int Offset of next unescaped $char or false if not found
+   */
+  function findNextOccurrance ($str, $char, $start) {
+    $n = strpos($str, $char, $start + 1);
+    if (false === $n) {
+      return $n;
+    }
+    if ('\\' === $str[$n - 1]) {
+      return self::findNextOccurrance($str, $char, $n);
+
+    } else {
+      return $n;
+    }
+  } //end findNextOccurrance
 
 } //end Graphite_Graph_CallSpec
