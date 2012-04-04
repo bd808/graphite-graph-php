@@ -31,7 +31,7 @@
           </div>
                                               <h2>Classes:</h2>
                 <div class="package"><ul>
-	<li>Graph<ul>			<li><a href="../Graphite/Graph/Graphite_Graph_CallSpec.html">Graphite_Graph_CallSpec</a></li>			<li><a href="../Graphite/Graph/Graphite_Graph_Functions.html">Graphite_Graph_Functions</a></li>			<li><a href="../Graphite/Graph/Graphite_Graph_Params.html">Graphite_Graph_Params</a></li>			<li><a href="../Graphite/Graph/Graphite_Graph_Series.html">Graphite_Graph_Series</a></li>		</ul></li>  </ul>
+	<li>Graph<ul>			<li><a href="../Graphite/Graph/Graphite_Graph_CallSpec.html">Graphite_Graph_CallSpec</a></li>			<li><a href="../Graphite/Graph/Graphite_Graph_Functions.html">Graphite_Graph_Functions</a></li>			<li><a href="../Graphite/Graph/Graphite_Graph_Generators.html">Graphite_Graph_Generators</a></li>			<li><a href="../Graphite/Graph/Graphite_Graph_IniHelper.html">Graphite_Graph_IniHelper</a></li>			<li><a href="../Graphite/Graph/Graphite_Graph_Params.html">Graphite_Graph_Params</a></li>			<li><a href="../Graphite/Graph/Graphite_Graph_Series.html">Graphite_Graph_Series</a></li>		</ul></li>  </ul>
   </div>
   <div class="package"><ul>
 				<li><a href="../Graphite/Graphite_ConfigurationException.html">Graphite_ConfigurationException</a></li>			<li><a href="../Graphite/Graphite_GraphBuilder.html">Graphite_GraphBuilder</a></li>			<li><a href="../Graphite/Graphite_IniParser.html">Graphite_IniParser</a></li>		  </ul>
@@ -141,7 +141,16 @@
   <a name="sec-var-summary"></a>
   <h2>Member Variables</h2>
   <table class="summary">
-                                                    <tr>
+                                                              <tr>
+          <td class="right">
+            <em>protected</em>            <em>array</em>          </td>
+          <td>
+            <code>
+              $meta
+               = <span class="var-default">array()</span>            </code>
+            <br /><div style="margin-left: 20px">Configuration metadata.</div>            <br /><div style="margin-left: 20px"><p>Metadata is arbitrary configuration data that may be used in creating a  graph but is not directly graph settings or rendered targets. Examples  include ini-file prefix configurations and abstract series.</p><p>The top level array is keyed on category. Each category is expected to be  an array of name =&gt; data pairs. The format of the data is category  specific.</p></div>          </td>
+        </tr>
+                        <tr>
           <td class="right">
             <em>protected</em>            <em>array</em>          </td>
           <td>
@@ -186,7 +195,7 @@
             </code>
             <br /><div style="margin-left: 20px">Builder factory.</div>          </td>
         </tr>
-                                                                                                                  <tr>
+                                                                                                                                      <tr>
           <td class="right">
             <em>public</em>            static
                         <em>string</em>          </td>
@@ -198,20 +207,7 @@
             </code>
             <br /><div style="margin-left: 20px">Query string specific uri encoding.</div>          </td>
         </tr>
-                                  <tr>
-          <td class="right">
-            <em>public</em>            static
-                        <em>string</em>          </td>
-          <td>
-            <code>
-              <a href="#resolvePrefix"><b>resolvePrefix</b></a>(
-                                                                                    $conf
-                                                    ,                                     $prefixes
-                                                 )
-            </code>
-            <br /><div style="margin-left: 20px">Create a fully qualified prefix for the given configuration.</div>          </td>
-        </tr>
-                                                                                        <tr>
+                                                                                                                      <tr>
           <td class="right">
             <em>public</em>                        <em>Graphite_GraphBuilder</em>          </td>
           <td>
@@ -278,6 +274,19 @@
         </tr>
                         <tr>
           <td class="right">
+            <em>public</em>                        <em>mixed</em>          </td>
+          <td>
+            <code>
+              <a href="#getMeta"><b>getMeta</b></a>(
+                                                                                    $type
+                                                    ,                                     $name
+                                                    ,                   [                  $default
+                   = array()]                               )
+            </code>
+            <br /><div style="margin-left: 20px">Get metadata by type and name.</div>          </td>
+        </tr>
+                        <tr>
+          <td class="right">
             <em>public</em>                        <em><a href="../Graphite/Graphite_GraphBuilder.html">Graphite_GraphBuilder</a></em>          </td>
           <td>
             <code>
@@ -298,6 +307,17 @@
                                                  )
             </code>
             <br /><div style="margin-left: 20px">Draws a straight line on the graph.</div>          </td>
+        </tr>
+                        <tr>
+          <td class="right">
+            <em>public</em>                        <em>string</em>          </td>
+          <td>
+            <code>
+              <a href="#lookupPrefix"><b>lookupPrefix</b></a>(
+                                                                                    $name
+                                                 )
+            </code>
+            <br /><div style="margin-left: 20px">Lookup a prefix in this graph's metadata.</div>          </td>
         </tr>
                         <tr>
           <td class="right">
@@ -344,7 +364,18 @@
             </code>
             <br /><div style="margin-left: 20px">Reset builder to empty state.</div>          </td>
         </tr>
-                                  <tr>
+                        <tr>
+          <td class="right">
+            <em>protected</em>                        <em>string</em>          </td>
+          <td>
+            <code>
+              <a href="#resolvePrefix"><b>resolvePrefix</b></a>(
+                                                                                    $meta
+                                                 )
+            </code>
+            <br /><div style="margin-left: 20px">Resolve a prefix.</div>          </td>
+        </tr>
+                        <tr>
           <td class="right">
             <em>public</em>                        <em><a href="../Graphite/Graphite_GraphBuilder.html">Graphite_GraphBuilder</a></em>          </td>
           <td>
@@ -355,6 +386,19 @@
                    = array()]                               )
             </code>
             <br /><div style="margin-left: 20px">Add a data series to the graph.</div>          </td>
+        </tr>
+                        <tr>
+          <td class="right">
+            <em>public</em>                        <em>void</em>          </td>
+          <td>
+            <code>
+              <a href="#storeMeta"><b>storeMeta</b></a>(
+                                                                                    $type
+                                                    ,                                     $name
+                                                    ,                                     $data
+                                                 )
+            </code>
+            <br /><div style="margin-left: 20px">Add new metadata.</div>          </td>
         </tr>
                         <tr>
           <td class="right">
@@ -455,7 +499,7 @@
       
       
       
-                          <a name="methodqsEncode" id="qsEncode"><!-- --></a>
+                              <a name="methodqsEncode" id="qsEncode"><!-- --></a>
 
     <h3>qsEncode</h3>
 
@@ -493,52 +537,7 @@
       
       
       
-          <a name="methodresolvePrefix" id="resolvePrefix"><!-- --></a>
-
-    <h3>resolvePrefix</h3>
-
-    <div class="method-signature">
-      static string
-      resolvePrefix(
-                                  mixed
-          $conf
-                            ,           
-          $prefixes
-                        )
-    </div>
-
-      <p>Create a fully qualified prefix for the given configuration.</p>      
-              <h4>Parameters:</h4>
-        <table class="detail">
-          <thead>
-            <tr>
-              <th>Name</th>
-              <th>Type</th>
-              <th class="desc">Description</th>
-            </tr>
-          </thead>
-          <tbody>
-                          <tr>
-                <td><code>$conf</code></td>
-                <td><em>mixed</em></td>
-                <td>
-                                      Literal prefix or array of config data
-                                  </td>
-              </tr>
-                          <tr>
-                <td><code>$prefixes</code></td>
-                <td><em></em></td>
-                <td>
-                                  </td>
-              </tr>
-                      </tbody>
-        </table>
-      
-      
-      
-      
-      
-              
+                    
       <a name="method__construct" id="__construct"><!-- --></a>
 
     <h3>__construct</h3>
@@ -767,6 +766,62 @@
     
     
     
+        <a name="methodgetMeta" id="getMeta"><!-- --></a>
+
+    <h3>getMeta</h3>
+
+    <div class="method-signature">
+      mixed
+      getMeta(
+                                  string
+          $type
+                            ,           string
+          $name
+                            ,           [mixed
+          $default
+           = array()]              )
+    </div>
+
+    <p>Get metadata by type and name.</p>
+          <h4>Parameters:</h4>
+      <table class="detail">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Type</th>
+            <th class="desc">Description</th>
+          </tr>
+        </thead>
+        <tbody>
+                      <tr>
+              <td><code>$type</code></td>
+              <td><em>string</em></td>
+              <td>
+                                  Metadata type
+                              </td>
+            </tr>
+                      <tr>
+              <td><code>$name</code></td>
+              <td><em>string</em></td>
+              <td>
+                                  Configuration name
+                              </td>
+            </tr>
+                      <tr>
+              <td><code>$default</code></td>
+              <td><em>mixed</em></td>
+              <td>
+                                  Data to return if no matching metadata is found
+                              </td>
+            </tr>
+                  </tbody>
+      </table>
+    
+        
+
+    
+    
+    
         <a name="methodini" id="ini"><!-- --></a>
 
     <h3>ini</h3>
@@ -864,6 +919,44 @@
             </tr>
                   </tbody>
       </table>
+        
+
+    
+    
+    
+        <a name="methodlookupPrefix" id="lookupPrefix"><!-- --></a>
+
+    <h3>lookupPrefix</h3>
+
+    <div class="method-signature">
+      string
+      lookupPrefix(
+                                  string
+          $name
+                        )
+    </div>
+
+    <p>Lookup a prefix in this graph's metadata.</p>
+          <h4>Parameters:</h4>
+      <table class="detail">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Type</th>
+            <th class="desc">Description</th>
+          </tr>
+        </thead>
+        <tbody>
+                      <tr>
+              <td><code>$name</code></td>
+              <td><em>string</em></td>
+              <td>
+                                  Prefix name
+                              </td>
+            </tr>
+                  </tbody>
+      </table>
+    
         
 
     
@@ -1029,7 +1122,45 @@
     
     
     
-          <a name="methodseries" id="series"><!-- --></a>
+        <a name="methodresolvePrefix" id="resolvePrefix"><!-- --></a>
+
+    <h3>resolvePrefix</h3>
+
+    <div class="method-signature">
+      string
+      resolvePrefix(
+                                  mixed
+          $meta
+                        )
+    </div>
+
+    <p>Resolve a prefix.</p>
+          <h4>Parameters:</h4>
+      <table class="detail">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Type</th>
+            <th class="desc">Description</th>
+          </tr>
+        </thead>
+        <tbody>
+                      <tr>
+              <td><code>$meta</code></td>
+              <td><em>mixed</em></td>
+              <td>
+                                  Scalar prefix value or array of prefix configuration
+                              </td>
+            </tr>
+                  </tbody>
+      </table>
+    
+        
+
+    
+    
+    
+        <a name="methodseries" id="series"><!-- --></a>
 
     <h3>series</h3>
 
@@ -1066,6 +1197,62 @@
               <td><em>array</em></td>
               <td>
                                   Series options
+                              </td>
+            </tr>
+                  </tbody>
+      </table>
+    
+        
+
+    
+    
+    
+        <a name="methodstoreMeta" id="storeMeta"><!-- --></a>
+
+    <h3>storeMeta</h3>
+
+    <div class="method-signature">
+      void
+      storeMeta(
+                                  string
+          $type
+                            ,           string
+          $name
+                            ,           mixed
+          $data
+                        )
+    </div>
+
+    <p>Add new metadata.</p>
+          <h4>Parameters:</h4>
+      <table class="detail">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Type</th>
+            <th class="desc">Description</th>
+          </tr>
+        </thead>
+        <tbody>
+                      <tr>
+              <td><code>$type</code></td>
+              <td><em>string</em></td>
+              <td>
+                                  Metadata type
+                              </td>
+            </tr>
+                      <tr>
+              <td><code>$name</code></td>
+              <td><em>string</em></td>
+              <td>
+                                  Configuration name
+                              </td>
+            </tr>
+                      <tr>
+              <td><code>$data</code></td>
+              <td><em>mixed</em></td>
+              <td>
+                                  Metadata
                               </td>
             </tr>
                   </tbody>
@@ -1279,7 +1466,7 @@
       Code published under the <a href="http://www.opensource.org/licenses/BSD-2-Clause">Simplified BSD License</a>. Documentation published under the <a href="http://creativecommons.org/licenses/by-sa/3.0/">Creative Commons Attribution-ShareAlike 3.0 Unported License</a>.
       </div>
       <div class="credit">
-        Documentation generated on Fri, 30 Mar 2012 16:03:39 -0700 by <a href="http://www.phpdoc.org">phpDocumentor 1.4.3</a>
+        Documentation generated on Tue, 03 Apr 2012 17:34:02 -0700 by <a href="http://www.phpdoc.org">phpDocumentor 1.4.3</a>
       </div>
     </footer>
     <script type="text/javascript">

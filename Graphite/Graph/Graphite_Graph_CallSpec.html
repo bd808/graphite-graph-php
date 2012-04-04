@@ -31,7 +31,7 @@
           </div>
                                               <h2>Classes:</h2>
                 <div class="package"><ul>
-	<li>Graph<ul>			<li><a href="../../Graphite/Graph/Graphite_Graph_CallSpec.html">Graphite_Graph_CallSpec</a></li>			<li><a href="../../Graphite/Graph/Graphite_Graph_Functions.html">Graphite_Graph_Functions</a></li>			<li><a href="../../Graphite/Graph/Graphite_Graph_Params.html">Graphite_Graph_Params</a></li>			<li><a href="../../Graphite/Graph/Graphite_Graph_Series.html">Graphite_Graph_Series</a></li>		</ul></li>  </ul>
+	<li>Graph<ul>			<li><a href="../../Graphite/Graph/Graphite_Graph_CallSpec.html">Graphite_Graph_CallSpec</a></li>			<li><a href="../../Graphite/Graph/Graphite_Graph_Functions.html">Graphite_Graph_Functions</a></li>			<li><a href="../../Graphite/Graph/Graphite_Graph_Generators.html">Graphite_Graph_Generators</a></li>			<li><a href="../../Graphite/Graph/Graphite_Graph_IniHelper.html">Graphite_Graph_IniHelper</a></li>			<li><a href="../../Graphite/Graph/Graphite_Graph_Params.html">Graphite_Graph_Params</a></li>			<li><a href="../../Graphite/Graph/Graphite_Graph_Series.html">Graphite_Graph_Series</a></li>		</ul></li>  </ul>
   </div>
   <div class="package"><ul>
 				<li><a href="../../Graphite/Graphite_ConfigurationException.html">Graphite_ConfigurationException</a></li>			<li><a href="../../Graphite/Graphite_GraphBuilder.html">Graphite_GraphBuilder</a></li>			<li><a href="../../Graphite/Graphite_IniParser.html">Graphite_IniParser</a></li>		  </ul>
@@ -95,7 +95,7 @@
   <a name="sec-var-summary"></a>
   <h2>Member Variables</h2>
   <table class="summary">
-                                                              <tr>
+                                                                        <tr>
           <td class="right">
             <em>protected</em>            <em>bool</em>          </td>
           <td>
@@ -131,13 +131,70 @@
                           </code>
             <br /><div style="margin-left: 20px">Description of function arguments.</div>                      </td>
         </tr>
+                        <tr>
+          <td class="right">
+            <em>protected</em>            <em>bool</em>          </td>
+          <td>
+            <code>
+              $usesSeries
+                          </code>
+            <br /><div style="margin-left: 20px">Does this function wrap a series?</div>                      </td>
+        </tr>
             </table>
 
 
   <a name="sec-method-summary"></a>
   <h2>Method Summary</h2>
   <table class="summary">
-                                      <tr>
+                  <tr>
+          <td class="right">
+            <em>public</em>            static
+                        <em>bool</em>          </td>
+          <td>
+            <code>
+              <a href="#argHasMods"><b>argHasMods</b></a>(
+                                                                                    $arg
+                                                 )
+            </code>
+            <br /><div style="margin-left: 20px">Does the given argument have modifiers?</div>          </td>
+        </tr>
+                        <tr>
+          <td class="right">
+            <em>public</em>            static
+                        <em>bool</em>          </td>
+          <td>
+            <code>
+              <a href="#argIsOptional"><b>argIsOptional</b></a>(
+                                                                                    $arg
+                                                 )
+            </code>
+            <br /><div style="margin-left: 20px">Is the given argument optional?</div>          </td>
+        </tr>
+                        <tr>
+          <td class="right">
+            <em>public</em>            static
+                        <em>bool</em>          </td>
+          <td>
+            <code>
+              <a href="#argIsString"><b>argIsString</b></a>(
+                                                                                    $arg
+                                                 )
+            </code>
+            <br /><div style="margin-left: 20px">Is the given argument optional?</div>          </td>
+        </tr>
+                        <tr>
+          <td class="right">
+            <em>public</em>            static
+                        <em>bool</em>          </td>
+          <td>
+            <code>
+              <a href="#argIsWildcard"><b>argIsWildcard</b></a>(
+                                                                                    $arg
+                                                 )
+            </code>
+            <br /><div style="margin-left: 20px">Is the given argument a wildcard?</div>          </td>
+        </tr>
+                                  <tr>
           <td class="right">
             <em>public</em>            static
                         <em>int</em>          </td>
@@ -150,7 +207,7 @@
             </code>
             <br /><div style="margin-left: 20px">Compare two CallSpecs for sort ordering.</div>          </td>
         </tr>
-                        <tr>
+                                  <tr>
           <td class="right">
             <em>public</em>            static
                         <em>mixed</em>          </td>
@@ -163,21 +220,7 @@
             </code>
             <br /><div style="margin-left: 20px">Format an argument as a specified type.</div>          </td>
         </tr>
-                                                <tr>
-          <td class="right">
-            <em>public</em>                        <em>Graphite_Graph_CallSpec</em>          </td>
-          <td>
-            <code>
-              <a href="#__construct"><b>__construct</b></a>(
-                                                                                    $name
-                                                    ,                                     $signature
-                                                    ,                   [                  $order
-                   = 50]                                  ,                   [                  $alias
-                   = false]                               )
-            </code>
-            <br /><div style="margin-left: 20px">Constructor.</div>          </td>
-        </tr>
-                        <tr>
+                                                                                                                      <tr>
           <td class="right">
             <em>public</em>                        <em>string</em>          </td>
           <td>
@@ -189,7 +232,33 @@
             </code>
             <br /><div style="margin-left: 20px">Format the call for use as a target.</div>          </td>
         </tr>
-                                            <tr>
+                                  <tr>
+          <td class="right">
+            <em>public</em>                        <em>Graphite_Graph_CallSpec</em>          </td>
+          <td>
+            <code>
+              <a href="#__construct"><b>__construct</b></a>(
+                                                                                    $name
+                                                    ,                                     $signature
+                                                    ,                   [                  $order
+                   = 50]                                  ,                   [                  $alias
+                   = false]                                  ,                   [                  $generator
+                   = false]                               )
+            </code>
+            <br /><div style="margin-left: 20px">Constructor.</div>          </td>
+        </tr>
+                                  <tr>
+          <td class="right">
+            <em>public</em>                        <em>string</em>          </td>
+          <td>
+            <code>
+              <a href="#getArg"><b>getArg</b></a>(
+                                                                                    $idx
+                                                 )
+            </code>
+            <br /><div style="margin-left: 20px">Get the Nth argument spec.</div>          </td>
+        </tr>
+                        <tr>
           <td class="right">
             <em>public</em>                        <em>bool</em>          </td>
           <td>
@@ -201,7 +270,27 @@
         </tr>
                         <tr>
           <td class="right">
-            <em>protected</em>                        <em>bool</em>          </td>
+            <em>public</em>                        <em>int</em>          </td>
+          <td>
+            <code>
+              <a href="#maxArgs"><b>maxArgs</b></a>(
+               )
+            </code>
+            <br /><div style="margin-left: 20px">How many args are possible for this function?</div>          </td>
+        </tr>
+                        <tr>
+          <td class="right">
+            <em>public</em>                        <em>int</em>          </td>
+          <td>
+            <code>
+              <a href="#requiredArgs"><b>requiredArgs</b></a>(
+               )
+            </code>
+            <br /><div style="margin-left: 20px">How many args are required for this function?</div>          </td>
+        </tr>
+                        <tr>
+          <td class="right">
+            <em>public</em>                        <em>bool</em>          </td>
           <td>
             <code>
               <a href="#takesArgs"><b>takesArgs</b></a>(
@@ -215,6 +304,154 @@
   <a name="sec-methods"></a>
   <h2>Methods</h2>
   <a name='method_detail'></a>
+      <a name="methodargHasMods" id="argHasMods"><!-- --></a>
+
+    <h3>argHasMods</h3>
+
+    <div class="method-signature">
+      static bool
+      argHasMods(
+                                  string
+          $arg
+                        )
+    </div>
+
+      <p>Does the given argument have modifiers?</p>      
+              <h4>Parameters:</h4>
+        <table class="detail">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Type</th>
+              <th class="desc">Description</th>
+            </tr>
+          </thead>
+          <tbody>
+                          <tr>
+                <td><code>$arg</code></td>
+                <td><em>string</em></td>
+                <td>
+                                      Argument description to check
+                                  </td>
+              </tr>
+                      </tbody>
+        </table>
+      
+      
+      
+      
+      
+        <a name="methodargIsOptional" id="argIsOptional"><!-- --></a>
+
+    <h3>argIsOptional</h3>
+
+    <div class="method-signature">
+      static bool
+      argIsOptional(
+                                  string
+          $arg
+                        )
+    </div>
+
+      <p>Is the given argument optional?</p>      
+              <h4>Parameters:</h4>
+        <table class="detail">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Type</th>
+              <th class="desc">Description</th>
+            </tr>
+          </thead>
+          <tbody>
+                          <tr>
+                <td><code>$arg</code></td>
+                <td><em>string</em></td>
+                <td>
+                                      Argument description to check
+                                  </td>
+              </tr>
+                      </tbody>
+        </table>
+      
+      
+      
+      
+      
+        <a name="methodargIsString" id="argIsString"><!-- --></a>
+
+    <h3>argIsString</h3>
+
+    <div class="method-signature">
+      static bool
+      argIsString(
+                                  string
+          $arg
+                        )
+    </div>
+
+      <p>Is the given argument optional?</p>      
+              <h4>Parameters:</h4>
+        <table class="detail">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Type</th>
+              <th class="desc">Description</th>
+            </tr>
+          </thead>
+          <tbody>
+                          <tr>
+                <td><code>$arg</code></td>
+                <td><em>string</em></td>
+                <td>
+                                      Argument description to check
+                                  </td>
+              </tr>
+                      </tbody>
+        </table>
+      
+      
+      
+      
+      
+        <a name="methodargIsWildcard" id="argIsWildcard"><!-- --></a>
+
+    <h3>argIsWildcard</h3>
+
+    <div class="method-signature">
+      static bool
+      argIsWildcard(
+                                  string
+          $arg
+                        )
+    </div>
+
+      <p>Is the given argument a wildcard?</p>      
+              <h4>Parameters:</h4>
+        <table class="detail">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Type</th>
+              <th class="desc">Description</th>
+            </tr>
+          </thead>
+          <tbody>
+                          <tr>
+                <td><code>$arg</code></td>
+                <td><em>string</em></td>
+                <td>
+                                      Argument description to check
+                                  </td>
+              </tr>
+                      </tbody>
+        </table>
+      
+      
+      
+      
+      
           <a name="methodcmp" id="cmp"><!-- --></a>
 
     <h3>cmp</h3>
@@ -261,7 +498,7 @@
       
       
       
-        <a name="methodformat" id="format"><!-- --></a>
+          <a name="methodformat" id="format"><!-- --></a>
 
     <h3>format</h3>
 
@@ -307,8 +544,60 @@
       
       
       
-      
-      <a name="method__construct" id="__construct"><!-- --></a>
+            
+              <a name="methodasString" id="asString"><!-- --></a>
+
+    <h3>asString</h3>
+
+    <div class="method-signature">
+      string
+      asString(
+                                  string
+          $series
+                            ,           array
+          $args
+                        )
+    </div>
+
+    <p>Format the call for use as a target.</p><div><p>Arguments to the function can be provided as an array or using a varadic  argument style.  <ol><li><div class="src-line">&nbsp;<span class="src-comm">//&nbsp;args&nbsp;provided&nbsp;as&nbsp;array</span></div></li>
+<li><div class="src-line">&nbsp;<span class="src-var">$out&nbsp;</span>=&nbsp;<span class="src-var">$callSpec</span><span class="src-sym">-&gt;</span><a href="../../Graphite/Graph/Graphite_Graph_CallSpec.html#methodasString">asString</a><span class="src-sym">(</span><span class="src-str">'*'</span><span class="src-sym">,&nbsp;</span><span class="src-key">array</span><span class="src-sym">(</span><span class="src-num">1</span><span class="src-sym">,&nbsp;</span><span class="src-num">2</span><span class="src-sym">,&nbsp;</span><span class="src-num">3</span><span class="src-sym">))</span><span class="src-sym">;</span></div></li>
+<li><div class="src-line">&nbsp;</div></li>
+<li><div class="src-line">&nbsp;<span class="src-comm">//&nbsp;varadic&nbsp;args</span></div></li>
+<li><div class="src-line">&nbsp;<span class="src-var">$out&nbsp;</span>=&nbsp;<span class="src-var">$callSpec</span><span class="src-sym">-&gt;</span><a href="../../Graphite/Graph/Graphite_Graph_CallSpec.html#methodasString">asString</a><span class="src-sym">(</span><span class="src-str">'*'</span><span class="src-sym">,&nbsp;</span><span class="src-num">1</span><span class="src-sym">,&nbsp;</span><span class="src-num">2</span><span class="src-sym">,&nbsp;</span><span class="src-num">3</span><span class="src-sym">)</span><span class="src-sym">;</span></div></li>
+</ol></p><p>If this call is a generator the $series argument will be ignored.</p></div>
+          <h4>Parameters:</h4>
+      <table class="detail">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Type</th>
+            <th class="desc">Description</th>
+          </tr>
+        </thead>
+        <tbody>
+                      <tr>
+              <td><code>$series</code></td>
+              <td><em>string</em></td>
+              <td>
+                                  Series to apply function to
+                              </td>
+            </tr>
+                      <tr>
+              <td><code>$args</code></td>
+              <td><em>array</em></td>
+              <td>
+                                  Arguments to function
+                              </td>
+            </tr>
+                  </tbody>
+      </table>
+    
+        
+
+    
+    
+    
+          <a name="method__construct" id="__construct"><!-- --></a>
 
     <h3>__construct</h3>
 
@@ -323,6 +612,8 @@
           $order
            = 50]                  ,           [bool
           $alias
+           = false]                  ,           [bool
+          $generator
            = false]              )
     </div>
 
@@ -367,6 +658,13 @@
                                   Does this function provide an alias?
                               </td>
             </tr>
+                      <tr>
+              <td><code>$generator</code></td>
+              <td><em>bool</em></td>
+              <td>
+                                  Is this function a generator?
+                              </td>
+            </tr>
                   </tbody>
       </table>
     
@@ -375,26 +673,19 @@
     
     
     
-        <a name="methodasString" id="asString"><!-- --></a>
+          <a name="methodgetArg" id="getArg"><!-- --></a>
 
-    <h3>asString</h3>
+    <h3>getArg</h3>
 
     <div class="method-signature">
       string
-      asString(
-                                  string
-          $series
-                            ,           array
-          $args
+      getArg(
+                                  int
+          $idx
                         )
     </div>
 
-    <p>Format the call for use as a target.</p><div><p>Arguments to the function can be provided as an array or using a varadic  argument style.  <ol><li><div class="src-line">&nbsp;<span class="src-comm">//&nbsp;args&nbsp;provided&nbsp;as&nbsp;array</span></div></li>
-<li><div class="src-line">&nbsp;<span class="src-var">$out&nbsp;</span>=&nbsp;<span class="src-var">$callSpec</span><span class="src-sym">-&gt;</span><a href="../../Graphite/Graph/Graphite_Graph_CallSpec.html#methodasString">asString</a><span class="src-sym">(</span><span class="src-str">'*'</span><span class="src-sym">,&nbsp;</span><span class="src-key">array</span><span class="src-sym">(</span><span class="src-num">1</span><span class="src-sym">,&nbsp;</span><span class="src-num">2</span><span class="src-sym">,&nbsp;</span><span class="src-num">3</span><span class="src-sym">))</span><span class="src-sym">;</span></div></li>
-<li><div class="src-line">&nbsp;</div></li>
-<li><div class="src-line">&nbsp;<span class="src-comm">//&nbsp;varadic&nbsp;args</span></div></li>
-<li><div class="src-line">&nbsp;<span class="src-var">$out&nbsp;</span>=&nbsp;<span class="src-var">$callSpec</span><span class="src-sym">-&gt;</span><a href="../../Graphite/Graph/Graphite_Graph_CallSpec.html#methodasString">asString</a><span class="src-sym">(</span><span class="src-str">'*'</span><span class="src-sym">,&nbsp;</span><span class="src-num">1</span><span class="src-sym">,&nbsp;</span><span class="src-num">2</span><span class="src-sym">,&nbsp;</span><span class="src-num">3</span><span class="src-sym">)</span><span class="src-sym">;</span></div></li>
-</ol></p></div>
+    <p>Get the Nth argument spec.</p>
           <h4>Parameters:</h4>
       <table class="detail">
         <thead>
@@ -406,17 +697,10 @@
         </thead>
         <tbody>
                       <tr>
-              <td><code>$series</code></td>
-              <td><em>string</em></td>
+              <td><code>$idx</code></td>
+              <td><em>int</em></td>
               <td>
-                                  Series to apply function to
-                              </td>
-            </tr>
-                      <tr>
-              <td><code>$args</code></td>
-              <td><em>array</em></td>
-              <td>
-                                  Arguments to function
+                                  Argument index
                               </td>
             </tr>
                   </tbody>
@@ -427,7 +711,7 @@
     
     
     
-            <a name="methodisAlias" id="isAlias"><!-- --></a>
+        <a name="methodisAlias" id="isAlias"><!-- --></a>
 
     <h3>isAlias</h3>
 
@@ -438,6 +722,40 @@
     </div>
 
     <p>Does this function provide an alias for the series?</p>
+    
+        
+
+    
+    
+    
+        <a name="methodmaxArgs" id="maxArgs"><!-- --></a>
+
+    <h3>maxArgs</h3>
+
+    <div class="method-signature">
+      int
+      maxArgs(
+      )
+    </div>
+
+    <p>How many args are possible for this function?</p>
+    
+        
+
+    
+    
+    
+        <a name="methodrequiredArgs" id="requiredArgs"><!-- --></a>
+
+    <h3>requiredArgs</h3>
+
+    <div class="method-signature">
+      int
+      requiredArgs(
+      )
+    </div>
+
+    <p>How many args are required for this function?</p>
     
         
 
@@ -478,7 +796,7 @@
       Code published under the <a href="http://www.opensource.org/licenses/BSD-2-Clause">Simplified BSD License</a>. Documentation published under the <a href="http://creativecommons.org/licenses/by-sa/3.0/">Creative Commons Attribution-ShareAlike 3.0 Unported License</a>.
       </div>
       <div class="credit">
-        Documentation generated on Fri, 30 Mar 2012 16:03:39 -0700 by <a href="http://www.phpdoc.org">phpDocumentor 1.4.3</a>
+        Documentation generated on Tue, 03 Apr 2012 17:34:01 -0700 by <a href="http://www.phpdoc.org">phpDocumentor 1.4.3</a>
       </div>
     </footer>
     <script type="text/javascript">

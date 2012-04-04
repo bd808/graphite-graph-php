@@ -31,7 +31,7 @@
           </div>
                                               <h2>Classes:</h2>
                 <div class="package"><ul>
-	<li>Graph<ul>			<li><a href="../../Graphite/Graph/Graphite_Graph_CallSpec.html">Graphite_Graph_CallSpec</a></li>			<li><a href="../../Graphite/Graph/Graphite_Graph_Functions.html">Graphite_Graph_Functions</a></li>			<li><a href="../../Graphite/Graph/Graphite_Graph_Params.html">Graphite_Graph_Params</a></li>			<li><a href="../../Graphite/Graph/Graphite_Graph_Series.html">Graphite_Graph_Series</a></li>		</ul></li>  </ul>
+	<li>Graph<ul>			<li><a href="../../Graphite/Graph/Graphite_Graph_CallSpec.html">Graphite_Graph_CallSpec</a></li>			<li><a href="../../Graphite/Graph/Graphite_Graph_Functions.html">Graphite_Graph_Functions</a></li>			<li><a href="../../Graphite/Graph/Graphite_Graph_Generators.html">Graphite_Graph_Generators</a></li>			<li><a href="../../Graphite/Graph/Graphite_Graph_IniHelper.html">Graphite_Graph_IniHelper</a></li>			<li><a href="../../Graphite/Graph/Graphite_Graph_Params.html">Graphite_Graph_Params</a></li>			<li><a href="../../Graphite/Graph/Graphite_Graph_Series.html">Graphite_Graph_Series</a></li>		</ul></li>  </ul>
   </div>
   <div class="package"><ul>
 				<li><a href="../../Graphite/Graphite_ConfigurationException.html">Graphite_ConfigurationException</a></li>			<li><a href="../../Graphite/Graphite_GraphBuilder.html">Graphite_GraphBuilder</a></li>			<li><a href="../../Graphite/Graphite_IniParser.html">Graphite_IniParser</a></li>		  </ul>
@@ -150,9 +150,9 @@
             <em>protected</em>            <em>array</em>          </td>
           <td>
             <code>
-              $functions
+              $conf
                           </code>
-                                  </td>
+            <br /><div style="margin-left: 20px">Series configuration data.</div>                      </td>
         </tr>
                         <tr>
           <td class="right">
@@ -161,7 +161,7 @@
             <code>
               $graph
                           </code>
-                                  </td>
+            <br /><div style="margin-left: 20px">Paired graph builder.</div>                      </td>
         </tr>
             </table>
 
@@ -172,7 +172,7 @@
                                                 <tr>
           <td class="right">
             <em>public</em>            static
-                        <em>void</em>          </td>
+                        <em><a href="../../Graphite/Graph/Graphite_Graph_Series.html">Graphite_Graph_Series</a></em>          </td>
           <td>
             <code>
               <a href="#builder"><b>builder</b></a>(
@@ -227,7 +227,7 @@
         </tr>
                                             <tr>
           <td class="right">
-            <em>public</em>                        <em>mixed</em>          </td>
+            <em>public</em>                        <em><a href="../../Graphite/Graph/Graphite_Graph_Series.html">Graphite_Graph_Series</a></em>          </td>
           <td>
             <code>
               <a href="#__call"><b>__call</b></a>(
@@ -248,7 +248,7 @@
     <h3>builder</h3>
 
     <div class="method-signature">
-      static void
+      static <a href="../../Graphite/Graph/Graphite_Graph_Series.html">Graphite_Graph_Series</a>
       builder(
                                   [string
           $series
@@ -420,7 +420,7 @@
     <h3>__call</h3>
 
     <div class="method-signature">
-      mixed
+      <a href="../../Graphite/Graph/Graphite_Graph_Series.html">Graphite_Graph_Series</a>
       __call(
                                   string
           $name
@@ -429,7 +429,7 @@
                         )
     </div>
 
-    <p>Handle attempts to call non-existant methods.</p><div><p>Looks for $name in settings and gets/sets value if found.  If the setting isn't valid an E_USER_NOTICE warning will be raised.</p></div>
+    <p>Handle attempts to call non-existant methods.</p><div><p>Looks up method name as a function and if found adds that function and  the given arguments to this builder's configuration.</p><p>If no matching function was found it will attempt to lookup the given  method as a generator and add it to the current configuration.</p></div>
           <h4>Parameters:</h4>
       <table class="detail">
         <thead>
@@ -479,7 +479,7 @@
       Code published under the <a href="http://www.opensource.org/licenses/BSD-2-Clause">Simplified BSD License</a>. Documentation published under the <a href="http://creativecommons.org/licenses/by-sa/3.0/">Creative Commons Attribution-ShareAlike 3.0 Unported License</a>.
       </div>
       <div class="credit">
-        Documentation generated on Fri, 30 Mar 2012 16:03:39 -0700 by <a href="http://www.phpdoc.org">phpDocumentor 1.4.3</a>
+        Documentation generated on Tue, 03 Apr 2012 17:34:02 -0700 by <a href="http://www.phpdoc.org">phpDocumentor 1.4.3</a>
       </div>
     </footer>
     <script type="text/javascript">

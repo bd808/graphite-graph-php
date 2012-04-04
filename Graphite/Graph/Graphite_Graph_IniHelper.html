@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv='Content-Type' content='text/html; charset=utf-8'/>
+    <title>Docs For Class Graphite_Graph_IniHelper</title>
+    <link rel="stylesheet" type="text/css" href="../../media/style.css" />
+  </head>
+  <body>
+    <div id="container">
+      <header id="header">
+        <h1>Graphite_GraphBuilder Manual :: Docs For Class Graphite_Graph_IniHelper</h1>
+        <a href="https://github.com/bd808/graphite-graph-php"><img style="position:absolute;top:0;right:0;border:0;" src="https://a248.e.akamai.net/assets.github.com/img/7afbc8b248c68eb468279e8c17986ad46549fb71/687474703a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f6461726b626c75655f3132313632312e706e67" alt="Fork me on GitHub"></a>
+      </header>
+      <div id="main">
+        <div id="sidebar">
+                                <h2>Tutorials/Manuals:</h2>
+            <div class="package">
+                              <strong>Package-level:</strong>
+                                  <ul>
+	<li type="square"><a href="../../Graphite/tutorial_Graphite.pkg.html">Graphite_GraphBuilder Manual</a>
+</ul>
+
+                                                                      </div>
+                    <h2>Packages:</h2>
+          <div class="package">
+            <ul>
+                              <li>
+                  <a href="../../classtrees_Graphite.html">Graphite</a>
+                </li>
+                          </ul>
+          </div>
+                                              <h2>Classes:</h2>
+                <div class="package"><ul>
+	<li>Graph<ul>			<li><a href="../../Graphite/Graph/Graphite_Graph_CallSpec.html">Graphite_Graph_CallSpec</a></li>			<li><a href="../../Graphite/Graph/Graphite_Graph_Functions.html">Graphite_Graph_Functions</a></li>			<li><a href="../../Graphite/Graph/Graphite_Graph_Generators.html">Graphite_Graph_Generators</a></li>			<li><a href="../../Graphite/Graph/Graphite_Graph_IniHelper.html">Graphite_Graph_IniHelper</a></li>			<li><a href="../../Graphite/Graph/Graphite_Graph_Params.html">Graphite_Graph_Params</a></li>			<li><a href="../../Graphite/Graph/Graphite_Graph_Series.html">Graphite_Graph_Series</a></li>		</ul></li>  </ul>
+  </div>
+  <div class="package"><ul>
+				<li><a href="../../Graphite/Graphite_ConfigurationException.html">Graphite_ConfigurationException</a></li>			<li><a href="../../Graphite/Graphite_GraphBuilder.html">Graphite_GraphBuilder</a></li>			<li><a href="../../Graphite/Graphite_IniParser.html">Graphite_IniParser</a></li>		  </ul>
+  </div>
+                                                    </div>
+        <div id="content">
+          <div class="nav">
+            
+                                          
+                                      [ <a href="../../index.html">Index</a> ]
+                          [ <a href="../../classtrees_Graphite.html">Graphite classes</a> ]
+              [ <a href="../../elementindex_Graphite.html">Graphite elements</a> ]
+                        [ <a href="../../elementindex.html">All elements</a> ]
+          </div>
+<a name="sec-description"></a>
+<h2>Class Graphite_Graph_IniHelper</h2>
+
+<p>Helper object for processing ini file configurations in  Graphite_GraphBuilder.</p>
+
+
+
+
+  <strong>Author(s):</strong>
+  <ul>
+                  <li>Bryan Davis &lt;<a href="mailto:bd808@bd808.com">bd808@bd808.com</a>&gt;</li>
+                                </ul>
+
+  <table>
+    	      	  		<tr>
+		  <td>
+		    <strong>Copyright:</strong>&nbsp;&nbsp;
+		  </td>
+		  <td>2012 Bryan Davis and contributors. All Rights Reserved.</td>
+		</tr>
+	      	  		<tr>
+		  <td>
+		    <strong>License:</strong>&nbsp;&nbsp;
+		  </td>
+		  <td><a href="http://www.opensource.org/licenses/BSD-2-Clause">Simplified BSD License</a></td>
+		</tr>
+	        </table>
+
+
+
+
+
+  <a name="sec-var-summary"></a>
+  <h2>Member Variables</h2>
+  <table class="summary">
+                                                    <tr>
+          <td class="right">
+            <em>protected</em>            <em><a href="../../Graphite/Graphite_GraphBuilder.html">Graphite_GraphBuilder</a></em>          </td>
+          <td>
+            <code>
+              $builder
+                          </code>
+            <br /><div style="margin-left: 20px">Paired Graphite_GraphBuilder</div>                      </td>
+        </tr>
+                        <tr>
+          <td class="right">
+            <em>protected</em>            <em>array</em>          </td>
+          <td>
+            <code>
+              $global
+               = <span class="var-default">array()</span>            </code>
+            <br /><div style="margin-left: 20px">Global graph configuration.</div>                      </td>
+        </tr>
+                        <tr>
+          <td class="right">
+            <em>protected</em>            <em>array</em>          </td>
+          <td>
+            <code>
+              $series
+               = <span class="var-default">array()</span>            </code>
+            <br /><div style="margin-left: 20px">Global graph configuration.</div>                      </td>
+        </tr>
+            </table>
+
+
+  <a name="sec-method-summary"></a>
+  <h2>Method Summary</h2>
+  <table class="summary">
+                                                                    <tr>
+          <td class="right">
+            <em>protected</em>            static
+                        <em>mixed</em>          </td>
+          <td>
+            <code>
+              <a href="#pop"><b>pop</b></a>(
+                                                                                    &$arr
+                                                    ,                                     $key
+                                                    ,                   [                  $default
+                   = null]                                  ,                                     $arr
+                                                 )
+            </code>
+            <br /><div style="margin-left: 20px">Remove and return a named value from an array.</div>          </td>
+        </tr>
+                                  <tr>
+          <td class="right">
+            <em>public</em>            static
+                        <em>void</em>          </td>
+          <td>
+            <code>
+              <a href="#process"><b>process</b></a>(
+                                                                                    $builder
+                                                    ,                                     $ini
+                                                 )
+            </code>
+            <br /><div style="margin-left: 20px">Process an ini configuration.</div>          </td>
+        </tr>
+                            <tr>
+          <td class="right">
+            <em>protected</em>                        <em>Graphite_Graph_IniHelper</em>          </td>
+          <td>
+            <code>
+              <a href="#__construct"><b>__construct</b></a>(
+                                                                                    $builder
+                                                 )
+            </code>
+            <br /><div style="margin-left: 20px">Constructor.</div>          </td>
+        </tr>
+                        <tr>
+          <td class="right">
+            <em>protected</em>                        <em>void</em>          </td>
+          <td>
+            <code>
+              <a href="#configureGraph"><b>configureGraph</b></a>(
+               )
+            </code>
+            <br /><div style="margin-left: 20px">Configure a Graphite_GraphBuilder using our internal state.</div>          </td>
+        </tr>
+                        <tr>
+          <td class="right">
+            <em>protected</em>                        <em>array</em>          </td>
+          <td>
+            <code>
+              <a href="#extendSeries"><b>extendSeries</b></a>(
+                                                                                    $name
+                                                    ,                   [                  $child
+                   = null]                               )
+            </code>
+            <br /><div style="margin-left: 20px">Inherit series configuration.</div>          </td>
+        </tr>
+                        <tr>
+          <td class="right">
+            <em>protected</em>                        <em>array</em>          </td>
+          <td>
+            <code>
+              <a href="#findSeries"><b>findSeries</b></a>(
+                                                                                    $name
+                                                 )
+            </code>
+            <br /><div style="margin-left: 20px">Find an existing series configuration.</div>          </td>
+        </tr>
+                        <tr>
+          <td class="right">
+            <em>protected</em>                        <em>void</em>          </td>
+          <td>
+            <code>
+              <a href="#loadIniData"><b>loadIniData</b></a>(
+                                                                                    $ini
+                                                 )
+            </code>
+            <br /><div style="margin-left: 20px">Load configuration data from the provided array into this instance.</div>          </td>
+        </tr>
+                                  <tr>
+          <td class="right">
+            <em>protected</em>                        <em>string</em>          </td>
+          <td>
+            <code>
+              <a href="#prefix"><b>prefix</b></a>(
+                                                                                    $name
+                                                 )
+            </code>
+            <br /><div style="margin-left: 20px">Get a prefix by name.</div>          </td>
+        </tr>
+                      </table>
+
+
+  <a name="sec-methods"></a>
+  <h2>Methods</h2>
+  <a name='method_detail'></a>
+                <a name="methodpop" id="pop"><!-- --></a>
+
+    <h3>pop</h3>
+
+    <div class="method-signature">
+      static mixed
+      pop(
+                                  
+          &$arr
+                            ,           mixed
+          $key
+                            ,           [mixed
+          $default
+           = null]                  ,           array
+          $arr
+                        )
+    </div>
+
+      <p>Remove and return a named value from an array.</p><div><p>The input array is modified as an intentional side effect.</p></div>      
+              <h4>Parameters:</h4>
+        <table class="detail">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Type</th>
+              <th class="desc">Description</th>
+            </tr>
+          </thead>
+          <tbody>
+                          <tr>
+                <td><code>$arr</code></td>
+                <td><em>array</em></td>
+                <td>
+                                      Array to modify
+                                  </td>
+              </tr>
+                          <tr>
+                <td><code>$key</code></td>
+                <td><em>mixed</em></td>
+                <td>
+                                      Key to pop
+                                  </td>
+              </tr>
+                          <tr>
+                <td><code>$default</code></td>
+                <td><em>mixed</em></td>
+                <td>
+                                      Default value to return if not found
+                                  </td>
+              </tr>
+                          <tr>
+                <td><code>&$arr</code></td>
+                <td><em></em></td>
+                <td>
+                                  </td>
+              </tr>
+                      </tbody>
+        </table>
+      
+      
+      
+      
+      
+          <a name="methodprocess" id="process"><!-- --></a>
+
+    <h3>process</h3>
+
+    <div class="method-signature">
+      static void
+      process(
+                                  <a href="../../Graphite/Graphite_GraphBuilder.html">Graphite_GraphBuilder</a>
+          $builder
+                            ,           array
+          $ini
+                        )
+    </div>
+
+      <p>Process an ini configuration.</p>      
+              <h4>Parameters:</h4>
+        <table class="detail">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Type</th>
+              <th class="desc">Description</th>
+            </tr>
+          </thead>
+          <tbody>
+                          <tr>
+                <td><code>$builder</code></td>
+                <td><em><a href="../../Graphite/Graphite_GraphBuilder.html">Graphite_GraphBuilder</a></em></td>
+                <td>
+                                      Builder we are helping
+                                  </td>
+              </tr>
+                          <tr>
+                <td><code>$ini</code></td>
+                <td><em>array</em></td>
+                <td>
+                                      Ini-style data set
+                                  </td>
+              </tr>
+                      </tbody>
+        </table>
+      
+      
+      
+      
+      
+  
+      <a name="method__construct" id="__construct"><!-- --></a>
+
+    <h3>__construct</h3>
+
+    <div class="method-signature">
+      Graphite_Graph_IniHelper
+      __construct(
+                                  <a href="../../Graphite/Graphite_GraphBuilder.html">Graphite_GraphBuilder</a>
+          $builder
+                        )
+    </div>
+
+    <p>Constructor.</p>
+          <h4>Parameters:</h4>
+      <table class="detail">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Type</th>
+            <th class="desc">Description</th>
+          </tr>
+        </thead>
+        <tbody>
+                      <tr>
+              <td><code>$builder</code></td>
+              <td><em><a href="../../Graphite/Graphite_GraphBuilder.html">Graphite_GraphBuilder</a></em></td>
+              <td>
+                                  Builder to configure
+                              </td>
+            </tr>
+                  </tbody>
+      </table>
+    
+        
+
+    
+    
+    
+        <a name="methodconfigureGraph" id="configureGraph"><!-- --></a>
+
+    <h3>configureGraph</h3>
+
+    <div class="method-signature">
+      void
+      configureGraph(
+      )
+    </div>
+
+    <p>Configure a Graphite_GraphBuilder using our internal state.</p>
+    
+        
+
+    
+    
+    
+        <a name="methodextendSeries" id="extendSeries"><!-- --></a>
+
+    <h3>extendSeries</h3>
+
+    <div class="method-signature">
+      array
+      extendSeries(
+                                  string
+          $name
+                            ,           [array
+          $child
+           = null]              )
+    </div>
+
+    <p>Inherit series configuration.</p><div><p>Starting with a base series that indicates inheritance, walk upward in the  series inheritance hirarchy until you find a root series. Then come  back down the ancestry stack merging the parent's defaults with the  child's configuration until you get back to the orginal child.</p></div>
+          <h4>Parameters:</h4>
+      <table class="detail">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Type</th>
+            <th class="desc">Description</th>
+          </tr>
+        </thead>
+        <tbody>
+                      <tr>
+              <td><code>$name</code></td>
+              <td><em>string</em></td>
+              <td>
+                                  Series to extend
+                              </td>
+            </tr>
+                      <tr>
+              <td><code>$child</code></td>
+              <td><em>array</em></td>
+              <td>
+                                  Configuration to merge with parent
+                              </td>
+            </tr>
+                  </tbody>
+      </table>
+    
+        
+
+    
+    
+    
+        <a name="methodfindSeries" id="findSeries"><!-- --></a>
+
+    <h3>findSeries</h3>
+
+    <div class="method-signature">
+      array
+      findSeries(
+                                  string
+          $name
+                        )
+    </div>
+
+    <p>Find an existing series configuration.</p>
+          <h4>Parameters:</h4>
+      <table class="detail">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Type</th>
+            <th class="desc">Description</th>
+          </tr>
+        </thead>
+        <tbody>
+                      <tr>
+              <td><code>$name</code></td>
+              <td><em>string</em></td>
+              <td>
+                                  Series name
+                              </td>
+            </tr>
+                  </tbody>
+      </table>
+    
+        
+
+    
+    
+    
+        <a name="methodloadIniData" id="loadIniData"><!-- --></a>
+
+    <h3>loadIniData</h3>
+
+    <div class="method-signature">
+      void
+      loadIniData(
+                                  array
+          $ini
+                        )
+    </div>
+
+    <p>Load configuration data from the provided array into this instance.</p><div><p>&quot;Ini-style&quot; confiugration data is expected to be an array as would be  returned by {@see Graphite_IniParser::parse()}. If a key in this array is  paired with a scalar value then it is assumed to be a graph level  configuration setting (eg. 'width' =&gt; 400). If the key indexes an array  then the value is assumed to be either a series to draw on the graph or  metadata configuration. Metadata is denoted by the inclusion of an ':is'  key in the value data.</p><p>Configuration data is processed and stored in member variables of this  helper instance.</p></div>
+          <h4>Parameters:</h4>
+      <table class="detail">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Type</th>
+            <th class="desc">Description</th>
+          </tr>
+        </thead>
+        <tbody>
+                      <tr>
+              <td><code>$ini</code></td>
+              <td><em>array</em></td>
+              <td>
+                                  Ini-style configuration data
+                              </td>
+            </tr>
+                  </tbody>
+      </table>
+    
+        
+
+    
+    
+    
+          <a name="methodprefix" id="prefix"><!-- --></a>
+
+    <h3>prefix</h3>
+
+    <div class="method-signature">
+      string
+      prefix(
+                                  string
+          $name
+                        )
+    </div>
+
+    <p>Get a prefix by name.</p>
+          <h4>Parameters:</h4>
+      <table class="detail">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Type</th>
+            <th class="desc">Description</th>
+          </tr>
+        </thead>
+        <tbody>
+                      <tr>
+              <td><code>$name</code></td>
+              <td><em>string</em></td>
+              <td>
+                                  Prefix name
+                              </td>
+            </tr>
+                  </tbody>
+      </table>
+    
+        
+
+    
+    
+    
+    
+<p class="notes">
+  Located in <a class="field" href="_src---Graphite---Graph---IniHelper.php.html">/src/Graphite/Graph/IniHelper.php</a> 
+  [<span class="field">line 25</span>]
+</p>
+
+      </div>
+    </div>
+    <footer id="footer">
+      <div class="copyright">
+      Copyright ® 2012 <a href="http://bd808.com">Bryan Davis</a> and
+      contributors. All Rights Reserved.
+      </div>
+      <div class="license">
+      Code published under the <a href="http://www.opensource.org/licenses/BSD-2-Clause">Simplified BSD License</a>. Documentation published under the <a href="http://creativecommons.org/licenses/by-sa/3.0/">Creative Commons Attribution-ShareAlike 3.0 Unported License</a>.
+      </div>
+      <div class="credit">
+        Documentation generated on Tue, 03 Apr 2012 17:34:02 -0700 by <a href="http://www.phpdoc.org">phpDocumentor 1.4.3</a>
+      </div>
+    </footer>
+    <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-18797634-3']);
+    _gaq.push(['_trackPageview']);
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+  </body>
+</html>
