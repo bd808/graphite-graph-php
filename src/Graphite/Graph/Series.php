@@ -47,11 +47,15 @@
 class Graphite_Graph_Series {
 
   /**
+   * Series configuration data.
+   *
    * @var array
    */
-  protected $functions;
+  protected $conf;
 
   /**
+   * Paired graph builder.
+   *
    * @var Graphite_GraphBuilder
    */
   protected $graph;
@@ -63,9 +67,9 @@ class Graphite_Graph_Series {
    * @param string $series Base series to construct series from.
    */
   public function __construct ($series=null, $graph=null) {
-    $this->functions = array();
+    $this->conf = array();
     if (null !== $series) {
-      $this->functions['series'] = $series;
+      $this->conf['series'] = $series;
     }
     $this->graph = $graph;
   } //end __construct
@@ -74,18 +78,35 @@ class Graphite_Graph_Series {
   /**
    * Handle attempts to call non-existant methods.
    *
-   * Looks for $name in settings and gets/sets value if found.
-   * If the setting isn't valid an E_USER_NOTICE warning will be raised.
+   * Looks up method name as a function and if found adds that function and
+   * the given arguments to this builder's configuration.
+   *
+   * If no matching function was found it will attempt to lookup the given
+   * method as a generator and add it to the current configuration.
    *
    * @param string $name Method name
    * @param array $args Invocation arguments
-   * @return mixed Property value or self
+   * @return Graphite_Graph_Series Self, for method chaining
+   * @see Graphite_Graph_Functions
+   * @see Graphite_Graph_Generators
    */
   public function __call ($name, $args) {
+    // TODO: actually pull the call spec and verify that the required number
+    // of arguments have been supplied.
     $func = Graphite_Graph_Functions::canonicalName($name);
     if (false !== $func) {
-      $this->functions[$func] = $args;
+      $this->conf[$func] = $args;
+
+    } else {
+      $gen = Graphite_Graph_Generators::canonicalName($name);
+      if (false !== $gen) {
+        $this->conf[':generator'] = $name;
+        if ($args) {
+          $this->conf[$name] = $args;
+        }
+      }
     }
+
     return $this;
   } //end __call
 
@@ -97,7 +118,7 @@ class Graphite_Graph_Series {
    * @return array Series configuration
    */
   public function asMetric () {
-    return $this->functions;
+    return $this->conf;
   }
 
 
@@ -125,6 +146,7 @@ class Graphite_Graph_Series {
    * Builder factory.
    *
    * @param string $series Base series to construct series from.
+   * @return Graphite_Graph_Series Series builder
    */
   static public function builder ($series=null) {
     return new Graphite_Graph_Series($series);
@@ -140,12 +162,35 @@ class Graphite_Graph_Series {
    */
   static public function generate ($conf) {
     if ($conf instanceof Graphite_Graph_Series) {
-      $conf = $conf->functions;
+      $conf = $conf->conf;
     }
 
     if (isset($conf['target'])) {
       // explict target has been provided by the user
       return $conf['target'];
+    }
+
+    $haveAlias = false;
+
+    if (isset($conf[':generator'])) {
+      $name = $conf[':generator'];
+      $spec = Graphite_Graph_Generators::callSpec($name);
+      if (null !== $spec && (
+          isset($conf[$name]) || (
+              1 == $spec->requiredArgs() &&
+              Graphite_Graph_CallSpec::argIsString($spec->getArg(0))
+            )
+          )) {
+        // args are explicit or we can use the alias
+        $args = (isset($conf[$name]))? $conf[$name]: $conf['alias'];
+        if (is_scalar($args)) {
+          $args = array($args);
+        }
+
+        // override series with generated content
+        $conf['series'] = $spec->asString('', $args);
+        $haveAlias = $spec->isAlias();
+      }
     }
 
     if (!isset($conf['series'])) {
@@ -166,7 +211,6 @@ class Graphite_Graph_Series {
 
     // start from the provided series
     $target = $conf['series'];
-    $haveAlias = false;
 
     // build up target string
     foreach ($funcs as $name => $args) {

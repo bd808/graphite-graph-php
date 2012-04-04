@@ -41,4 +41,25 @@ class Graphite_Graph_SeriesTest extends PHPUnit_Framework_TestCase {
         Graphite_Graph_Series::generate($spec));
   }
 
+  /**
+   * Given: a generator call with no arguments
+   * Expect: a series using the generator with the alias as the only arg
+   */
+  public function test_generator_no_args () {
+    $b = Graphite_Graph_Series::builder()
+        ->random()
+        ->alias('Noise');
+    $this->assertEquals("randomWalkFunction('Noise')", $b->build());
+  }
+
+  /**
+   * Given: a generator call with arguments
+   * Expect: a series using the generator
+   */
+  public function test_generator_with_args () {
+    $b = Graphite_Graph_Series::builder()
+        ->threshold(123.456, "omgwtfbbq", "red");
+    $this->assertEquals("threshold(123.456,'omgwtfbbq','red')", $b->build());
+  }
+
 } //end Graphite_Graph_SeriesTest
