@@ -198,6 +198,15 @@ class Graphite_Graph_Series {
         "metric does not have any data associated with it.");
     }
 
+    if (is_array($conf['series'])) {
+      // generate each grouped series
+      $grouped = array();
+      foreach ($conf['series'] as $series) {
+        $grouped[] = self::generate($series);
+      }
+      $conf['series'] = implode(',',$grouped);
+    }
+
     // find functions named in the conf data
     $funcs = array();
     foreach ($conf as $key => $args) {

@@ -198,6 +198,18 @@ class Graphite_GraphBuilderTest extends PHPUnit_Framework_TestCase {
   }
 
   /**
+   * Given: ini config using :series
+   * Expect: grouped targets
+   */
+  public function test_group_series () {
+    $g = Graphite_GraphBuilder::builder()
+        ->prefix('com.example.foo')
+        ->ini($this->iniPath('test_group_series.ini'));
+    $this->assertEquals('target=cactiStyle(group(alias(color(scale(derivative(com.example.foo.munin.cpu.irq),0.001),\'red\'),\'IRQ\'),alias(color(scale(derivative(com.example.foo.munin.cpu.softirq),0.001),\'yellow\'),\'Batched+IRQ\')))&target=alias(color(drawAsInfinite(puppet.time.total),\'blue\'),\'Puppet+Run\')', (string) $g);
+  }
+
+
+  /**
    * Get the path to an ini file.
    * @param string $file File name
    * @return string Path to file
