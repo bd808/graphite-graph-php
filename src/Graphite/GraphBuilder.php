@@ -540,7 +540,11 @@ class Graphite_GraphBuilder {
    *    graph
    */
   public function __toString () {
-    return $this->build();
+    try {
+      return $this->build();
+    } catch (Graphite_ConfigurationException $gce) {
+      return "error({$gce->getMessage()})";
+    }
   }
 
 

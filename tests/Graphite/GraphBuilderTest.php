@@ -208,6 +208,15 @@ class Graphite_GraphBuilderTest extends PHPUnit_Framework_TestCase {
     $this->assertEquals('target=cactiStyle(group(alias(color(scale(derivative(com.example.foo.munin.cpu.irq),0.001),\'red\'),\'IRQ\'),alias(color(scale(derivative(com.example.foo.munin.cpu.softirq),0.001),\'yellow\'),\'Batched+IRQ\')))&target=alias(color(drawAsInfinite(puppet.time.total),\'blue\'),\'Puppet+Run\')', (string) $g);
   }
 
+  /**
+   * Given: empty builder
+   * Expect: empty response
+   */
+  public function test_empty () {
+    $g = Graphite_GraphBuilder::builder();
+    $this->assertEquals('', (string) $g);
+  }
+
 
   /**
    * Get the path to an ini file.
