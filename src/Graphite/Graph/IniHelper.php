@@ -179,6 +179,33 @@ class Graphite_Graph_IniHelper {
         $conf = $this->extendSeries($parent, $conf);
       }
 
+      $group = self::pop($conf, ':series');
+      if (null !== $group) {
+        if (is_scalar($group)) {
+          $group = array_map('trim', explode(',', $group));
+        }
+        $conf['series'] = array();
+        foreach ($group as $name) {
+          // lookup the grouped series
+          $series = $this->findSeries($name);
+
+          // enable prefix if specified
+          $prefix = self::pop($series, ':prefix');
+          if (null !== $prefix) {
+            $this->builder->prefix($this->builder->lookupPrefix($prefix));
+          }
+
+          // augment the series with graph defaults and store
+          $conf['series'][] = $this->builder->addSeriesDefaults(
+              $name, $series);
+
+          // restore prefix
+          if (null !== $prefix) {
+            $this->builder->endPrefix();
+          }
+        }
+      }
+
       $prefix = self::pop($conf, ':prefix');
       if (null !== $prefix) {
         $this->builder->prefix($this->builder->lookupPrefix($prefix));
