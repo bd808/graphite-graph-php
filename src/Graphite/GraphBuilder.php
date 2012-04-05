@@ -291,6 +291,27 @@ class Graphite_GraphBuilder {
 
 
   /**
+   * Add default values to the provided series options.
+   *
+   * @param string $name Series name
+   * @param array $opts Series options
+   * @return array Series options merged with default values
+   */
+  public function addSeriesDefaults ($name, $opts) {
+    return array_merge(
+        array(
+            // default alias is prettied up version of name
+            'alias'   => ucwords(strtr($name, '-_.', ' ')),
+
+            // default series is prefixed name
+            'series'  => "{$this->currentPrefix()}{$name}",
+          ),
+        $opts
+      );
+  } //end addSeriesDefaults
+
+
+  /**
    * Add a data series to the graph.
    *
    * @param string $name Name of data series to graph
@@ -299,15 +320,7 @@ class Graphite_GraphBuilder {
    */
   public function series ($name, $opts=array()) {
     $this->storeMeta('series', $name, $opts);
-    $defaults = array(
-      // default alias is prettied up version of name
-      'alias'   => ucwords(strtr($name, '-_.', ' ')),
-
-      // default series is prefixed name
-      'series'  => "{$this->currentPrefix()}{$name}",
-    );
-    $this->targets[] = array_merge($defaults, $opts);
-
+    $this->targets[] = $this->addSeriesDefaults($name, $opts);
     return $this;
   } //end series
 
