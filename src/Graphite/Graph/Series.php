@@ -137,7 +137,7 @@ class Graphite_Graph_Series {
     if (null === $this->graph) {
       return self::generate($this);
     } else {
-      return $this->graph->metric('', $this->asMetric());
+      return $this->graph->series('', $this->asMetric());
     }
   }
 
