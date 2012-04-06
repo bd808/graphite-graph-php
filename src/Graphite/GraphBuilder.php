@@ -19,9 +19,10 @@
  * @author Bryan Davis <bd808@bd808.com>
  * @copyright 2012 Bryan Davis and contributors. All Rights Reserved.
  * @license http://www.opensource.org/licenses/BSD-2-Clause Simplified BSD License
- * @link http://graphite.wikidot.com/
+ * @link http://bd808.com/graphite-graph-php/ Graphite_GraphBuilder site
+ * @link http://graphite.wikidot.com/ Graphite
  * @link http://readthedocs.org/docs/graphite/en/latest/url-api.html
- * @link http://bd808.com/graphite-graph-php/
+ *    Graphite URL API
  */
 class Graphite_GraphBuilder {
 
@@ -87,13 +88,15 @@ class Graphite_GraphBuilder {
 
 
   /**
-   * Handle attempts to read from non-existant members.
+   * Proxy read requests for non-existant members as graph level settings.
    *
    * Looks for $name in settings and returns value if found.
    * If the setting isn't valid an E_USER_NOTICE warning will be raised.
    *
-   * @param string $name Setting name
+   * @param string $name Setting name or alias
    * @return mixed Setting value or null if not found
+   * @see Graphite_Graph_Params
+   * @see http://readthedocs.org/docs/graphite/en/latest/url-api.html
    */
   public function __get ($name) {
     if ('qs' == $name || 'url' == $name) {
@@ -124,14 +127,16 @@ class Graphite_GraphBuilder {
 
 
   /**
-   * Handle attempts to write to non-existant members.
+   * Proxy write requests for non-existant members as graph level settings.
    *
-   * Sets setting $name=$val if $name is a valid setting.
+   * Sets graph level setting $name=$val if $name is a valid setting.
    * If the setting isn't valid an E_USER_NOTICE warning will be raised.
    *
-   * @param string $name Member name
+   * @param string $name Setting name or alias
    * @param mixed $val Value to set
    * @return void
+   * @see Graphite_Graph_Params
+   * @see http://readthedocs.org/docs/graphite/en/latest/url-api.html
    */
   public function __set ($name, $val) {
     $cname = Graphite_Graph_Params::canonicalName($name);
@@ -330,8 +335,8 @@ class Graphite_GraphBuilder {
    * @param string $name Name of data series to graph
    * @param array $opts Series options
    * @return Graphite_GraphBuilder Self, for message chaining
-   * @deprecated
    * @see series()
+   * @deprecated Use series() instead
    */
   public function metric ($name, $opts=array()) {
     return $this->series($name, $opts);
@@ -475,6 +480,7 @@ class Graphite_GraphBuilder {
    * @param string $file Path to file
    * @param array $vars Variables to substitute in the ini file
    * @return Graphite_GraphBuilder Self, for message chaining
+   * @see Graphite_Graph_IniHelper
    */
   public function ini ($file, $vars=null) {
     $ini = Graphite_IniParser::parse($file, $vars);
@@ -485,6 +491,7 @@ class Graphite_GraphBuilder {
 
   /**
    * Generate a graphite graph description query string.
+   *
    * @param string $format Format to export data in (null for graph)
    * @return string Query string to append to graphite url to render this
    *    graph
@@ -515,8 +522,12 @@ class Graphite_GraphBuilder {
   /**
    * Alias for build().
    *
-   * @deprecated
+   * @param string $format Format to export data in (null for graph)
+   * @return string Query string to append to graphite url to render this
+   *    graph
+   * @throws Graphite_ConfigurationException If required data is missing
    * @see build()
+   * @deprecated Use build() instead
    */
   public function qs ($format=null) {
     return $this->build($format);
@@ -525,8 +536,12 @@ class Graphite_GraphBuilder {
   /**
    * Alias for build().
    *
-   * @deprecated
+   * @param string $format Format to export data in (null for graph)
+   * @return string Query string to append to graphite url to render this
+   *    graph
+   * @throws Graphite_ConfigurationException If required data is missing
    * @see build()
+   * @deprecated Use build() instead
    */
   public function url ($format=null) {
     return $this->build($format);
@@ -596,9 +611,9 @@ class Graphite_GraphBuilder {
    * @param string $str String to encode for embedding in the query component
    *    of a URI.
    * @return string RFC-3986 conforming encoded string
-   * @see RFC-3986
-   * @see RFC-1738
-   * @see HTML 4.01 Specification
+   * @see https://www.ietf.org/rfc/rfc3986.txt
+   * @see https://www.ietf.org/rfc/rfc1738.txt
+   * @see http://www.w3.org/TR/REC-html40/
    */
   static public function qsEncode ($str) {
     static $decode = array(

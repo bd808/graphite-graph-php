@@ -7,20 +7,34 @@
  * @license http://www.opensource.org/licenses/BSD-2-Clause Simplified BSD License
  */
 
+
+/**
+ * Define E_USER_DEPRECATED for php < 5.3.0
+ */
 if (!defined('E_USER_DEPRECATED')) {
-  // php < 5.3.0 doesn't have deprecated constants so sub in notice
   define('E_USER_DEPRECATED', E_USER_NOTICE);
 }
+
 
 /**
  * Helper object for processing ini file configurations in
  * Graphite_GraphBuilder.
+ *
+ * {@link Graphite_GraphBuilder::ini()} uses this helper object to process the
+ * contents of an ini file. Actual parsing of the ini file into an array is
+ * performed by {@link Graphite_IniParser}.
+ *
+ * Ini syntax:
+ * TODO: make a tutorial for this.
+ *
  *
  * @package Graphite
  * @subpackage Graph
  * @author Bryan Davis <bd808@bd808.com>
  * @copyright 2012 Bryan Davis and contributors. All Rights Reserved.
  * @license http://www.opensource.org/licenses/BSD-2-Clause Simplified BSD License
+ * @see Graphite_GraphBuilder
+ * @see Graphite_IniParser
  */
 class Graphite_Graph_IniHelper {
 
@@ -174,11 +188,13 @@ class Graphite_Graph_IniHelper {
     foreach ($this->series as $name => $conf) {
       // TODO: add support for preconfigured "types" like line, forecast, etc
 
+      // inheritance
       $parent = self::pop($conf, ':extends');
       if (null !== $parent) {
         $conf = $this->extendSeries($parent, $conf);
       }
 
+      // series grouping
       $group = self::pop($conf, ':series');
       if (null !== $group) {
         if (is_scalar($group)) {
@@ -206,6 +222,7 @@ class Graphite_Graph_IniHelper {
         }
       }
 
+      // metric prefix
       $prefix = self::pop($conf, ':prefix');
       if (null !== $prefix) {
         $this->builder->prefix($this->builder->lookupPrefix($prefix));
