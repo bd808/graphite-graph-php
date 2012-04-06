@@ -119,15 +119,14 @@ ul {
   font-weight:bold;
 }
 
-.method-definition {
-  font-size:8pt;
-  margin-bottom:0.3em;
-  padding-left:1em;
+.method-detail {
+  border-bottom:1px solid #babdb6;
 }
 
 .method-definition {
   font-size:8pt;
   margin-bottom:0.3em;
+  padding-left:1em;
 }
 
 .method-result {
@@ -137,9 +136,15 @@ ul {
 }
 
 .method-signature {
-  color:#BABDB6; /*FIXME*/
-  font-size:85%;
-  margin:0.5em 0em;
+  font-size:1.1em;
+}
+
+.method-attributes dt {
+  font-weight:bold;
+  margin-top:.5em;
+}
+.method-attributes dd code {
+  font-size:1.2em;
 }
 
 .notes {
@@ -519,23 +524,44 @@ table.summary {
   border-collapse:collapse;
   font-size:1em;
   line-height:1.4em;
+  margin-top:1em;
   width:100%;
 }
 
 /* Summary tables for methods, properties, constants etc. */
 table.summary {
+  border:1px solid #586E75;
+}
+table.summary {
+  border:1px solid #586E75;
+}
+table.summary thead th {
+  border:1px solid #586E75;
+  background-color:#EEE8D5;
+  color:#586E75;
+  padding:.3em 1.5em .3em .5em;
+  text-align:left;
 }
 table.summary th {
   font-weight:normal;
   padding:.5em 1em;
   text-align:left;
 }
-table.summary td {
+table.summary tbody td,
+table.detail tbody td {
   border-bottom:1px solid #073642;
   padding:.5em 1em;
+  width:100%;
 }
-table.summary td.right {
+table.summary tbody td.right,
+table.detail tbody td.right {
   text-align:right;
+  width:0;
+  white-space:nowrap;
+}
+table.summary td > dl,
+table.detail td > dl {
+  margin:0;
 }
 
 /* The tables are used for detaile informations. */
@@ -558,10 +584,9 @@ table.summary tbody td code {
   font-size:1.1em;
 }
 
-.method-signature {
+.section-header {
   border:1px solid #586E75;
-  color:#073642;
-  font-family:courier new,courier;
-  font-size:1.3em;
-  padding:.5em 1em;
+  background-color:#EEE8D5;
+  color:#586E75;
+  padding:.2em .5em;
 }
