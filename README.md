@@ -34,7 +34,7 @@ Written by [Bryan Davis][bd808] with support from [Keynetics][].
 Inspired by https://github.com/ripienaar/graphite-graph-dsl/
 
 ---
-[Graphite_GraphBuilder]: https://bd808.com/graphite-graph-php/
+[Graphite_GraphBuilder]: http://bd808.com/graphite-graph-php/
 [Graphite]: http://graphite.wikidot.com/
 [url-api]: http://readthedocs.org/docs/graphite/en/latest/url-api.html
 [PHP]: http://php.net/
