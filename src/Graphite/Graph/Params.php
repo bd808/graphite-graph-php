@@ -1,11 +1,6 @@
 <?php
-/**
- * @package Graphite
- * @subpackage Graph
- * @author Bryan Davis <bd808@bd808.com>
- * @copyright 2011 Bryan Davis and contributors. All Rights Reserved.
- * @license http://www.opensource.org/licenses/BSD-2-Clause Simplified BSD License
- */
+
+namespace Graphite\Graph;
 
 /**
  * Utility for graph level parameters.
@@ -16,7 +11,7 @@
  * @copyright 2012 Bryan Davis and contributors. All Rights Reserved.
  * @license http://www.opensource.org/licenses/BSD-2-Clause Simplified BSD License
  */
-class Graphite_Graph_Params {
+class Params {
 
   /**
    * Valid graph URI parameters.
@@ -152,11 +147,11 @@ class Graphite_Graph_Params {
    * @param string $name Parameter name
    * @param string $value Value to format
    * @return mixed Formatted value
-   * @see Graphite_Graph_CallSpec::format
+   * @see CallSpec::format
    */
   static public function format ($name, $value) {
     $type = self::$params[$name];
-    return Graphite_Graph_CallSpec::format($value, $type);
+    return CallSpec::format($value, $type);
   } //end format
 
 
@@ -167,5 +162,5 @@ class Graphite_Graph_Params {
     // no-op
   }
 
-} //end Graphite_Graph_Params
+} //end Params
 

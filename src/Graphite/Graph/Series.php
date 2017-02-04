@@ -1,11 +1,9 @@
 <?php
-/**
- * @package Graphite
- * @subpackage Graph
- * @author Bryan Davis <bd808@bd808.com>
- * @copyright 2012 Bryan Davis and contributors. All Rights Reserved.
- * @license http://www.opensource.org/licenses/BSD-2-Clause Simplified BSD License
- */
+
+namespace Graphite\Graph;
+
+use Graphite\ConfigurationException;
+use Graphite\GraphBuilder;
 
 /**
  * DSL for building Graphite series to display on a graph.
@@ -24,7 +22,7 @@
  *
  * <code>
  * <?php
- *  $series = Graphite_Graph_Series::builder('whisper.metric.name')
+ *  $series = Series::builder('whisper.metric.name')
  *      ->cactistyle()
  *      ->color('green')
  *      ->alias('Free')
@@ -33,7 +31,7 @@
  * </code>
  *
  * Although this builder can be used as a stand-alone component, it will most
- * often be used via a call to {@link Graphite_GraphBuilder::buildSeries()} as
+ * often be used via a call to {@link GraphBuilder::buildSeries()} as
  * part of a larger graph creation process:
  * {@example series_example.php}
  *
@@ -44,7 +42,7 @@
  * @license http://www.opensource.org/licenses/BSD-2-Clause Simplified BSD License
  * @link http://readthedocs.org/docs/graphite/en/latest/functions.html
  */
-class Graphite_Graph_Series {
+class Series {
 
   /**
    * Series configuration data.
@@ -56,7 +54,7 @@ class Graphite_Graph_Series {
   /**
    * Paired graph builder.
    *
-   * @var Graphite_GraphBuilder
+   * @var GraphBuilder
    */
   protected $graph;
 
@@ -86,19 +84,19 @@ class Graphite_Graph_Series {
    *
    * @param string $name Method name
    * @param array $args Invocation arguments
-   * @return Graphite_Graph_Series Self, for method chaining
-   * @see Graphite_Graph_Functions
-   * @see Graphite_Graph_Generators
+   * @return Series Self, for method chaining
+   * @see Functions
+   * @see Generators
    */
   public function __call ($name, $args) {
     // TODO: actually pull the call spec and verify that the required number
     // of arguments have been supplied.
-    $func = Graphite_Graph_Functions::canonicalName($name);
+    $func = Functions::canonicalName($name);
     if (false !== $func) {
       $this->conf[$func] = $args;
 
     } else {
-      $gen = Graphite_Graph_Generators::canonicalName($name);
+      $gen = Generators::canonicalName($name);
       if (false !== $gen) {
         $this->conf[':generator'] = $name;
         if ($args) {
@@ -113,7 +111,7 @@ class Graphite_Graph_Series {
 
   /**
    * Get the description of this series as an array suitable for use with a
-   * call to {@link Graphite_GraphBuilder::metric()}.
+   * call to {@link GraphBuilder::metric()}.
    *
    * @return array Series configuration
    */
@@ -127,7 +125,7 @@ class Graphite_Graph_Series {
    *
    * Returns either an array of series configuration data or the string
    * representation of this series depending on whether or not this series has
-   * a Graphite_GraphBuilder or not.
+   * a GraphBuilder or not.
    *
    * @return mixed Series parameter for use in query string or parent graph
    * @see generate()
@@ -146,22 +144,22 @@ class Graphite_Graph_Series {
    * Builder factory.
    *
    * @param string $series Base series to construct series from.
-   * @return Graphite_Graph_Series Series builder
+   * @return Series Series builder
    */
   static public function builder ($series=null) {
-    return new Graphite_Graph_Series($series);
+    return new Series($series);
   }
 
   /**
    * Generate the target parameter for a given configuration.
    *
-   * @param mixed $conf Configuration as array or Graphite_Graph_Series object
+   * @param mixed $conf Configuration as array or Series object
    * @return string Series parameter for use in query string
-   * @throws Graphite_ConfigurationException If neither series nor target is set
+   * @throws ConfigurationException If neither series nor target is set
    *    in $conf
    */
   static public function generate ($conf) {
-    if ($conf instanceof Graphite_Graph_Series) {
+    if ($conf instanceof Series) {
       $conf = $conf->conf;
     }
 
@@ -174,11 +172,11 @@ class Graphite_Graph_Series {
 
     if (isset($conf[':generator'])) {
       $name = $conf[':generator'];
-      $spec = Graphite_Graph_Generators::callSpec($name);
+      $spec = Generators::callSpec($name);
       if (null !== $spec && (
           isset($conf[$name]) || (
               1 == $spec->requiredArgs() &&
-              Graphite_Graph_CallSpec::argIsString($spec->getArg(0))
+              CallSpec::argIsString($spec->getArg(0))
             )
           )) {
         // args are explicit or we can use the alias
@@ -194,7 +192,7 @@ class Graphite_Graph_Series {
     }
 
     if (!isset($conf['series'])) {
-      throw new Graphite_ConfigurationException(
+      throw new ConfigurationException(
         "metric does not have any data associated with it.");
     }
 
@@ -210,20 +208,20 @@ class Graphite_Graph_Series {
     // find functions named in the conf data
     $funcs = array();
     foreach ($conf as $key => $args) {
-      $name = Graphite_Graph_Functions::canonicalName($key);
+      $name = Functions::canonicalName($key);
       if ($name) {
         $funcs[$name] = $args;
       }
     }
     // sort the found functions by priority
-    uksort($funcs, array('Graphite_Graph_Functions', 'cmp'));
+    uksort($funcs, array(Functions::class, 'cmp'));
 
     // start from the provided series
     $target = $conf['series'];
 
     // build up target string
     foreach ($funcs as $name => $args) {
-      $spec = Graphite_Graph_Functions::callSpec($name);
+      $spec = Functions::callSpec($name);
 
       if (is_scalar($args)) {
         $args = array($args);
@@ -249,4 +247,4 @@ class Graphite_Graph_Series {
   } //end generateSeries
 
 
-} //end Graphite_Graph_Series
+} //end Series

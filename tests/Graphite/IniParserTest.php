@@ -1,24 +1,22 @@
 <?php
-/**
- * @package Graphite
- */
 
+namespace Graphite;
 
 /**
  * @package Graphite
  */
-class Graphite_IniParserTest extends PHPUnit_Framework_TestCase {
+class IniParserTest extends \PHPUnit_Framework_TestCase {
 
   /**
    * Given: non-conforming for php ini file
    * Expect: a php error to be raised
    *
-   * @expectedException PHPUnit_Framework_Error
+   * @expectedException \PHPUnit_Framework_Error
    */
   public function test_error_when_no_substitute  () {
     // our test file contains illegal values when no substition has been done
     $iniFile = $this->iniPath('test_ini_parser_sub.ini');
-    $ini = Graphite_IniParser::parse($iniFile);
+    $ini = IniParser::parse($iniFile);
   }
 
   /**
@@ -28,7 +26,7 @@ class Graphite_IniParserTest extends PHPUnit_Framework_TestCase {
    */
   public function test_suppress_load_error_returns_false () {
     $iniFile = $this->iniPath('test_ini_parser_sub.ini');
-    $ini = @Graphite_IniParser::parse($iniFile);
+    $ini = @IniParser::parse($iniFile);
     $this->assertSame(false, $ini, "Suppressed load error returns false");
   }
 
@@ -51,7 +49,7 @@ class Graphite_IniParserTest extends PHPUnit_Framework_TestCase {
           ),
         );
 
-    $ini = Graphite_IniParser::parse($iniFile, array());
+    $ini = IniParser::parse($iniFile, array());
     $this->assertSame($expect, $ini);
   }
 
@@ -86,7 +84,7 @@ class Graphite_IniParserTest extends PHPUnit_Framework_TestCase {
         'a{b}c{{d}}e' => 'funkier',
       );
 
-    $ini = Graphite_IniParser::parse($iniFile, $vars);
+    $ini = IniParser::parse($iniFile, $vars);
     $this->assertSame($expect, $ini);
   }
 
@@ -116,7 +114,7 @@ class Graphite_IniParserTest extends PHPUnit_Framework_TestCase {
             ),
           );
 
-    $ini = Graphite_IniParser::parse($iniFile);
+    $ini = IniParser::parse($iniFile);
     $this->assertSame($expect, $ini);
   }
 
@@ -130,4 +128,4 @@ class Graphite_IniParserTest extends PHPUnit_Framework_TestCase {
     return dirname(__FILE__) . DIRECTORY_SEPARATOR . $file;
   }
 
-} //end Graphite_IniParserTest
+} //end IniParserTest

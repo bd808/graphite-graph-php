@@ -1,10 +1,6 @@
 <?php
-/**
- * @package Graphite
- * @author Bryan Davis <bd808@bd808.com>
- * @copyright 2011 Bryan Davis and contributors. All Rights Reserved.
- * @license http://www.opensource.org/licenses/BSD-2-Clause Simplified BSD License
- */
+
+namespace Graphite;
 
 /**
  * Ini file parser.
@@ -15,7 +11,7 @@
  * Tokens in the ini file are strings that start with `{{` and end wtih `}}`.
  * The exact text inside the delimiters becomes the token. These tokens can
  * be replaced with alternate content by passing an array of replacement
- * values to Graphite_IniParser::parse(). The array should use the exact token
+ * values to IniParser::parse(). The array should use the exact token
  * text as the key and the replacement value as the value for each substition
  * to be made. Any tokens which do not appear as keys in the replacement
  * variables array will be used verbatium in the output. This allows using a
@@ -49,7 +45,7 @@
  *
  * <code>
  * <?php
- * $ini = Graphite_IniParser::parse('/path/to/file.ini', array(
+ * $ini = IniParser::parse('/path/to/file.ini', array(
  *    'TOKEN1' => 'replacement 1',
  *    'TOKEN2' => 'replacement 2',
  *  ));
@@ -62,7 +58,7 @@
  * @see parse_ini_string
  * @see parse_ini_file
  */
-class Graphite_IniParser {
+class IniParser {
 
   /**
    * Regular expression used to find substituion tokens in the ini file.
@@ -164,8 +160,8 @@ class Graphite_IniParser {
       return parse_ini_file($file, true);
     }
 
-    $p = new Graphite_IniParser($file, $vars);
+    $p = new IniParser($file, $vars);
     return $p->expand();
   } //end parse
 
-} //end Graphite_IniParser
+} //end IniParser

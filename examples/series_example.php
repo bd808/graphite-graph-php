@@ -12,9 +12,9 @@
  * be used to construct a target series for graphing.
  */
 
-require_once dirname(__FILE__) . '/../src/autoload.php';
+require_once __DIR__ . '/../vendor/autoload.php';
 
-$g = Graphite_GraphBuilder::builder()
+$g = Graphite\GraphBuilder::builder()
     ->title('Memory')
     ->vtitle('MiB')
     ->width(800)

@@ -1,11 +1,6 @@
 <?php
-/**
- * @package Graphite
- * @subpackage Graph
- * @author Bryan Davis <bd808@bd808.com>
- * @copyright 2011 Bryan Davis and contributors. All Rights Reserved.
- * @license http://www.opensource.org/licenses/BSD-2-Clause Simplified BSD License
- */
+
+namespace Graphite\Graph;
 
 /**
  * Utility for target functions.
@@ -20,17 +15,17 @@
  * @license http://www.opensource.org/licenses/BSD-2-Clause Simplified BSD License
  * @link http://readthedocs.org/docs/graphite/en/latest/functions.html
  */
-class Graphite_Graph_Functions {
+class Functions {
 
   /**
    * Metric manipulation function specifications.
    *
    * Each specification is shorthand for constructing a
-   * Graphite_Graph_CallSpec stored as an array. This is a tuple of:
+   * CallSpec stored as an array. This is a tuple of:
    * (call signature, sort order, alias flag)
    *
    * @var array
-   * @see Graphite_Graph_CallSpec::__construct
+   * @see CallSpec::__construct
    */
   static protected $functions = array(
       'alias'                      => array('"', 99, 1),
@@ -163,7 +158,7 @@ class Graphite_Graph_Functions {
    * Get the call specification for a function.
    *
    * @param string $name Function name
-   * @return Graphite_Graph_CallSpec Function specification or null if not
+   * @return CallSpec Function specification or null if not
    *    found
    */
   static public function callSpec ($name) {
@@ -172,7 +167,7 @@ class Graphite_Graph_Functions {
       return null;
     }
     $spec = self::$functions[$name];
-    return new Graphite_Graph_CallSpec($name, $spec[0], $spec[1], $spec[2]);
+    return new CallSpec($name, $spec[0], $spec[1], $spec[2]);
   }
 
 
@@ -199,4 +194,4 @@ class Graphite_Graph_Functions {
     // no-op
   }
 
-} //end Graphite_Graph_Functions
+} //end Functions

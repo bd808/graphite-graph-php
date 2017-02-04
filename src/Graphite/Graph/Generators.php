@@ -1,11 +1,6 @@
 <?php
-/**
- * @package Graphite
- * @subpackage Graph
- * @author Bryan Davis <bd808@bd808.com>
- * @copyright 2011 Bryan Davis and contributors. All Rights Reserved.
- * @license http://www.opensource.org/licenses/BSD-2-Clause Simplified BSD License
- */
+
+namespace Graphite\Graph;
 
 /**
  * Utility for target generators.
@@ -19,7 +14,7 @@
  * @license http://www.opensource.org/licenses/BSD-2-Clause Simplified BSD License
  * @link http://readthedocs.org/docs/graphite/en/latest/functions.html
  */
-class Graphite_Graph_Generators {
+class Generators {
 
   /**
    * Data generation functions.
@@ -92,7 +87,7 @@ class Graphite_Graph_Generators {
    * Get the call specification for a generator.
    *
    * @param string $name Generator name
-   * @return Graphite_Graph_CallSpec Function specification or null if not
+   * @return CallSpec Function specification or null if not
    *    found
    */
   static public function callSpec ($name) {
@@ -101,7 +96,7 @@ class Graphite_Graph_Generators {
       return null;
     }
     $spec = self::$generators[$name];
-    return new Graphite_Graph_CallSpec(
+    return new CallSpec(
         $name, $spec[0], $spec[1], $spec[2], true);
   }
 
@@ -113,4 +108,4 @@ class Graphite_Graph_Generators {
     // no-op
   }
 
-} //end Graphite_Graph_Generators
+} //end Generators

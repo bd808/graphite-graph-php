@@ -1,11 +1,6 @@
 <?php
-/**
- * @package Graphite
- * @subpackage Graph
- * @author Bryan Davis <bd808@bd808.com>
- * @copyright 2011 Bryan Davis and contributors. All Rights Reserved.
- * @license http://www.opensource.org/licenses/BSD-2-Clause Simplified BSD License
- */
+
+namespace Graphite\Graph;
 
 /**
  * Description of the call specification for a Graphite function.
@@ -16,7 +11,7 @@
  * @copyright 2012 Bryan Davis and contributors. All Rights Reserved.
  * @license http://www.opensource.org/licenses/BSD-2-Clause Simplified BSD License
  */
-class Graphite_Graph_CallSpec {
+class CallSpec {
 
   /**
    * Sprintf format string for creating a lambda function to format a list of
@@ -492,4 +487,4 @@ class Graphite_Graph_CallSpec {
     }
   } //end findNextOccurrance
 
-} //end Graphite_Graph_CallSpec
+} //end CallSpec

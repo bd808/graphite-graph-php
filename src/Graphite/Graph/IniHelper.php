@@ -1,16 +1,12 @@
 <?php
-/**
- * @package Graphite
- * @subpackage Graph
- * @author Bryan Davis <bd808@bd808.com>
- * @copyright 2011 Bryan Davis and contributors. All Rights Reserved.
- * @license http://www.opensource.org/licenses/BSD-2-Clause Simplified BSD License
- */
 
+namespace Graphite\Graph;
 
 /**
  * Define E_USER_DEPRECATED for php < 5.3.0
  */
+use Graphite\GraphBuilder;
+
 if (!defined('E_USER_DEPRECATED')) {
   define('E_USER_DEPRECATED', E_USER_NOTICE);
 }
@@ -18,11 +14,11 @@ if (!defined('E_USER_DEPRECATED')) {
 
 /**
  * Helper object for processing ini file configurations in
- * Graphite_GraphBuilder.
+ * GraphBuilder.
  *
- * {@link Graphite_GraphBuilder::ini()} uses this helper object to process the
+ * {@link GraphBuilder::ini()} uses this helper object to process the
  * contents of an ini file. Actual parsing of the ini file into an array is
- * performed by {@link Graphite_IniParser}.
+ * performed by {@link IniParser}.
  *
  * Ini syntax:
  * TODO: make a tutorial for this.
@@ -33,15 +29,15 @@ if (!defined('E_USER_DEPRECATED')) {
  * @author Bryan Davis <bd808@bd808.com>
  * @copyright 2012 Bryan Davis and contributors. All Rights Reserved.
  * @license http://www.opensource.org/licenses/BSD-2-Clause Simplified BSD License
- * @see Graphite_GraphBuilder
- * @see Graphite_IniParser
+ * @see GraphBuilder
+ * @see IniParser
  */
-class Graphite_Graph_IniHelper {
+class IniHelper {
 
   /**
-   * Paired Graphite_GraphBuilder
+   * Paired GraphBuilder
    *
-   * @var Graphite_GraphBuilder
+   * @var GraphBuilder
    */
   protected $builder;
 
@@ -63,7 +59,7 @@ class Graphite_Graph_IniHelper {
   /**
    * Constructor.
    *
-   * @param Graphite_GraphBuilder $builder Builder to configure
+   * @param GraphBuilder $builder Builder to configure
    */
   protected function __construct ($builder) {
     $this->builder = $builder;
@@ -87,7 +83,7 @@ class Graphite_Graph_IniHelper {
    * Load configuration data from the provided array into this instance.
    *
    * "Ini-style" confiugration data is expected to be an array as would be
-   * returned by {@see Graphite_IniParser::parse()}. If a key in this array is
+   * returned by {@see IniParser::parse()}. If a key in this array is
    * paired with a scalar value then it is assumed to be a graph level
    * configuration setting (eg. 'width' => 400). If the key indexes an array
    * then the value is assumed to be either a series to draw on the graph or
@@ -174,7 +170,7 @@ class Graphite_Graph_IniHelper {
 
 
   /**
-   * Configure a Graphite_GraphBuilder using our internal state.
+   * Configure a GraphBuilder using our internal state.
    *
    * @return void
    */
@@ -263,14 +259,14 @@ class Graphite_Graph_IniHelper {
   /**
    * Process an ini configuration.
    *
-   * @param Graphite_GraphBuilder $builder Builder we are helping
+   * @param GraphBuilder $builder Builder we are helping
    * @param array $ini Ini-style data set
    * @return void
    */
   static public function process ($builder, $ini) {
-    $helper = new Graphite_Graph_IniHelper($builder);
+    $helper = new IniHelper($builder);
     $helper->loadIniData($ini);
     $helper->configureGraph();
   } //end process
 
-} //end Graphite_Graph_IniHelper
+} //end IniHelper

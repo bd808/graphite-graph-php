@@ -3,9 +3,9 @@
  * Example usage of the DSL API to construct a graph of memory usage.
  */
 
-require_once dirname(__FILE__) . '/../src/autoload.php';
+require_once __DIR__ . '/../vendor/autoload.php';
 
-$g = Graphite_GraphBuilder::builder()
+$g = Graphite\GraphBuilder::builder()
     ->title('Memory')
     ->vtitle('Mbytes')
     ->width(800)

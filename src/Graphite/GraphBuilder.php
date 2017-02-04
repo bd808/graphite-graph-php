@@ -1,10 +1,10 @@
 <?php
-/**
- * @package Graphite
- * @author Bryan Davis <bd808@bd808.com>
- * @copyright 2011 Bryan Davis and contributors. All Rights Reserved.
- * @license http://www.opensource.org/licenses/BSD-2-Clause Simplified BSD License
- */
+
+namespace Graphite;
+
+use Graphite\Graph\IniHelper;
+use Graphite\Graph\Params;
+use Graphite\Graph\Series;
 
 /**
  * Graphite graph query string generator.
@@ -19,12 +19,12 @@
  * @author Bryan Davis <bd808@bd808.com>
  * @copyright 2012 Bryan Davis and contributors. All Rights Reserved.
  * @license http://www.opensource.org/licenses/BSD-2-Clause Simplified BSD License
- * @link http://bd808.com/graphite-graph-php/ Graphite_GraphBuilder site
+ * @link http://bd808.com/graphite-graph-php/ GraphBuilder site
  * @link http://graphite.wikidot.com/ Graphite
  * @link http://readthedocs.org/docs/graphite/en/latest/url-api.html
  *    Graphite URL API
  */
-class Graphite_GraphBuilder {
+class GraphBuilder {
 
   /**
    * Graph settings.
@@ -76,7 +76,7 @@ class Graphite_GraphBuilder {
    * Reset builder to empty state.
    *
    * @param array $settings Default settings for graph
-   * @return Graphite_GraphBuilder Self, for message chaining
+   * @return GraphBuilder Self, for message chaining
    */
   public function reset ($settings=null) {
     $this->settings = (is_array($settings))? $settings: array();
@@ -95,7 +95,7 @@ class Graphite_GraphBuilder {
    *
    * @param string $name Setting name or alias
    * @return mixed Setting value or null if not found
-   * @see Graphite_Graph_Params
+   * @see Params
    * @see http://readthedocs.org/docs/graphite/en/latest/url-api.html
    */
   public function __get ($name) {
@@ -103,7 +103,7 @@ class Graphite_GraphBuilder {
       return $this->qs();
     }
 
-    $cname = Graphite_Graph_Params::canonicalName($name);
+    $cname = Params::canonicalName($name);
     if (array_key_exists($cname, $this->settings)) {
       $val = $this->settings[$cname];
 
@@ -135,11 +135,11 @@ class Graphite_GraphBuilder {
    * @param string $name Setting name or alias
    * @param mixed $val Value to set
    * @return void
-   * @see Graphite_Graph_Params
+   * @see Params
    * @see http://readthedocs.org/docs/graphite/en/latest/url-api.html
    */
   public function __set ($name, $val) {
-    $cname = Graphite_Graph_Params::canonicalName($name);
+    $cname = Params::canonicalName($name);
     if (false !== $cname) {
       if ('hide' == mb_substr($cname, 0, 4) &&
           'hide' != mb_substr(mb_strtolower($name), 0, 4)) {
@@ -218,7 +218,7 @@ class Graphite_GraphBuilder {
   /**
    * Set a prefix to add to subsequent series.
    * @param string $prefix Prefix to add
-   * @return Graphite_GraphBuilder Self, for message chaining
+   * @return GraphBuilder Self, for message chaining
    */
   public function prefix ($prefix) {
     if ('.' !== mb_substr($prefix, -1)) {
@@ -241,7 +241,7 @@ class Graphite_GraphBuilder {
 
   /**
    * End prefix block.
-   * @return Graphite_GraphBuilder Self, for message chaining
+   * @return GraphBuilder Self, for message chaining
    */
   public function endPrefix () {
     array_pop($this->prefixStack);
@@ -321,7 +321,7 @@ class Graphite_GraphBuilder {
    *
    * @param string $name Name of data series to graph
    * @param array $opts Series options
-   * @return Graphite_GraphBuilder Self, for message chaining
+   * @return GraphBuilder Self, for message chaining
    */
   public function series ($name, $opts=array()) {
     $this->storeMeta('series', $name, $opts);
@@ -334,7 +334,7 @@ class Graphite_GraphBuilder {
    *
    * @param string $name Name of data series to graph
    * @param array $opts Series options
-   * @return Graphite_GraphBuilder Self, for message chaining
+   * @return GraphBuilder Self, for message chaining
    * @see series()
    * @deprecated Use series() instead
    */
@@ -344,14 +344,14 @@ class Graphite_GraphBuilder {
 
 
   /**
-   * Add a data series to the graph using the {@link Graphite_Graph_Series}
+   * Add a data series to the graph using the {@link Series}
    * fluent builder DSL.
    *
    * @param string $name Name of data series to graph
-   * @return Graphite_Graph_Series Series builder
+   * @return Series Series builder
    */
   public function buildSeries ($name) {
-    return new Graphite_Graph_Series("{$this->currentPrefix()}{$name}", $this);
+    return new Series("{$this->currentPrefix()}{$name}", $this);
   }
 
 
@@ -359,13 +359,13 @@ class Graphite_GraphBuilder {
    * Draws a straight line on the graph.
    *
    * @param array $opts Line options
-   * @return Graphite_GraphBuilder Self, for message chaining
-   * @throws Graphite_ConfigurationException If required options are missing
+   * @return GraphBuilder Self, for message chaining
+   * @throws ConfigurationException If required options are missing
    */
   public function line ($opts) {
     foreach (array('value', 'alias') as $key) {
       if (!isset($opts[$key])) {
-        throw new Graphite_ConfigurationException(
+        throw new ConfigurationException(
           "lines require a {$key}");
       }
     }
@@ -382,12 +382,12 @@ class Graphite_GraphBuilder {
    * Holt-Winters Confidence Band prediction model.
    *
    * @param array $opts Line options
-   * @return Graphite_GraphBuilder Self, for message chaining
-   * @throws Graphite_ConfigurationException If required options are missing
+   * @return GraphBuilder Self, for message chaining
+   * @throws ConfigurationException If required options are missing
    */
   public function forecast ($name, $opts) {
     if (!isset($opts['series'])) {
-      throw new Graphite_ConfigurationException(
+      throw new ConfigurationException(
         "'series' is required for a Holt-Winters Confidence forecast");
     }
 
@@ -479,12 +479,12 @@ class Graphite_GraphBuilder {
    *
    * @param string $file Path to file
    * @param array $vars Variables to substitute in the ini file
-   * @return Graphite_GraphBuilder Self, for message chaining
-   * @see Graphite_Graph_IniHelper
+   * @return GraphBuilder Self, for message chaining
+   * @see IniHelper
    */
   public function ini ($file, $vars=null) {
-    $ini = Graphite_IniParser::parse($file, $vars);
-    Graphite_Graph_IniHelper::process($this, $ini);
+    $ini = IniParser::parse($file, $vars);
+    IniHelper::process($this, $ini);
     return $this;
   } //end ini
 
@@ -495,13 +495,13 @@ class Graphite_GraphBuilder {
    * @param string $format Format to export data in (null for graph)
    * @return string Query string to append to graphite url to render this
    *    graph
-   * @throws Graphite_ConfigurationException If required data is missing
+   * @throws ConfigurationException If required data is missing
    */
   public function build ($format=null) {
     $parms = array();
 
     foreach ($this->settings as $name => $value) {
-      $value = Graphite_Graph_Params::format($name, $value);
+      $value = Params::format($name, $value);
       if (null !== $value) {
         $parms[] = self::qsEncode($name) . '=' . self::qsEncode($value);
       }
@@ -509,7 +509,7 @@ class Graphite_GraphBuilder {
 
     foreach ($this->targets as $target) {
       $parms[] = 'target=' .
-        self::qsEncode(Graphite_Graph_Series::generate($target));
+        self::qsEncode(Series::generate($target));
     } //end foreach
 
     if (null !== $format) {
@@ -525,7 +525,7 @@ class Graphite_GraphBuilder {
    * @param string $format Format to export data in (null for graph)
    * @return string Query string to append to graphite url to render this
    *    graph
-   * @throws Graphite_ConfigurationException If required data is missing
+   * @throws ConfigurationException If required data is missing
    * @see build()
    * @deprecated Use build() instead
    */
@@ -539,7 +539,7 @@ class Graphite_GraphBuilder {
    * @param string $format Format to export data in (null for graph)
    * @return string Query string to append to graphite url to render this
    *    graph
-   * @throws Graphite_ConfigurationException If required data is missing
+   * @throws ConfigurationException If required data is missing
    * @see build()
    * @deprecated Use build() instead
    */
@@ -557,7 +557,7 @@ class Graphite_GraphBuilder {
   public function __toString () {
     try {
       return $this->build();
-    } catch (Graphite_ConfigurationException $gce) {
+    } catch (ConfigurationException $gce) {
       return "error({$gce->getMessage()})";
     }
   }
@@ -569,7 +569,7 @@ class Graphite_GraphBuilder {
    * @param array $settings Default settings for graph
    */
   static public function builder ($settings=null) {
-    return new Graphite_GraphBuilder($settings);
+    return new GraphBuilder($settings);
   }
 
 
@@ -635,4 +635,4 @@ class Graphite_GraphBuilder {
     return str_replace(array_keys($decode), array_values($decode), $full);
   } //end qsEncode
 
-} //end Graphite_GraphBuilder
+} //end GraphBuilder

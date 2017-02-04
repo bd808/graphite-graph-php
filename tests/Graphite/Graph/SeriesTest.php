@@ -1,14 +1,14 @@
 <?php
-/**
- * @package Graphite
- * @subpackage Graph
- */
+
+namespace Graphite\Graph;
+
+use PHPUnit_Framework_TestCase;
 
 /**
  * @package Graphite
  * @subpackage Graph
  */
-class Graphite_Graph_SeriesTest extends PHPUnit_Framework_TestCase {
+class SeriesTest extends \PHPUnit_Framework_TestCase {
 
   /**
    * Given: a moderately complex DSL usage
@@ -23,7 +23,7 @@ class Graphite_Graph_SeriesTest extends PHPUnit_Framework_TestCase {
       );
     $this->assertEquals(
         'cactiStyle(aliasByNode(something.prod.*.requests.count,3))',
-        Graphite_Graph_Series::generate($spec));
+        Series::generate($spec));
   } //end testFirstAliasWins
 
 
@@ -38,7 +38,7 @@ class Graphite_Graph_SeriesTest extends PHPUnit_Framework_TestCase {
       );
     $this->assertEquals(
         'sumSeries(something.prod.*.requests.count)',
-        Graphite_Graph_Series::generate($spec));
+        Series::generate($spec));
   }
 
   /**
@@ -46,7 +46,7 @@ class Graphite_Graph_SeriesTest extends PHPUnit_Framework_TestCase {
    * Expect: a series using the generator with the alias as the only arg
    */
   public function test_generator_no_args () {
-    $b = Graphite_Graph_Series::builder()
+    $b = Series::builder()
         ->random()
         ->alias('Noise');
     $this->assertEquals("randomWalkFunction('Noise')", $b->build());
@@ -57,9 +57,9 @@ class Graphite_Graph_SeriesTest extends PHPUnit_Framework_TestCase {
    * Expect: a series using the generator
    */
   public function test_generator_with_args () {
-    $b = Graphite_Graph_Series::builder()
+    $b = Series::builder()
         ->threshold(123.456, "omgwtfbbq", "red");
     $this->assertEquals("threshold(123.456,'omgwtfbbq','red')", $b->build());
   }
 
-} //end Graphite_Graph_SeriesTest
+} //end SeriesTest

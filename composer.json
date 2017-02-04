@@ -13,9 +13,19 @@
     }
   ],
   "require": {
-    "php": ">=5.2.0"
+    "php" : "^5.5 || ^7.0"
   },
   "autoload": {
-    "classmap": ["src/"]
+    "psr-4": {
+      "Graphite\\": "src/Graphite/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Graphite\\": "tests/Graphite/"
+    }
+  },
+  "require-dev": {
+    "phpunit/phpunit": "^4.8"
   }
 }

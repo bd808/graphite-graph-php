@@ -1,19 +1,18 @@
 <?php
-/**
- * @package Graphite
- */
+
+namespace Graphite;
 
 /**
  * @package Graphite
  */
-class Graphite_GraphBuilderTest extends PHPUnit_Framework_TestCase {
+class GraphBuilderTest extends \PHPUnit_Framework_TestCase {
 
   /**
    * Given: a moderately complex DSL usage
    * Expect: a well formed query string
    */
   public function test_dsl_funcs () {
-    $g = new Graphite_GraphBuilder();
+    $g = new GraphBuilder();
 
     $got = $g->title('CPU IRQ Usage')
         ->vtitle('percent')
@@ -45,7 +44,7 @@ class Graphite_GraphBuilderTest extends PHPUnit_Framework_TestCase {
 
 
   public function test_dsl_members () {
-    $g = new Graphite_GraphBuilder();
+    $g = new GraphBuilder();
     $g->title = 'CPU IRQ Usage';
     $g->vtitle = 'percent';
     $g->from = '-2days';
@@ -68,7 +67,7 @@ class Graphite_GraphBuilderTest extends PHPUnit_Framework_TestCase {
    * Expect: a well formed query string
    */
   public function test_ini_load () {
-    $g = Graphite_GraphBuilder::builder()
+    $g = GraphBuilder::builder()
         ->prefix('com.example.foo')
         ->ini($this->iniPath('test_ini_load.ini'));
     $this->assertEquals('title=CPU+IRQ+Usage&vtitle=percent&from=-2days&width=100&height=100&areaMode=stacked&target=alias(color(scale(derivative(com.example.foo.munin.cpu.irq),0.001),\'red\'),\'IRQ\')&target=alias(color(scale(derivative(com.example.foo.munin.cpu.softirq),0.001),\'yellow\'),\'Batched+IRQ\')&target=alias(color(drawAsInfinite(puppet.time.total),\'blue\'),\'Puppet+Run\')', (string) $g->build());
@@ -80,7 +79,7 @@ class Graphite_GraphBuilderTest extends PHPUnit_Framework_TestCase {
    * Expect: a well formed query string
    */
   public function test_defaults () {
-    $g = new Graphite_GraphBuilder();
+    $g = new GraphBuilder();
     $g->metric('sample', array('data' => 'sample'));
     $this->assertValidQueryStringChars($g->build());
     $this->assertEquals('target=alias(sample,\'Sample\')', $g->build());
@@ -92,7 +91,7 @@ class Graphite_GraphBuilderTest extends PHPUnit_Framework_TestCase {
    * Expect: the query string contains the supplied target
    */
   public function test_explicit_target () {
-    $g = new Graphite_GraphBuilder();
+    $g = new GraphBuilder();
     $got = $g->metric('irq', array(
             'derivative' => true,
             'scale' => 0.001,
@@ -111,7 +110,7 @@ class Graphite_GraphBuilderTest extends PHPUnit_Framework_TestCase {
    * Expect: a well formed query string with a format
    */
   public function test_output_format () {
-    $g = new Graphite_GraphBuilder();
+    $g = new GraphBuilder();
     $g->metric('sample', array('data' => 'sample'));
     $this->assertContains('format=json', $g->build('json'));
     $this->assertContains('format=xml', $g->build('xml'));
@@ -123,7 +122,7 @@ class Graphite_GraphBuilderTest extends PHPUnit_Framework_TestCase {
    * Expect: a well formed query string
    */
   public function test_forecast () {
-    $g = new Graphite_GraphBuilder();
+    $g = new GraphBuilder();
     $g->forecast('sample', array(
         'series' => 'sample',
         'critical' => array(100),
@@ -137,7 +136,7 @@ class Graphite_GraphBuilderTest extends PHPUnit_Framework_TestCase {
    * Expect: default alias is omitted
    */
   public function test_alias_override () {
-    $g = new Graphite_GraphBuilder();
+    $g = new GraphBuilder();
     $g->ini($this->iniPath('test_alias_override.ini'));
     $this->assertEquals('target=cactiStyle(aliasByNode(something.prod.*.requests.count,3))&target=*', $g->build());
   }
@@ -147,7 +146,7 @@ class Graphite_GraphBuilderTest extends PHPUnit_Framework_TestCase {
    * Expect: param to be true and then false
    */
   public function test_bool_param_unset () {
-    $g = Graphite_GraphBuilder::builder()
+    $g = GraphBuilder::builder()
         ->ini($this->iniPath('test_bool_param_unset1.ini'));
     $this->assertEquals('drawNullAsZero=True', (string) $g);
 
@@ -160,7 +159,7 @@ class Graphite_GraphBuilderTest extends PHPUnit_Framework_TestCase {
    * Expect: multiple arguments to be processed
    */
   public function test_ini_multiarg_array () {
-    $g = Graphite_GraphBuilder::builder()
+    $g = GraphBuilder::builder()
         ->ini($this->iniPath('test_multiarg_array.ini'));
     $this->assertEquals('target=aliasByNode(my-metric,1,3,5)', (string) $g);
   } //end test_ini_multiarg_array
@@ -170,7 +169,7 @@ class Graphite_GraphBuilderTest extends PHPUnit_Framework_TestCase {
    * Expect: string to be split on commas and processed
    */
   public function test_ini_multiarg_split () {
-    $g = Graphite_GraphBuilder::builder()
+    $g = GraphBuilder::builder()
         ->ini($this->iniPath('test_multiarg_split.ini'));
     $this->assertEquals("target=aliasByNode(my-metric,1,3,5)&target=aliasSub(ip.*TCP*,'%5E.*TCP(%5Cd%2B)','%5C1')", (string) $g);
   } //end test_ini_multiarg_split
@@ -180,7 +179,7 @@ class Graphite_GraphBuilderTest extends PHPUnit_Framework_TestCase {
    * Expect: series config values to be inherited
    */
   public function test_inherit () {
-    $g = Graphite_GraphBuilder::builder()
+    $g = GraphBuilder::builder()
         ->ini($this->iniPath('test_inherit_base.ini'))
         ->ini($this->iniPath('test_inherit_extends.ini'));
 
@@ -192,7 +191,7 @@ class Graphite_GraphBuilderTest extends PHPUnit_Framework_TestCase {
    * Expect: targets using generators a a primary data source
    */
   public function test_generator () {
-    $g = Graphite_GraphBuilder::builder()
+    $g = GraphBuilder::builder()
         ->ini($this->iniPath('test_generator.ini'));
     $this->assertEquals("target=alias(constantLine(123.456),'Constantline')&target=timeFunction('The.time.series')&target=randomWalkFunction('Random')&target=sinFunction('this.is.the.sin',2)&target=threshold(15,'omgwtfbbq','red')&target=alias(events('*'),'Events')", (string) $g);
   }
@@ -202,7 +201,7 @@ class Graphite_GraphBuilderTest extends PHPUnit_Framework_TestCase {
    * Expect: grouped targets
    */
   public function test_group_series () {
-    $g = Graphite_GraphBuilder::builder()
+    $g = GraphBuilder::builder()
         ->prefix('com.example.foo')
         ->ini($this->iniPath('test_group_series.ini'));
     $this->assertEquals('target=cactiStyle(group(alias(color(scale(derivative(com.example.foo.munin.cpu.irq),0.001),\'red\'),\'IRQ\'),alias(color(scale(derivative(com.example.foo.munin.cpu.softirq),0.001),\'yellow\'),\'Batched+IRQ\')))&target=alias(color(drawAsInfinite(puppet.time.total),\'blue\'),\'Puppet+Run\')', (string) $g);
@@ -213,7 +212,7 @@ class Graphite_GraphBuilderTest extends PHPUnit_Framework_TestCase {
    * Expect: empty response
    */
   public function test_empty () {
-    $g = Graphite_GraphBuilder::builder();
+    $g = GraphBuilder::builder();
     $this->assertEquals('', (string) $g);
   }
 
@@ -293,4 +292,4 @@ class Graphite_GraphBuilderTest extends PHPUnit_Framework_TestCase {
     return $vars;
   } //end parseQueryString
 
-} //end Graphite_GraphBuilderTest
+} //end GraphBuilderTest
