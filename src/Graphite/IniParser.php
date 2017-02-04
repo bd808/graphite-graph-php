@@ -51,20 +51,19 @@ namespace Graphite;
  *  ));
  * </code>
  *
- * @package Graphite
  * @author Bryan Davis <bd808@bd808.com>
  * @copyright 2012 Bryan Davis and contributors. All Rights Reserved.
  * @license http://www.opensource.org/licenses/BSD-2-Clause Simplified BSD License
  * @see parse_ini_string
  * @see parse_ini_file
  */
-class IniParser {
-
-  /**
-   * Regular expression used to find substituion tokens in the ini file.
-   * @var string
-   */
-  const RE_PARSE = '/
+class IniParser
+{
+    /**
+     * Regular expression used to find substituion tokens in the ini file.
+     * @var string
+     */
+    const RE_PARSE = '/
     \\\\{{          # backslash escaped start marker
     |               # OR
     \\\\}}          # backslash escaped end marker
@@ -78,90 +77,89 @@ class IniParser {
     (?<!\\\\)       # not after a backslash
     }}              # token end marker
     /sxS';          // dotall, extended, analyze
+    /**
+     * Ini file contents.
+     * @var string
+     */
+    private $iniString;
+    /**
+     * Substitution variables.
+     * @var array
+     */
+    private $vars;
 
-
-  /**
-   * Ini file contents.
-   * @var string
-   */
-  private $iniString;
-
-  /**
-   * Substitution variables.
-   * @var array
-   */
-  private $vars;
-
-
-  /**
-   * Constructor.
-   *
-   * @param string $file File path
-   * @param array $vars Substitution variables
-   */
-  private function __construct ($file, $vars) {
-    $this->iniString = file_get_contents($file);
-    $this->vars = $vars;
-  }
-
-  /**
-   * Parse and expand the ini file.
-   * @return array Ini contents
-   */
-  private function expand () {
-    $expanded = preg_replace_callback(
-      self::RE_PARSE, array($this, 'substitute'), $this->iniString);
-
-    if (function_exists('parse_ini_string')) {
-      return parse_ini_string($expanded, true);
-
-    } else {
-      // php 5.2 doesn't have parse_ini_string()
-      $tmp = tempnam(sys_get_temp_dir(), __CLASS__);
-      file_put_contents($tmp, $expanded);
-      $parsed = parse_ini_file($tmp, true);
-      unlink($tmp);
-      return $parsed;
-    }
-  } //end expand
-
-
-  /**
-   * Substitute a match with data found in our variables.
-   * @param array $match Regex matches
-   * @return string Variable value or original key if no match found
-   */
-  public function substitute ($match) {
-    if ('\\{{' == $match[0] || '\\}}' == $match[0]) {
-      // strip escape char
-      return mb_substr($match[0], 1);
+    /**
+     * Constructor.
+     *
+     * @param string $file File path
+     * @param array $vars Substitution variables
+     */
+    private function __construct($file, $vars)
+    {
+        $this->iniString = file_get_contents($file);
+        $this->vars = $vars;
     }
 
-    $label = $match['label'];
-    $label = strtr($label, array('\\{{' => '{{', '\\}}' => '}}'));
-    if (isset($this->vars[$label])) {
-      return $this->vars[$label];
+    /**
+     * Parse and expand the ini file.
+     * @return array Ini contents
+     */
+    private function expand()
+    {
+        $expanded = preg_replace_callback(
+            self::RE_PARSE,
+            [$this, 'substitute'],
+            $this->iniString
+        );
 
-    } else {
-      return $label;
+        if (function_exists('parse_ini_string')) {
+            return parse_ini_string($expanded, true);
+        }
+        // php 5.2 doesn't have parse_ini_string()
+        $tmp = tempnam(sys_get_temp_dir(), __CLASS__);
+        file_put_contents($tmp, $expanded);
+        $parsed = parse_ini_file($tmp, true);
+        unlink($tmp);
+
+        return $parsed;
     }
-  } //end substitute
 
+    /**
+     * Substitute a match with data found in our variables.
+     * @param array $match Regex matches
+     * @return string Variable value or original key if no match found
+     */
+    public function substitute($match)
+    {
+        if ('\\{{' == $match[0] || '\\}}' == $match[0]) {
+            // strip escape char
+            return mb_substr($match[0], 1);
+        }
 
-  /**
-   * Parse an ini file and return an array of it's contents.
-   *
-   * @param string $file Path to ini file
-   * @param array $vars Variable values to substiute in the file
-   * @return array Parsed ini data
-   */
-  static public function parse ($file, $vars=null) {
-    if (null === $vars) {
-      return parse_ini_file($file, true);
+        $label = $match['label'];
+        $label = strtr($label, ['\\{{' => '{{', '\\}}' => '}}']);
+        if (isset($this->vars[$label])) {
+            return $this->vars[$label];
+        }
+
+        return $label;
     }
 
-    $p = new IniParser($file, $vars);
-    return $p->expand();
-  } //end parse
+    /**
+     * Parse an ini file and return an array of it's contents.
+     *
+     * @param string $file Path to ini file
+     * @param array $vars Variable values to substiute in the file
+     * @return array Parsed ini data
+     */
+    public static function parse($file, $vars = null)
+    {
+        if (null === $vars) {
+            return parse_ini_file($file, true);
+        }
 
-} //end IniParser
+        $p = new self($file, $vars);
+
+        return $p->expand();
+    }
+}
