@@ -3,9 +3,9 @@
  * Example usage of ini file graph template with variable expansion.
  */
 
-require_once dirname(__FILE__) . '/../src/autoload.php';
+require_once __DIR__ . '/../vendor/autoload.php';
 
-$g = Graphite_GraphBuilder::builder()
+$g = Graphite\GraphBuilder::builder()
     ->prefix('com.example.host')
     ->ini('interface.ini', array('IF' => 'Tunnel0', 'IF_DESC' => 'tu0'));
 ?>

@@ -9,3 +9,4 @@ composer.phar
 phpunit.xml
 vendor
 foo
+.php_cs.cache
